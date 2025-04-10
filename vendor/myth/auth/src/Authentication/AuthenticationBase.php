@@ -219,7 +219,8 @@ class AuthenticationBase
         $this->loginModel->rememberUser($userID, $selector, hash('sha256', $validator), $expires);
 
         // Save it to the user's browser in a cookie.
-        $appConfig = config('App');
+        // $appConfig = config('App');
+        $appConfig = config('cookie');
         $response  = service('response');
 
         // Create the cookie
@@ -227,10 +228,14 @@ class AuthenticationBase
             'remember',      							// Cookie Name
             $token,                         			// Value
             $this->config->rememberLength,  			// # Seconds until it expires
-            $appConfig->cookieDomain,
-            $appConfig->cookiePath,
-            $appConfig->cookiePrefix,
-            $appConfig->cookieSecure,                   // Only send over HTTPS?
+            // $appConfig->cookieDomain,
+            // $appConfig->cookiePath,
+            // $appConfig->cookiePrefix,
+            // $appConfig->cookieSecure,                   // Only send over HTTPS?
+            $appConfig->domain,
+            $appConfig->path,
+            $appConfig->prefix,
+            $appConfig->secure,
             true                    					// Hide from Javascript?
         );
     }

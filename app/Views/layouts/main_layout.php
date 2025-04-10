@@ -44,6 +44,7 @@
             <?= $this->include('partials/footer') ?>
         </footer>
 
+
         <!-- Pristine JS -->
         <script src="<?= base_url('js/pristine.js') ?>"></script>
     </body>

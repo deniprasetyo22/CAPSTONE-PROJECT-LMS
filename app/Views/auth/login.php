@@ -47,7 +47,7 @@
                 <label class="fieldset-label text-black text-sm">
                     <input type="checkbox" class="checkbox checkbox-primary checkbox-xs" name="remember"
                         id="remember" />
-                    Ingat Saya
+                    Remember me
                 </label>
             </fieldset>
 
@@ -55,12 +55,12 @@
         </form>
 
         <div class="text-center mt-4">
-            <a href="<?= route_to('forgot') ?>" class="text-indigo-600 hover:underline">Lupa Password?</a>
+            <a href="<?= route_to('forgot') ?>" class="text-indigo-600 hover:underline">Forgot Password?</a>
         </div>
 
         <div class="mt-4 text-center">
-            <p class="text-gray-600">Belum punya akun? <a href="<?= route_to('register') ?>"
-                    class="text-indigo-600 hover:underline">Daftar Sekarang</a></p>
+            <p class="text-gray-600">Don't have an account? <a href="<?= route_to('register') ?>"
+                    class="text-indigo-600 hover:underline">Register</a></p>
         </div>
     </div>
 

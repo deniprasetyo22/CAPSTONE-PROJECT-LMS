@@ -19,13 +19,6 @@
         <form action="<?= route_to('register') ?>" method="post">
             <?= csrf_field() ?>
 
-            <!-- <div class="mb-4">
-                <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                <input type="text" name="full_name"
-                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="Full Name" value="<?= old('full_name') ?>">
-            </div> -->
-
             <fieldset class="mb-4">
                 <label for="username" class="fieldset-label text-black">Username</label>
                 <input type="text" name="username"
@@ -48,19 +41,19 @@
             </fieldset>
 
             <fieldset class="mb-4">
-                <label for="pass_confirm" class="fieldset-label text-black">Konfirmasi Password</label>
+                <label for="pass_confirm" class="fieldset-label text-black">Confirmation Password</label>
                 <input type="password" name="pass_confirm"
                     class="input w-full <?php if (session('errors.pass_confirm')) echo 'border-red-500'; ?>"
-                    placeholder="Konfirmasi Password">
+                    placeholder="Confirmation Password">
             </fieldset>
 
             <button type="submit" class="btn btn-primary w-full">
-                Daftar
+                Register
             </button>
         </form>
 
         <div class="mt-4 text-center">
-            <p class="text-gray-600">Sudah punya akun? <a href="<?= route_to('login') ?>"
+            <p class="text-gray-600">Already have an account? <a href="<?= route_to('login') ?>"
                     class="text-indigo-600 hover:underline">Login</a></p>
         </div>
     </div>
