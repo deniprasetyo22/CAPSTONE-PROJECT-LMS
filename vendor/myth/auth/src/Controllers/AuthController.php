@@ -2,10 +2,12 @@
 
 namespace Myth\Auth\Controllers;
 
+use App\Models\UserProfileModel;
 use CodeIgniter\Controller;
 use CodeIgniter\Session\Session;
 use Myth\Auth\Config\Auth as AuthConfig;
 use Myth\Auth\Entities\User;
+use Myth\Auth\Models\GroupModel;
 use Myth\Auth\Models\UserModel;
 
 class AuthController extends Controller
@@ -21,6 +23,8 @@ class AuthController extends Controller
      * @var Session
      */
     protected $session;
+    protected $groupModel;
+    protected $userProfileModel;
 
     public function __construct()
     {
@@ -30,6 +34,8 @@ class AuthController extends Controller
 
         $this->config = config('Auth');
         $this->auth   = service('authentication');
+        $this->groupModel = new GroupModel();
+        $this->userProfileModel = new UserProfileModel();
     }
 
     //--------------------------------------------------------------------
@@ -171,14 +177,46 @@ class AuthController extends Controller
 
         $this->config->requireActivation === null ? $user->activate() : $user->generateActivateHash();
 
-        // Ensure default group gets assigned if set
-        if (! empty($this->config->defaultUserGroup)) {
-            $users = $users->withGroup($this->config->defaultUserGroup);
-        }
+        // // Ensure default group gets assigned if set
+        // if (! empty($this->config->defaultUserGroup)) {
+        //     $users = $users->withGroup($this->config->defaultUserGroup);
+        // }
 
         if (! $users->save($user)) {
             return redirect()->back()->withInput()->with('errors', $users->errors());
         }
+
+        /* Add Role and User Profile */
+        $savedUser = $users->where('email', $user->email)->first();
+        $fName = $this->request->getPost('fname');
+        $lName = $this->request->getPost('lname');
+        $phone = $this->request->getPost('phone');
+        $address = $this->request->getPost('address');
+        $sex = $this->request->getPost('sex');
+        $dob = $this->request->getPost('dob');
+        $defaultProfilePicture = '/images/default_profile_picture.png';
+
+        if ($savedUser) {
+            $studentGroup = $this->groupModel->where('name', 'student')->first();
+
+            if (!empty($studentGroup)) {
+                $this->groupModel->addUserToGroup($savedUser->id, $studentGroup->id);
+            }
+
+            $userProfileData = [
+                'user_id' => $savedUser->id,
+                'first_name' => $fName,
+                'last_name' => $lName,
+                'phone' => $phone,
+                'address' => $address,
+                'sex' => $sex,
+                'dob' => $dob,
+                'profile_picture' => $defaultProfilePicture
+            ];
+
+            $this->userProfileModel->insert($userProfileData);
+        }
+        /* End */
 
         if ($this->config->requireActivation !== null) {
             $activator = service('activator');

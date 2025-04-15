@@ -121,4 +121,12 @@ class UserModel extends Model
             'password' => bin2hex(random_bytes(16)),
         ]);
     }
+
+    /* Get All User with User Profile */
+    public function getAllUserWithProfile()
+    {
+        return $this->db->table('users')
+            ->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->get()->getResult();
+    }
 }

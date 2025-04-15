@@ -1,96 +1,33 @@
-<div class="h-full flex flex-col bg-gray-800 text-white">
-    <!-- Logo -->
-    <div class="p-4 text-center text-lg font-bold bg-gray-900">
-        Admin Panel
-    </div>
-
-    <!-- Menu Items -->
-    <nav class="flex-1 p-4">
-        <ul class="space-y-2">
-            <?php
-            $currentUrl = current_url();
-            ?>
+<aside id="sidebar"
+    class="w-64 h-full bg-gray-800 text-white p-6 transform transition-transform duration-200 ease-in-out flex flex-col justify-between">
+    <div>
+        <h2 class="text-center text-xl font-bold mb-4">Admin Panel</h2>
+        <ul class="menu w-full">
+            <?php $currentUrl = current_url(); ?>
 
             <?php if(logged_in()) : ?>
             <li>
-                <a href="<?= url_to('home') ?>"
-                    class="flex items-center p-2 rounded <?= $currentUrl == url_to('home') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-home w-5"></i>
-                    <span class="ml-3">Home</span>
-                </a>
-            </li>
-            <?php endif; ?>
-
-            <?php if(in_groups('administrator')) : ?>
-            <li>
-                <a href="<?= url_to('admin-dashboard') ?>"
-                    class="flex items-center p-2 rounded <?= $currentUrl == url_to('admin-dashboard') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-tachometer-alt w-5"></i>
-                    <span class="ml-3">Dashboard</span>
+                <a href="<?= url_to('admin_dashboard') ?>"
+                    class="<?= $currentUrl == url_to('admin_dashboard') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
+                    <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                 </a>
             </li>
             <?php endif ?>
 
-            <?php if(in_groups('product_manager')) : ?>
+            <?php if(logged_in()) : ?>
             <li>
-                <a href="<?= url_to('manager-dashboard') ?>"
-                    class="flex items-center p-2 rounded <?= $currentUrl == url_to('manager-dashboard') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-tachometer-alt w-5"></i>
-                    <span class="ml-3">Dashboard</span>
-                </a>
-            </li>
-            <?php endif ?>
-
-            <?php if(in_groups('administrator') || (in_groups('product_manager'))) : ?>
-            <li>
-                <a href="<?= url_to('report') ?>"
-                    class="flex items-center p-2 rounded <?= $currentUrl == url_to('report') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-chart-bar w-5"></i>
-                    <span class="ml-3">Report</span>
-                </a>
-            </li>
-            <?php endif ?>
-
-            <?php if(in_groups('administrator')) : ?>
-            <li>
-                <a href="<?= url_to('auth-user') ?>"
-                    class="flex items-center p-2 rounded <?= $currentUrl == url_to('auth-user') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-users w-5"></i>
-                    <span class="ml-3">Users</span>
-                </a>
-            </li>
-            <?php endif ?>
-
-            <?php if(in_groups('administrator') || (in_groups('product_manager'))) : ?>
-            <li>
-                <a href="<?= url_to('product') ?>"
-                    class="flex items-center p-2 rounded <?= $currentUrl == url_to('product') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-box w-5"></i>
-                    <span class="ml-3">Products</span>
-                </a>
-            </li>
-            <?php endif ?>
-
-            <?php if(in_groups('administrator')) : ?>
-            <li>
-                <a href="<?= url_to('role') ?>"
-                    class="flex items-center p-2 rounded <?= $currentUrl == url_to('role') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-users w-5"></i>
-                    <span class="ml-3">Roles</span>
+                <a href="<?= url_to('users') ?>"
+                    class="<?= $currentUrl == url_to('users') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
+                    <i class="fas fa-users mr-2"></i> Users
                 </a>
             </li>
             <?php endif ?>
         </ul>
-    </nav>
-
-    <!-- Logout Button -->
-    <div class="p-4 border-t border-gray-700">
-        <?php if(logged_in()) : ?>
-        <a href="/logout"
-            class="w-full flex items-center justify-center p-2 rounded bg-red-600 hover:bg-red-700 text-white">
-            <i class="fa-solid fa-sign-out-alt w-5"></i>
-            <span class="ml-3">Logout</span>
-        </a>
-        <?php endif; ?>
     </div>
-</div>
+
+    <div class="mt-4">
+        <a href="<?= url_to('logout') ?>" class="btn btn-error w-full">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+    </div>
+</aside>
