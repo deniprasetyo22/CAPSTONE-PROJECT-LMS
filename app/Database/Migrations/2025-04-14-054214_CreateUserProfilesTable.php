@@ -49,12 +49,6 @@ class CreateUserProfilesTable extends Migration
                 'type' => 'DATE',
                 'null' => true,
             ],
-            'email'            => [
-                'type'       => 'VARCHAR',
-                'constraint' => 150,
-                'unique'     => true,
-                'null'       => false,
-            ],
             'profile_picture'  => [
                 'type' => 'TEXT',
                 'null' => true,

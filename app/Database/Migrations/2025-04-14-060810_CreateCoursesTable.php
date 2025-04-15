@@ -30,9 +30,9 @@ class CreateCoursesTable extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'price' => [
-                'type'       => 'NUMERIC',
-                'constraint' => '10,2',  // Maksimal 10 digit dengan 2 angka di belakang koma
+            'enrollment_code'       => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
                 'null'       => false,
             ],
             'expected_duration' => [
