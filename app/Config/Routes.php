@@ -8,7 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('home', 'Home::index', ['as' => 'home']);
 
- /* Public Routes */
+/* Public Routes */
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('/', 'AuthController::login');
     $routes->get('login', 'AuthController::login', ['as' => 'login']);
@@ -26,4 +26,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers'], function ($routes) {
         $routes->post('update/(:num)', 'UserController::update/$1', ['as' => 'update_user']);
         $routes->delete('delete/(:num)', 'UserController::delete/$1', ['as' => 'delete_user']);
     });
+});
+
+$routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->get('/courses', 'CourseController::index', ['as' => 'courses']);
+    $routes->get('/admin/courses', 'CourseController::listCoursesAdmin');
+    $routes->get('/courses/add', 'CourseController::addCourseForm');
+    $routes->post('/courses/add', 'CourseController::addCourse');
+    $routes->get('/courses/edit/(:num)', 'CourseController::editCourseForm/$1', ['as' => 'edit_course']);
+    $routes->put('/courses/edit/(:num)', 'CourseController::editCourse/$1');
+    $routes->delete('/courses/delete/(:num)', 'CourseController::deleteCourse/$1');
 });
