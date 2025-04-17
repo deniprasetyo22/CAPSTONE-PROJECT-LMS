@@ -16,10 +16,18 @@
     </div>
 </div>
 
+<div class="mb-4">
+    <?php if(session()->has('success')) : ?>
+    <div role="alert" class="alert alert-success">
+        <span><i class="fa fa-check mr-2"></i> <?= session('success') ?></span>
+    </div>
+    <?php endif ?>
+</div>
+
 <div class="flex justify-between gap-2 mb-2">
-    <button class="btn btn-primary">
+    <a href="<?= url_to('create_user') ?>" class="btn btn-primary">
         <i class="fa fa-plus mr-2"></i>Add User
-    </button>
+    </a>
 
     <label class="input flex-grow">
         <i class="fa fa-search"></i>
@@ -65,7 +73,7 @@
                 <td><?= $user->dob ?></td>
                 <td><?= $user->address ?></td>
                 <td>
-                    <img src="<?= base_url($user->profile_picture) ?>" alt="Profile Picture" width="50" height="50">
+                    <img src="<?= base_url( $user->profile_picture) ?>" alt="Profile Picture" width="50" height="50">
                 </td>
                 <td><?= $user->created_at ?></td>
             </tr>
@@ -73,6 +81,13 @@
             <?php endif; ?>
         </tbody>
     </table>
+    <div class="flex justify-center mt-2">
+        <?= $pager->links('users', 'custom_pager') ?>
+    </div>
+    <div class="text-center mt-2">
+        <small>Menampilkan <?= count($users) ?> dari <?= $total ?>
+            total data (Halaman <?= $params->page ?>)</small>
+    </div>
 </div>
 
 <?= $this->endSection() ?>

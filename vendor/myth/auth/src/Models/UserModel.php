@@ -2,6 +2,7 @@
 
 namespace Myth\Auth\Models;
 
+use App\Libraries\DataParams;
 use CodeIgniter\Model;
 use Faker\Generator;
 use Myth\Auth\Authorization\GroupModel;
@@ -125,8 +126,39 @@ class UserModel extends Model
     /* Get All User with User Profile */
     public function getAllUserWithProfile()
     {
-        return $this->db->table('users')
+        return $this->select('users.*, user_profiles.first_name as first_name, user_profiles.last_name as last_name, user_profiles.phone as phone, user_profiles.sex as sex, user_profiles.dob as dob, user_profiles.address as address, user_profiles.profile_picture as profile_picture')
             ->join('user_profiles', 'user_profiles.user_id = users.id')
-            ->get()->getResult();
+            ->orderBy('users.id', 'desc');
+    }
+
+    public function getFileredUsers(DataParams $params)
+    {
+        $query = $this->getAllUserWithProfile();
+
+        //Search
+        if (!empty($params->search)) {
+            $query->groupStart()
+            ->where('CAST(users.id as TEXT) LIKE', "%$params->search%")
+            ->orLike('user_profiles.first_name', $params->search, 'both', null, true)
+            ->orLike('user_profiles.last_name', $params->search, 'both', null, true)
+            ->orLike('users.username', $params->search, 'both', null, true)
+            ->orLike('users.email', $params->search, 'both', null, true)
+            ->groupEnd();
+        }
+
+        //Sorting
+        $allowedSortColumns = ['id', 'username', 'email', 'first_name', 'last_name', 'sex', 'dob'];
+        $sort = in_array($params->sort, $allowedSortColumns) ? $params->sort : 'id';
+        $order = ($params->order === 'desc') ? 'desc' : 'asc';
+
+        $this->orderBy($sort, $order);
+
+        $results = [
+            'users' => $this->paginate($params->perPage ?? 5, 'users', $params->page),
+            'pager' => $this->pager,
+            'total' => $this->countAllResults(false)
+        ];
+
+        return $results;
     }
 }

@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main_layout') ?>
 
 <?= $this->section('content') ?>
-<div class="drawer lg:drawer-open h-screen">
+<div class="drawer lg:drawer-open h-full">
     <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
 
     <!-- Main Content Area -->
