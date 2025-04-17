@@ -40,12 +40,24 @@ class UserController extends BaseController
             'pager' => $results['pager'],
             'total' => $results['total'],
             'params' => $params,
+            'baseUrl' => base_url('admin/users/index'),
             'hideHeader' => true
         ];
 
         // dd($results['pager']);
         
         return view('pages/admin/users/v_index', $data);
+    }
+
+    public function show($id)
+    {
+        $user = $this->userModel->getAllUserWithProfile()->find($id);
+        $data = [
+            'page_title' => 'User Detail',
+            'user' => $user,
+            'hideHeader' => true
+        ];
+        return view('pages/admin/users/v_show', $data);
     }
 
     public function create()
@@ -116,5 +128,87 @@ class UserController extends BaseController
         return redirect()->to('admin/users/index')->with('success', 'User created successfully.');
     }
 
+    public function edit($id)
+    {
+        $user = $this->userModel->getAllUserWithProfile()->find($id);
+        $roleId = $this->groupModel->getGroupsForUser($id);
+        $roleName = $roleId[0]['name'];
+        $data = [
+            'page_title' => 'Edit User',
+            'user' => $user,
+            'role' => $roleName,
+            'hideHeader' => true
+        ];
+        return view('pages/admin/users/v_edit', $data);
+    }
+
+    public function update($id)
+    {
+        // Cek apakah ID valid dan data ada
+        $existingUser = $this->userModel->find($id);
+        if (!$existingUser) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        // Ambil data user utama
+        $userData = [
+            'id'       => $id,
+            'username' => $this->request->getVar('username'),
+            'email'    => $this->request->getVar('email'),
+        ];
+
+        // Jika password tidak kosong, hash password
+        $password = $this->request->getPost('password');
+        if (!empty($password)) {
+            $userData['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
+        } else {
+            unset($userData['password_hash']);
+        }
+
+        $userProfileData = [
+            'user_id' => $id,
+            'first_name' => $this->request->getPost('fname'),
+            'last_name' => $this->request->getPost('lname'),
+            'phone' => $this->request->getPost('phone'),
+            'address' => $this->request->getPost('address'),
+            'sex' => $this->request->getPost('sex'),
+            'dob' => $this->request->getPost('dob'),
+        ];
+
+        $rules = $this->userModel->getValidationRules();
+        $messages = $this->userModel->getValidationMessages();
+
+        $rules['username'] = "required|min_length[3]|is_unique[users.username,id,{$id}]";
+        $rules['email'] = "required|valid_email|is_unique[users.email,id,{$id}]";
+        $rules['password'] = 'permit_empty';
+        $rules['password_hash'] = 'permit_empty';
+
+        if(!$this->validate($rules, $messages)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        //Update User
+        $userUpdate = $this->userModel->update($id, $userData);
+
+        //Update User Profile
+        $userProfileUpdate = $this->userProfileModel->where('user_id', $id)->set($userProfileData)->update();
+        if($userUpdate && $userProfileUpdate) {
+            return redirect()->to('admin/users/index')->with('success', 'User updated successfully.');
+        }
+    }
+
+    public function delete($id)
+    {
+        $user = $this->userModel->find($id);
+        if (!$user) {
+            return redirect()->to('admin/users/index')->with('error', 'User not found.');
+        }
+
+        $this->userProfileModel->where('user_id', $id)->delete();
+
+        $this->userModel->delete($id);
+
+        return redirect()->to('admin/users/index')->with('success', 'User deleted successfully.');
+    }
 
 }

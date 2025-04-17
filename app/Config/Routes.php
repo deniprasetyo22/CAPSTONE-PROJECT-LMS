@@ -21,10 +21,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers'], function ($routes) {
 
     $routes->group('users', ['namespace' => 'App\Controllers'], function ($routes) {
         $routes->get('index', 'UserController::index', ['as' => 'users']);
+        $routes->get('show/(:num)', 'UserController::show/$1', ['as' => 'show_user']);
         $routes->get('create', 'UserController::create', ['as' => 'create_user']);
         $routes->post('store', 'UserController::store', ['as' => 'store_user']);
         $routes->get('edit/(:num)', 'UserController::edit/$1', ['as' => 'edit_user']);
-        $routes->post('update/(:num)', 'UserController::update/$1', ['as' => 'update_user']);
+        $routes->put('update/(:num)', 'UserController::update/$1', ['as' => 'update_user']);
         $routes->delete('delete/(:num)', 'UserController::delete/$1', ['as' => 'delete_user']);
     });
 });

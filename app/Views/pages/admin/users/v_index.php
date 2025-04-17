@@ -29,11 +29,19 @@
         <i class="fa fa-plus mr-2"></i>Add User
     </a>
 
-    <label class="input flex-grow">
-        <i class="fa fa-search"></i>
-        <input type="search" placeholder="Search" />
-    </label>
+    <div class="flex-grow mb-4">
+        <form method="get" action="<?= url_to('users') ?>" class="flex gap-2 w-full">
+            <input type="text" name="search" placeholder="Search by ID, Email, Username or Name..."
+                value="<?= esc($params->search) ?>" class="input input-bordered flex-grow" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <div>
+        <a href="<?= $params->getResetUrl($baseUrl) ?>" class="btn btn-info text-white">Reset</a>
+    </div>
 </div>
+
 
 <div class="overflow-x-auto rounded-box border border-gray-300">
     <table class="table">
@@ -43,20 +51,15 @@
                 <th>ID</th>
                 <th>Email</th>
                 <th>Username</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Phone</th>
-                <th>Sex</th>
-                <th>DOB</th>
-                <th>Address</th>
-                <th>Profile Picture</th>
+                <th>Full Name</th>
                 <th>Created At</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <?php if(empty($users)) : ?>
             <tr>
-                <td>No users found</td>
+                <td colspan="7" class="text-center">No users found</td>
             </tr>
             <?php else : ?>
             <?php $no = 1; ?>
@@ -66,16 +69,36 @@
                 <td><?= $user->id ?></td>
                 <td><?= $user->email ?></td>
                 <td><?= $user->username ?></td>
-                <td><?= $user->first_name ?></td>
-                <td><?= $user->last_name ?></td>
-                <td><?= $user->phone ?></td>
-                <td><?= $user->sex ?></td>
-                <td><?= $user->dob ?></td>
-                <td><?= $user->address ?></td>
-                <td>
-                    <img src="<?= base_url( $user->profile_picture) ?>" alt="Profile Picture" width="50" height="50">
-                </td>
+                <td><?= $user->first_name . ' ' . $user->last_name ?></td>
                 <td><?= $user->created_at ?></td>
+                <td class="flex gap-2">
+                    <a href="<?= url_to('show_user', $user->id) ?>" class="btn btn-info btn-sm">
+                        <i class="fa fa-eye text-white"></i>
+                    </a>
+                    <a href="<?= url_to('edit_user', $user->id) ?>" class="btn btn-warning btn-sm">
+                        <i class="fa fa-edit text-white"></i>
+                    </a>
+                    <button type="button" class="btn btn-error btn-sm text-white"
+                        onclick="document.getElementById('deleteModal<?= $user->id ?>').showModal()">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <dialog id="deleteModal<?= $user->id ?>" class="modal">
+                        <div class="modal-box">
+                            <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
+                            <p class="py-4">Are you sure you want to delete this user?</p>
+                            <div class="modal-action">
+                                <form method="dialog">
+                                    <button class="btn btn-error text-white">Cancel</button>
+                                </form>
+                                <form action="<?= url_to('delete_user', $user->id) ?>" method="post">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </dialog>
+                </td>
             </tr>
             <?php endforeach; ?>
             <?php endif; ?>

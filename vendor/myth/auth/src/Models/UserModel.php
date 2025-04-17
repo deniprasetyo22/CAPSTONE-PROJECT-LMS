@@ -23,11 +23,19 @@ class UserModel extends Model
     ];
     protected $useTimestamps   = true;
     protected $validationRules = [
+        'id'            => 'is_natural_no_zero|permit_empty',
         'email'         => 'required|valid_email|is_unique[users.email,id,{id}]',
         'username'      => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
         'password_hash' => 'required',
     ];
-    protected $validationMessages = [];
+    protected $validationMessages = [
+        'email'         => [
+            'is_unique' => 'This email address is already exist.',
+        ],
+        'username'      => [
+            'is_unique' => 'This username is already exist.',
+        ],
+    ];
     protected $skipValidation     = false;
     protected $afterInsert        = ['addToGroup'];
 
