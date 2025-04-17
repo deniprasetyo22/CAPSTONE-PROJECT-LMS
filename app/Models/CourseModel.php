@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Course;
+use App\Libraries\DataParams;
 use CodeIgniter\Model;
 
 class CourseModel extends Model
@@ -79,4 +80,31 @@ class CourseModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getJoinedTableCourses()
+    {
+        return $this->select('courses.*, level_courses.name as levelName')
+            ->join('level_courses', 'level_courses.id = courses.level_course_id');
+    }
+
+    public function getFilteredCourses(DataParams $params)
+    {
+        $query = $this->getJoinedTableCourses();
+        if (!empty($params->search)) { // Apply search
+            $query->groupStart()
+                ->where('CAST(courses.expected_duration as TEXT) LIKE', "%$params->search%")
+                ->orLike('courses.name', $params->search, 'both', null, true)
+                ->orLike('courses.code', $params->search, 'both', null, true)
+                ->orLike('courses.description', $params->search, 'both', null, true)
+                ->orLike('level_courses.name', $params->search, 'both', null, true)
+                ->groupEnd();
+        }
+
+        $result = [
+            'courses' => $this->paginate($params->perPage, 'courses', $params->page),
+            'pager' => $this->pager,
+            'total' => $this->countAllResults(false)
+        ];
+        return $result;
+    }
 }

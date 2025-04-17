@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\DataParams;
 use App\Models\CourseModel;
 use App\Models\LevelCourseModel;
 
@@ -26,11 +27,23 @@ class CourseController extends BaseController
 
     public function listCoursesAdmin(): string
     {
-        $listCourses = $this->courseModel->select('courses.*, level_courses.name as levelName')->join('level_courses', 'level_courses.id = courses.level_course_id')->findAll();
-        return view('pages/admin/courses/list_courses', [
-            'courses' => $listCourses,
-            'page_title' => 'List of all courses',
+        $params = new DataParams([
+            'search' => $this->request->getGet('search'),
+            'page' => $this->request->getGet('page_courses'),
+            'perPage' => $this->request->getGet('perPage')
         ]);
+
+        $result = $this->courseModel->getFilteredCourses($params);
+
+        $data = [
+            'courses' => $result['courses'],
+            'pager' => $result['pager'],
+            'total' => $result['total'],
+            'params' => $params,
+            'page_title' => 'List of all courses'
+        ];
+
+        return view('pages/admin/courses/list_courses', $data);
     }
 
     public function addCourseForm(): string

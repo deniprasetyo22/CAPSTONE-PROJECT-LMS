@@ -24,7 +24,9 @@
 
     <label class="input flex-grow">
         <i class="fa fa-search"></i>
-        <input type="search" placeholder="Search" />
+        <form method="get" action="<?= site_url('admin/courses') ?>" class="form-inline">
+            <input type="text" placeholder="Search" value="<?= $params->search ?>" name="search" />
+        </form>
     </label>
 </div>
 
@@ -58,7 +60,7 @@
                         <td><?= $course->enrollment_code ?></td>
                         <td><?= $course->name ?></td>
                         <td><?= $course->description ?></td>
-                        <td><?= $course->expected_duration ?></td>
+                        <td><?= $course->expected_duration ?> Months</td>
                         <td><?= $course->levelName ?></td>
                         <td><?= $course->created_at ?></td>
                         <td>
@@ -83,5 +85,9 @@
         </tbody>
     </table>
 </div>
+<div class="mt-4 flex justify-center">
+    <?= $pager->links('courses', 'custom_pager') ?>
+</div>
+
 
 <?= $this->endSection() ?>
