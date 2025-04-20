@@ -10,8 +10,8 @@ class CourseSeeder extends Seeder
     {
         $data = [
             [
-                'id'                => 1,
-                'code'              => 'CS101',
+                'id'                => 4,
+                'code'              => 'CS102',
                 'name'              => 'Computer Science Basics',
                 'description'       => 'Introduction to basic concepts of computer science including algorithms, data structures, and programming.',
                 'enrollment_code'   => 'ENR-2025-001',

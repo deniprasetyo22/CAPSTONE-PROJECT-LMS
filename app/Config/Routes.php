@@ -16,7 +16,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 });
 
 /* Admin Routes */
-$routes->group('admin', ['namespace' => 'App\Controllers'], function ($routes) {
+$routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('dashboard', 'DashboardController::adminDashboard', ['as' => 'admin_dashboard']);
 
     $routes->group('users', ['namespace' => 'App\Controllers'], function ($routes) {
@@ -32,10 +32,17 @@ $routes->group('admin', ['namespace' => 'App\Controllers'], function ($routes) {
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('/courses', 'CourseController::index', ['as' => 'courses']);
-    $routes->get('/admin/courses', 'CourseController::listCoursesAdmin');
+    $routes->get('/admin/courses', 'CourseController::listCoursesAdmin', ['as' => 'list_courses']);
     $routes->get('/courses/add', 'CourseController::addCourseForm');
     $routes->post('/courses/add', 'CourseController::addCourse');
     $routes->get('/courses/edit/(:num)', 'CourseController::editCourseForm/$1', ['as' => 'edit_course']);
     $routes->put('/courses/edit/(:num)', 'CourseController::editCourse/$1');
     $routes->delete('/courses/delete/(:num)', 'CourseController::deleteCourse/$1');
+});
+
+/* Student Routes */
+$routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->group('courses', ['namespace' => 'App\Controllers'], function ($routes) {
+        $routes->get('index', 'CourseController::studentCourseList', ['as' => 'student_courses']);
+    });
 });

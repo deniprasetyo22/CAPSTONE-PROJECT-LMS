@@ -5,7 +5,7 @@
         <ul class="menu w-full">
             <?php $currentUrl = current_url(); ?>
 
-            <?php if(logged_in()) : ?>
+            <?php if (logged_in()) : ?>
             <li>
                 <a href="<?= url_to('admin_dashboard') ?>"
                     class="<?= $currentUrl == url_to('admin_dashboard') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
@@ -14,7 +14,7 @@
             </li>
             <?php endif ?>
 
-            <?php if(logged_in()) : ?>
+            <?php if (in_groups('administrator')) : ?>
             <li>
                 <a href="<?= url_to('users') ?>"
                     class="<?= $currentUrl == url_to('users') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">

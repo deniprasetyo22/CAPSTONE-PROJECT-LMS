@@ -49,7 +49,7 @@ class AuthController extends MythAuthController
             } else if ($group['name'] === 'teacher') {
                 return redirect()->to('teacher/dashboard');
             } else if ($group['name'] === 'student') {
-                return redirect()->to('home');
+                return redirect()->to('student/courses/index');
             }
         }
     
