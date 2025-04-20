@@ -24,23 +24,46 @@
     <?php endif ?>
 </div>
 
-<div class="flex justify-between gap-2 mb-2">
-    <a href="<?= url_to('create_user') ?>" class="btn btn-primary">
-        <i class="fa fa-plus mr-2"></i>Add User
-    </a>
+<div class="flex flex-col md:flex-row md:justify-between gap-2 mb-2">
+    <div class="flex gap-2 md:flex-grow">
+        <div>
+            <a href="<?= url_to('create_user') ?>" class="btn btn-primary">
+                <i class="fa fa-plus mr-2"></i>Add User
+            </a>
+        </div>
 
-    <label class="input flex-grow">
-        <i class="fa fa-search"></i>
-        <form method="get" action="<?= url_to('users') ?>" class="w-full">
-            <input type="text" placeholder="Search by ID, Email, Username or Name" value="<?= $params->search ?>"
-                name="search" />
-        </form>
-    </label>
+        <div class="flex-grow">
+            <form method="get" action="<?= url_to('users') ?>" class="w-full">
+                <label class="input flex items-center w-full">
+                    <i class="fa fa-search mr-2"></i>
+                    <input type="text" placeholder="Search by ID, Email, Username or Name"
+                        value="<?= $params->search ?>" name="search" class="w-full focus:outline-none" />
+                </label>
+            </form>
+        </div>
+    </div>
 
-    <div>
-        <a href="<?= $params->getResetUrl($baseUrl) ?>" class="btn btn-info text-white">Reset</a>
+    <div class="flex justify-between gap-2">
+        <div>
+            <form method="get">
+                <select name="perPage" class="select w-full" onchange="this.form.submit()">
+                    <?php foreach ([5, 10, 25, 50, 100] as $option): ?>
+                    <option value="<?= $option ?>" <?= ($params->perPage == $option) ? 'selected' : '' ?>>
+                        Show <?= $option ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+            </form>
+        </div>
+
+        <div>
+            <a href="<?= $params->getResetUrl($baseUrl) ?>" class="btn btn-info text-white">
+                Reset
+            </a>
+        </div>
     </div>
 </div>
+
 
 
 <div class="overflow-x-auto rounded-box border border-gray-300">
@@ -104,12 +127,12 @@
             <?php endif; ?>
         </tbody>
     </table>
+
     <div class="flex justify-center mt-2">
         <?= $pager->links('users', 'custom_pager') ?>
     </div>
     <div class="text-center mt-2">
-        <small>Menampilkan <?= count($users) ?> dari <?= $total ?>
-            total data (Halaman <?= $params->page ?>)</small>
+        <small>Displaying <?= count($users) ?> out of <?= $total ?> total users (Page <?= $params->page ?>)</small>
     </div>
 </div>
 
