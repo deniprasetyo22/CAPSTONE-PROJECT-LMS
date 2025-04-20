@@ -135,7 +135,7 @@ class UserModel extends Model
     public function getAllUserWithProfile()
     {
         return $this->select('users.*, user_profiles.first_name as first_name, user_profiles.last_name as last_name, user_profiles.phone as phone, user_profiles.sex as sex, user_profiles.dob as dob, user_profiles.address as address, user_profiles.profile_picture as profile_picture')
-            ->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
             ->orderBy('users.id', 'desc');
     }
 
@@ -149,9 +149,10 @@ class UserModel extends Model
             ->where('CAST(users.id as TEXT) LIKE', "%$params->search%")
             ->orLike('user_profiles.first_name', $params->search, 'both', null, true)
             ->orLike('user_profiles.last_name', $params->search, 'both', null, true)
+            ->orWhere("user_profiles.first_name || ' ' || user_profiles.last_name ILIKE '%$params->search%'")
             ->orLike('users.username', $params->search, 'both', null, true)
             ->orLike('users.email', $params->search, 'both', null, true)
-            ->groupEnd();
+            ->groupEnd(); 
         }
 
         //Sorting

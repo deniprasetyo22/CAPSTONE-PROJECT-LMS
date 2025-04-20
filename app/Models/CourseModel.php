@@ -97,7 +97,7 @@ class CourseModel extends Model
                 ->orLike('courses.code', $params->search, 'both', null, true)
                 ->orLike('courses.description', $params->search, 'both', null, true)
                 ->orLike('level_courses.name', $params->search, 'both', null, true)
-                ->groupEnd();
+                ->groupEnd(); 
         }
 
         $result = [

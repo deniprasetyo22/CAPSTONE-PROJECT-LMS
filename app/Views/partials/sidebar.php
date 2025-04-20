@@ -22,14 +22,6 @@
                 </a>
             </li>
             <?php endif ?>
-
-            <?php if(logged_in()) : ?>
-            <li>
-                <a href="" class="hover:bg-gray-700">
-                    <i class="fas fa-book mr-2"></i> Assignments
-                </a>
-            </li>
-            <?php endif ?>
         </ul>
     </div>
 

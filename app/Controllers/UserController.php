@@ -44,7 +44,7 @@ class UserController extends BaseController
             'hideHeader' => true
         ];
 
-        // dd($results['pager']);
+        // dd($results['users']);
         
         return view('pages/admin/users/v_index', $data);
     }

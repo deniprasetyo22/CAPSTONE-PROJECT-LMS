@@ -29,13 +29,13 @@
         <i class="fa fa-plus mr-2"></i>Add User
     </a>
 
-    <div class="flex-grow mb-4">
-        <form method="get" action="<?= url_to('users') ?>" class="flex gap-2 w-full">
-            <input type="text" name="search" placeholder="Search by ID, Email, Username or Name..."
-                value="<?= esc($params->search) ?>" class="input input-bordered flex-grow" />
-            <button type="submit" class="btn btn-primary">Search</button>
+    <label class="input flex-grow">
+        <i class="fa fa-search"></i>
+        <form method="get" action="<?= url_to('users') ?>" class="w-full">
+            <input type="text" placeholder="Search by ID, Email, Username or Name" value="<?= $params->search ?>"
+                name="search" />
         </form>
-    </div>
+    </label>
 
     <div>
         <a href="<?= $params->getResetUrl($baseUrl) ?>" class="btn btn-info text-white">Reset</a>
