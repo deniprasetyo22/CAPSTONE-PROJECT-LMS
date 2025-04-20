@@ -21,6 +21,7 @@ class CourseModel extends Model
         'enrollment_code',
         'expected_duration',
         'level_course_id',
+        'deleted_at'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -84,7 +85,8 @@ class CourseModel extends Model
     public function getJoinedTableCourses()
     {
         return $this->select('courses.*, level_courses.name as levelName')
-            ->join('level_courses', 'level_courses.id = courses.level_course_id');
+            ->join('level_courses', 'level_courses.id = courses.level_course_id')
+            ->where('courses.deleted_at', null);
     }
 
     public function getFilteredCourses(DataParams $params)
@@ -100,8 +102,10 @@ class CourseModel extends Model
                 ->groupEnd();
         }
 
+        $query->orderBy($params->sort ?? 'id', $params->order ?? 'asc');
+
         $result = [
-            'courses' => $this->paginate($params->perPage, 'courses', $params->page),
+            'courses' => $this->paginate($params->perPage ?? 5, 'courses', $params->page),
             'pager' => $this->pager,
             'total' => $this->countAllResults(false)
         ];

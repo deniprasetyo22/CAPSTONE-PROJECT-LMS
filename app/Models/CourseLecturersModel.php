@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Entities\CourseLecturers;
 use CodeIgniter\Model;
 
-class LevelCourseModel extends Model
+class CourseLecturersModel extends Model
 {
     protected $table            = 'courses_lecturers';
     protected $primaryKey       = 'id';

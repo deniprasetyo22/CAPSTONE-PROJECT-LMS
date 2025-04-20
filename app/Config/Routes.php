@@ -32,7 +32,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers'], function ($routes) {
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('/courses', 'CourseController::index', ['as' => 'courses']);
-    $routes->get('/admin/courses', 'CourseController::listCoursesAdmin');
+    $routes->get('/admin/courses', 'CourseController::listCoursesAdmin', ['as' => 'list_courses']);
     $routes->get('/courses/add', 'CourseController::addCourseForm');
     $routes->post('/courses/add', 'CourseController::addCourse');
     $routes->get('/courses/edit/(:num)', 'CourseController::editCourseForm/$1', ['as' => 'edit_course']);

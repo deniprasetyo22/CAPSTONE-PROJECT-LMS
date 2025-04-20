@@ -5,30 +5,38 @@
         <ul class="menu w-full">
             <?php $currentUrl = current_url(); ?>
 
-            <?php if(logged_in()) : ?>
-            <li>
-                <a href="<?= url_to('admin_dashboard') ?>"
-                    class="<?= $currentUrl == url_to('admin_dashboard') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-                </a>
-            </li>
+            <?php if (logged_in()) : ?>
+                <li>
+                    <a href="<?= url_to('admin_dashboard') ?>"
+                        class="<?= $currentUrl == url_to('admin_dashboard') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
+                        <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                    </a>
+                </li>
             <?php endif ?>
 
-            <?php if(logged_in()) : ?>
-            <li>
-                <a href="<?= url_to('users') ?>"
-                    class="<?= $currentUrl == url_to('users') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fas fa-users mr-2"></i> Users
-                </a>
-            </li>
+            <?php if (logged_in()) : ?>
+                <li>
+                    <a href="<?= url_to('users') ?>"
+                        class="<?= $currentUrl == url_to('users') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
+                        <i class="fas fa-users mr-2"></i> Users
+                    </a>
+                </li>
             <?php endif ?>
 
-            <?php if(logged_in()) : ?>
-            <li>
-                <a href="" class="hover:bg-gray-700">
-                    <i class="fas fa-book mr-2"></i> Assignments
-                </a>
-            </li>
+            <?php if (logged_in()) : ?>
+                <li>
+                    <a href="<?= url_to('list_courses') ?>" class="hover:bg-gray-700">
+                        <i class="fas fa-school mr-2"></i> Courses
+                    </a>
+                </li>
+            <?php endif ?>
+
+            <?php if (logged_in()) : ?>
+                <li>
+                    <a href="" class="hover:bg-gray-700">
+                        <i class="fas fa-book mr-2"></i> Assignments
+                    </a>
+                </li>
             <?php endif ?>
         </ul>
     </div>

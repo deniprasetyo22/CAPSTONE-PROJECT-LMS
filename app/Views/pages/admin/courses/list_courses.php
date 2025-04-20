@@ -21,13 +21,17 @@
         <i class="fa fa-plus mr-2"></i>Add Course
     </a>
 
-
-    <label class="input flex-grow">
-        <i class="fa fa-search"></i>
-        <form method="get" action="<?= site_url('admin/courses') ?>" class="form-inline">
-            <input type="text" placeholder="Search" value="<?= $params->search ?>" name="search" />
+    <div class="flex-grow mb-4">
+        <form method="get" action="<?= url_to('list_courses') ?>" class="flex gap-2 w-full">
+            <input type="text" name="search" placeholder="Search by Course Code, Enrollment code, description, name..."
+                value="<?= esc($params->search) ?>" class="input input-bordered flex-grow" />
+            <button type="submit" class="btn btn-primary">Search</button>
         </form>
-    </label>
+    </div>
+
+    <div>
+        <a href="<?= $params->getResetUrl('courses') ?>" class="btn btn-info text-white">Reset</a>
+    </div>
 </div>
 
 <div class="overflow-x-auto rounded-box border border-gray-300">
@@ -42,8 +46,7 @@
                 <th>Expected Duration</th>
                 <th>Level Name</th>
                 <th>Created At</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -63,21 +66,30 @@
                         <td><?= $course->expected_duration ?> Months</td>
                         <td><?= $course->levelName ?></td>
                         <td><?= $course->created_at ?></td>
-                        <td>
+                        <td class="flex gap-2">
                             <a href="<?= site_url('courses/edit/' . $course->id) ?>" class="btn btn-warning btn-sm">
-                                <i class="fa fa-edit mr-1"></i>
+                                <i class="fa fa-edit text-white"></i>
                             </a>
-                        </td>
-                        <td>
-                            <form action="<?= site_url('courses/delete/' . $course->id) ?>" method="post" class="d-inline">
-                                <?= csrf_field() ?>
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="btn btn-error btn-sm" onclick="return confirm('Are you sure to delete?')">
-                                    <i class="fa fa-trash mr-1"></i>
-                                </button>
-                                </a>
-                            </form>
-
+                            <button type="button" class="btn btn-error btn-sm text-white"
+                                onclick="document.getElementById('deleteModal<?= $course->id ?>').showModal()">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                            <dialog id="deleteModal<?= $course->id ?>" class="modal">
+                                <div class="modal-box">
+                                    <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
+                                    <p class="py-4">Are you sure you want to delete this user?</p>
+                                    <div class="modal-action">
+                                        <form method="dialog">
+                                            <button class="btn btn-error text-white">Cancel</button>
+                                        </form>
+                                        <form action="<?= site_url('courses/delete/' . $course->id) ?>" method="post">
+                                            <?= csrf_field() ?>
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </dialog>
                         </td>
                     </tr>
                 <?php endforeach; ?>

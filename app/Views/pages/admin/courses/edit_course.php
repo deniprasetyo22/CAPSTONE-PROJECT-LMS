@@ -1,11 +1,21 @@
-<?= $this->extend('layouts/main_layout') ?>
+<?= $this->extend('layouts/admin_layout') ?>
 
 <?= $this->section('title') ?>Edit Course<?= $this->endSection() ?>
 
-<?= $this->section('content') ?>
+<?= $this->section('admin_content') ?>
 
-<div class="w-full flex justify-center py-10 px-4">
-    <div class="card card-lg border border-gray-300 shadow-lg w-full max-w-xl">
+<div>
+    <!-- Breadcrumbs -->
+    <div class="bg-gray-200 rounded-md px-4">
+        <div class="breadcrumbs mb-6">
+            <ul>
+                <li><a href="<?= url_to('admin_dashboard') ?>">Dashboard</a></li>
+                <li><a href="<?= url_to('list_courses') ?>">Courses</a></li>
+                <li class="font-semibold">Edit Courses</li>
+            </ul>
+        </div>
+    </div>
+    <div class="card card-lg border border-gray-300 shadow-lg w-full">
         <div class="card-body">
             <div class="flex justify-center border-b border-gray-300 pb-2 mb-4">
                 <h2 class="card-title">Edit Course</h2>
@@ -49,16 +59,6 @@
                         placeholder="Description of the course..."
                         data-pristine-required
                         data-pristine-required-message="Description is required"><?= old('description') ?? esc($course->description) ?></textarea>
-                </fieldset>
-
-                <fieldset class="mb-4">
-                    <label class="label" for="enrollment_code">
-                        <span class="label-text">Enrollment Code</span>
-                    </label>
-                    <input type="text" name="enrollment_code" id="enrollment_code" class="input input-bordered w-full <?= (session('errors.enrollment_code')) ? 'border-red-500' : '' ?>" placeholder="ENR-2025-001"
-                        data-pristine-required
-                        data-pristine-required-message="Enrollment Code is required"
-                        value="<?= old('enrollment_code') ?? esc($course->enrollment_code) ?>">
                 </fieldset>
 
                 <fieldset class="mb-4">

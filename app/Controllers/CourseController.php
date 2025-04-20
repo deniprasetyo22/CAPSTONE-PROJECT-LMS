@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+
 use App\Libraries\DataParams;
+use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
 use App\Models\LevelCourseModel;
 
@@ -10,16 +12,19 @@ class CourseController extends BaseController
 {
     private CourseModel $courseModel;
     private LevelCourseModel $levelCourseModel;
+    private CourseLecturersModel $courseLecturersModel;
 
     public function __construct()
     {
         $this->courseModel = new CourseModel();
         $this->levelCourseModel = new LevelCourseModel();
+        $this->courseLecturersModel = new courseLecturersModel();
     }
 
     public function index(): string
     {
-        $listCourses = $this->courseModel->select('courses.*, level_courses.name as levelName')->join('level_courses', 'level_courses.id = courses.level_course_id')->findAll();
+        $listCourses = $this->courseModel->select('courses.*, level_courses.name as levelName')->join('level_courses', 'level_courses.id = courses.level_course_id')
+            ->where('courses.deleted_at', null)->findAll();
         return view('pages/admin/courses/index', [
             'courses' => $listCourses,
         ]);
@@ -55,16 +60,24 @@ class CourseController extends BaseController
     }
     public function addCourse()
     {
+        $userId = user_id();
         $data = [
             'code'              => $this->request->getPost('code'),
             'name'              => $this->request->getPost('name'),
             'description'       => $this->request->getPost('description'),
-            'enrollment_code'   => $this->request->getPost('enrollment_code'),
+            'enrollment_code'   => generate_enrollment_code(),
             'expected_duration' => $this->request->getPost('expected_duration'),
             'level_course_id'   => $this->request->getPost('level_course_id'),
         ];
 
         if ($this->courseModel->save($data)) {
+            // Save the course ID to the course_lecturers table
+            $courseId = $this->courseModel->insertID();
+            $courseLecturersData = [
+                'course_id' => $courseId,
+                'lecturer_id' => $userId,
+            ];
+            $this->courseLecturersModel->save($courseLecturersData);
             return redirect()->to('/courses')->with('success', 'Course added successfully!');
         } else {
             return redirect()->back()->withInput()->with('errors', $this->courseModel->errors());
@@ -126,7 +139,7 @@ class CourseController extends BaseController
             return redirect()->to('/courses')->with('error', 'Course not found!');
         }
 
-        if ($this->courseModel->delete($id)) {
+        if ($this->courseModel->update($id, ['deleted_at' => date('Y-m-d H:i:s')])) {
             return redirect()->to('/courses')->with('success', 'Course deleted successfully!');
         } else {
             return redirect()->back()->with('error', 'Failed to delete course!');
