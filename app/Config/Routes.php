@@ -43,7 +43,13 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 
 /* Student Routes */
 $routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Controllers'], function ($routes) {
-    $routes->group('courses', ['namespace' => 'App\Controllers'], function ($routes) {
+    /* Enrollemnt */
+    $routes->group('enrollment', function ($routes) {
+        $routes->post('store', 'EnrollmentController::store', ['as' => 'store_enrollment']);
+    });
+
+    /* Courses */
+    $routes->group('courses', function ($routes) {
         $routes->get('index', 'CourseController::studentCourseList', ['as' => 'student_courses']);
     });
 });
