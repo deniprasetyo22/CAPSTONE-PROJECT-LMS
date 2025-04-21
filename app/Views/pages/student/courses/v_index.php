@@ -6,7 +6,21 @@
 
 <?= $this->section('content') ?>
 
-<div class="container mx-auto">
+<div class="container mx-auto mb-4">
+
+    <div class="p-4 md:px-0">
+        <?php if(session()->has('success')) : ?>
+        <div role="alert" class="alert alert-success">
+            <span><i class="fa fa-check mr-2"></i> <?= session('success') ?></span>
+        </div>
+        <?php endif ?>
+        <?php if(session()->has('error')) : ?>
+        <div role="alert" class="alert alert-error">
+            <span><i class="fa fa-xmark mr-2"></i> <?= session('error') ?></span>
+        </div>
+        <?php endif ?>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4 md:px-0">
         <?php foreach ($courses as $index => $course): ?>
         <?php $modalId = 'modal_' . $index; ?>
@@ -33,7 +47,7 @@
                     <dialog id="<?= $modalId ?>" class="modal">
                         <div class="modal-box">
                             <h3 class="text-lg font-bold mb-4">Enroll to <?= esc($course->name) ?> Class</h3>
-                            <form action="" method="post">
+                            <form action="<?= url_to('store_enrollment') ?>" method="post">
                                 <?= csrf_field() ?>
                                 <fieldset>
                                     <input type="text" name="enrollment_code" class="input w-full"
