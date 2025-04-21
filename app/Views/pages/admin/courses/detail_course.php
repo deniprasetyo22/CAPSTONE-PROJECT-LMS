@@ -17,44 +17,55 @@
 
         <div class="flex flex-col items-center">
             <div class="w-full max-w-2xl">
+                <!-- Teachers Heading with Add Icon -->
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-lg font-semibold">Teachers</h2>
+                    <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </button>
+                </div>
                 <!-- Teachers List -->
-                <h2 class="text-lg font-semibold mb-2">Teachers</h2>
                 <ul class="mb-6">
-                    <li class="flex items-center gap-4 p-4 border rounded-lg mb-2">
-                        <div class="avatar">
-                            <div class="w-12 rounded-full">
-                                <img src="https://i.pravatar.cc/100?img=1" />
+                    <?php foreach ($lecturers as $lecturer) : ?>
+                        <li class="flex items-center gap-4 p-4 border rounded-lg mb-2">
+                            <div class="avatar">
+                                <div class="w-12 rounded-full">
+                                    <img src="https://i.pravatar.cc/100?img=1" />
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <p class="font-semibold">Mr. John Doe</p>
-                            <p class="text-sm text-gray-500">john.doe@example.com</p>
-                        </div>
-                    </li>
-                    <!-- Tambah teacher lainnya di sini -->
+                            <div>
+                                <p class="font-semibold"><?= $lecturer->first_name ?> <?= $lecturer->last_name ?></p>
+                                <p class="text-sm text-gray-500"><?= $lecturer->email ?></p>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
+                <!-- Students Heading with Add Icon -->
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-lg font-semibold">Students</h2>
+                    <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </button>
+                </div>
 
                 <!-- Students List -->
-                <h2 class="text-lg font-semibold mb-2">Students</h2>
                 <ul>
-                    <li class="flex items-center gap-4 p-4 border rounded-lg mb-2">
-                        <div class="avatar">
-                            <div class="w-12 rounded-full">
-                                <img src="https://i.pravatar.cc/100?img=2" />
+                    <?php foreach ($students as $student) : ?>
+                        <li class="flex items-center gap-4 p-4 border rounded-lg mb-2">
+                            <div class="avatar">
+                                <div class="w-12 rounded-full">
+                                    <img src="https://i.pravatar.cc/100?img=2" />
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <p class="font-semibold">Jane Smith</p>
-                            <p class="text-sm text-gray-500">jane.smith@example.com</p>
-                        </div>
-                    </li>
-                    <!-- Tambah student lainnya di sini -->
+                            <div>
+                                <p class="font-semibold"><?= $student->first_name ?> <?= $student->last_name ?></p>
+                                <p class="text-sm text-gray-500"><?= $student->email ?></p>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
         </div>
-
-
-
     </div>
 </div>
 
