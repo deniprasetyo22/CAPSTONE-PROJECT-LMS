@@ -15,15 +15,23 @@ class CourseController extends BaseController
     private CourseModel $courseModel;
     private LevelCourseModel $levelCourseModel;
     private CourseLecturersModel $courseLecturersModel;
+<<<<<<< HEAD
     protected $userProfileModel;
     protected $enrollmentModel;
+=======
+    private EnrollmentModel $enrollmentModel;
+
+>>>>>>> 0aba78a578161e261adb2418633f72c8ac01f321
 
     public function __construct()
     {
         $this->courseModel = new CourseModel();
         $this->levelCourseModel = new LevelCourseModel();
         $this->courseLecturersModel = new courseLecturersModel();
+<<<<<<< HEAD
         $this->userProfileModel = new UserProfileModel();
+=======
+>>>>>>> 0aba78a578161e261adb2418633f72c8ac01f321
         $this->enrollmentModel = new EnrollmentModel();
     }
 
@@ -173,6 +181,7 @@ class CourseController extends BaseController
         return view('pages/student/courses/v_index', $data);
     }
 
+<<<<<<< HEAD
     public function myCourses()
     {
         $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
@@ -200,3 +209,35 @@ class CourseController extends BaseController
 
 
 }
+=======
+
+    public function detailCourse($id)
+    {
+        $course = $this->courseModel->select('courses.*, level_courses.name as levelName')
+            ->join('level_courses', 'level_courses.id = courses.level_course_id')->find($id);
+
+        if (!$course) {
+            return redirect()->to('/courses')->with('error', 'Course not found!');
+        }
+
+        $students = $this->enrollmentModel
+            ->select('user_profiles.*, users.email')
+            ->join('user_profiles', 'user_profiles.id = enrollments.student_id')
+            ->join('users', 'users.id = user_profiles.user_id')
+            ->where('enrollments.course_id', $id)
+            ->findAll();
+
+        $lecturers = $this->courseLecturersModel->select('user_profiles.*, users.email')->join('user_profiles', 'user_profiles.id = courses_lecturers.lecturer_id')
+            ->join('users', 'users.id = user_profiles.user_id')
+            ->where('courses_lecturers.course_id', $id)
+            ->findAll();
+
+        return view('pages/admin/courses/detail_course', [
+            'course' => $course,
+            'students' => $students,
+            'lecturers' => $lecturers,
+            'page_title' => 'Course Detail',
+        ]);
+    }
+}
+>>>>>>> 0aba78a578161e261adb2418633f72c8ac01f321
