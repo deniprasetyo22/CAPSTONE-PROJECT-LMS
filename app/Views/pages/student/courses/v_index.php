@@ -26,28 +26,33 @@
         <?php $modalId = 'modal_' . $index; ?>
         <div class="card bg-base-100 shadow-md border border-gray-200">
             <figure class="py-20 bg-blue-200">
-                <span class="text-xl font-semibold"><?= $course->name ?></span>
+                <span class="text-xl font-semibold"><?= esc($course->name) ?></span>
             </figure>
             <div class="card-body">
-                <h2 class="card-title text-lg font-semibold text-primary"><?= esc($course->code) ?> -
-                    <?= esc($course->name) ?></h2>
+                <h2 class="card-title text-lg font-semibold text-primary">
+                    <?= esc($course->code) ?> - <?= esc($course->name) ?>
+                </h2>
                 <p class="text-sm text-gray-600"><?= esc($course->description) ?></p>
                 <div class="mt-4 text-sm text-gray-500">
                     <p><strong>Duration:</strong> <?= esc($course->expected_duration) ?> months</p>
                     <p><strong>Level:</strong> <?= esc($course->levelName) ?></p>
                 </div>
                 <div class="card-actions justify-end mt-4">
-                    <!-- Button memanggil modal dengan ID unik -->
+                    <?php if (in_array($course->id, $enrolledCourseIds)) : ?>
+                    <span class="btn btn-sm bg-gray-200 cursor-not-allowed">Enrolled</span>
+                    <?php else : ?>
                     <button class="btn btn-sm btn-primary"
                         onclick="document.getElementById('<?= $modalId ?>').showModal()">
                         Enroll
                     </button>
+                    <?php endif ?>
 
-                    <!-- Modal dengan ID unik -->
+
+                    <!-- Modal -->
                     <dialog id="<?= $modalId ?>" class="modal">
                         <div class="modal-box">
                             <h3 class="text-lg font-bold mb-4">Enroll to <?= esc($course->name) ?> Class</h3>
-                            <form action="<?= url_to('store_enrollment') ?>" method="post">
+                            <form action="<?= url_to('store_enrollment', $course->id) ?>" method="post">
                                 <?= csrf_field() ?>
                                 <fieldset>
                                     <input type="text" name="enrollment_code" class="input w-full"
@@ -64,7 +69,6 @@
             </div>
         </div>
         <?php endforeach; ?>
-
     </div>
 </div>
 

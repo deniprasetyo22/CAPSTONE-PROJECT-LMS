@@ -22,6 +22,15 @@
                 </a>
             </li>
             <?php endif ?>
+
+            <?php if(in_groups('administrator')) : ?>
+            <li>
+                <a href="<?= url_to('levels') ?>"
+                    class="<?= $currentUrl == url_to('levels') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
+                    <i class="fas fa-layer-group mr-2"></i> Levels
+                </a>
+            </li>
+            <?php endif ?>
         </ul>
     </div>
 

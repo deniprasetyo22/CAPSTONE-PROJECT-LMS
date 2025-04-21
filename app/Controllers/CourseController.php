@@ -6,19 +6,25 @@ namespace App\Controllers;
 use App\Libraries\DataParams;
 use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
+use App\Models\EnrollmentModel;
 use App\Models\LevelCourseModel;
+use App\Models\UserProfileModel;
 
 class CourseController extends BaseController
 {
     private CourseModel $courseModel;
     private LevelCourseModel $levelCourseModel;
     private CourseLecturersModel $courseLecturersModel;
+    protected $userProfileModel;
+    protected $enrollmentModel;
 
     public function __construct()
     {
         $this->courseModel = new CourseModel();
         $this->levelCourseModel = new LevelCourseModel();
         $this->courseLecturersModel = new courseLecturersModel();
+        $this->userProfileModel = new UserProfileModel();
+        $this->enrollmentModel = new EnrollmentModel();
     }
 
     public function index(): string
@@ -153,10 +159,44 @@ class CourseController extends BaseController
     public function studentCourseList()
     {
         $courses = $this->courseModel->getJoinedTableCourses()->findAll();
+        $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
+        $enrollments = $this->enrollmentModel->where('student_id', $currentUser->id)->findAll();
+        $enrolledCourseIds = array_column($enrollments, 'course_id');
+
         $data = [
             'page_title' => 'Course List',
             'courses' => $courses,
+            'studentId' => $currentUser->id,
+            'enrolledCourseIds' => $enrolledCourseIds
         ];
+
         return view('pages/student/courses/v_index', $data);
     }
+
+    public function myCourses()
+    {
+        $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
+        $enrollments = $this->enrollmentModel->where('student_id', $currentUser->id)->findAll();
+        $enrolledCourseIds = array_column($enrollments, 'course_id');
+
+        $myCourses = [];
+        if (!empty($enrolledCourseIds)) {
+            $myCourses = $this->courseModel
+                ->getJoinedTableCourses()
+                ->whereIn('courses.id', $enrolledCourseIds)
+                ->findAll();
+        }
+
+        $data = [
+            'page_title' => 'My Courses',
+            'studentId' => $currentUser->id,
+            'enrolledCourseIds' => $enrolledCourseIds,
+            'myCourses' => $myCourses
+        ];
+
+        return view('pages/student/courses/v_my_courses', $data);
+    }
+
+
+
 }

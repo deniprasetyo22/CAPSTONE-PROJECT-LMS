@@ -19,6 +19,22 @@
                 <!-- Right: Menu (desktop) -->
                 <div class="hidden lg:flex">
                     <ul class="menu menu-horizontal items-center">
+                        <?php if(in_groups('student')) : ?>
+                        <li>
+                            <a href="<?= url_to('student_courses') ?>" class="text-white font-semibold">
+                                Home
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
+                        <?php if(in_groups('student')) : ?>
+                        <li>
+                            <a href="<?= url_to('my_courses') ?>" class="text-white font-semibold">
+                                My Courses
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
                         <?php if(logged_in()) : ?>
                         <li>
                             <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-md">
