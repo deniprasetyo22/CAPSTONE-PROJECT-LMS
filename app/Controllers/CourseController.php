@@ -195,6 +195,22 @@ class CourseController extends BaseController
 
         return view('pages/student/courses/v_my_courses', $data);
     }
+
+    public function show($id)
+    {
+        $course = $this->courseModel->find($id);
+        if (!$course) {
+            return redirect()->to('/courses/my-courses')->with('error', 'Course not found!');
+        }
+
+        $data = [
+            'page_title' => $course->name,
+            'course' => $course
+        ];
+
+        return view('pages/student/courses/v_show', $data);
+    }
+    
     public function detailCourse($id)
     {
         $params = new DataParams([

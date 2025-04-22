@@ -37,7 +37,7 @@
                     <p><strong>Level:</strong> <?= esc($myCourse->levelName) ?></p>
                 </div>
                 <div class="card-actions justify-end mt-4">
-                    <a href="">
+                    <a href="<?= url_to('show_course', $myCourse->id) ?>">
                         <button class="btn btn-sm btn-primary">View</button>
                     </a>
                 </div>

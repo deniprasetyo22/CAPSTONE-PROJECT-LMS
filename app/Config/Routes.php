@@ -63,6 +63,7 @@ $routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Con
     $routes->group('courses', function ($routes) {
         $routes->get('index', 'CourseController::studentCourseList', ['as' => 'student_courses']);
         $routes->get('my-courses', 'CourseController::myCourses', ['as' => 'my_courses']);
+        $routes->get('show/(:num)', 'CourseController::show/$1', ['as' => 'show_course']);
     });
 });
 
