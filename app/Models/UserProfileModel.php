@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\UserProfile;
+use App\Libraries\DataParams;
 use CodeIgniter\Model;
 
 class UserProfileModel extends Model
@@ -70,4 +71,35 @@ class UserProfileModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getJoinedTableUserProfiles()
+    {
+        return $this->select('user_profiles.first_name, user_profiles.last_name, users.email as email')
+            ->join('users', 'users.id = user_profiles.user_id')
+            ->where('user_profiles.deleted_at', null);
+    }
+
+    public function getFilteredUserProfiles(DataParams $params)
+    {
+        $query = $this->getJoinedTableUserProfiles();
+
+        //Search
+        if (!empty($params->search)) {
+            $query->groupStart()
+                ->orLike('user_profiles.first_name', $params->search, 'both', null, true)
+                ->orLike('user_profiles.last_name', $params->search, 'both', null, true)
+                ->orLike('users.email', $params->search, 'both', null, true)
+                ->groupEnd();
+        }
+
+        //Sorting
+        $sort = 'user_profiles.id';
+        $order = 'asc';
+
+        $query->orderBy($sort, $order);
+
+        return [
+            'user_profiles' => $query->findAll()
+        ];
+    }
 }

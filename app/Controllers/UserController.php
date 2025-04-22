@@ -21,7 +21,7 @@ class UserController extends BaseController
         $this->userProfileModel = new UserProfileModel();
         $this->groupModel = new GroupModel();
     }
-    
+
     public function index()
     {
         $params = new DataParams([
@@ -45,7 +45,7 @@ class UserController extends BaseController
         ];
 
         // dd($results['users']);
-        
+
         return view('pages/admin/users/v_index', $data);
     }
 
@@ -95,7 +95,7 @@ class UserController extends BaseController
         $sex        = $this->request->getPost('sex');
         $dob        = $this->request->getPost('dob');
         $profilePicture = '/images/default_profile_picture.png';
-        
+
         // Simpan ke tabel user_profiles
         $userProfileData = [
             'user_id'    => $userId,
@@ -108,7 +108,7 @@ class UserController extends BaseController
             'profile_picture' => $profilePicture
         ];
 
-        if(!$this->userProfileModel->save($userProfileData)) {
+        if (!$this->userProfileModel->save($userProfileData)) {
             return redirect()->back()->withInput()->with('error', 'Create user failed.');
         }
 
@@ -183,7 +183,7 @@ class UserController extends BaseController
         $rules['password'] = 'permit_empty';
         $rules['password_hash'] = 'permit_empty';
 
-        if(!$this->validate($rules, $messages)) {
+        if (!$this->validate($rules, $messages)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
@@ -192,7 +192,7 @@ class UserController extends BaseController
 
         //Update User Profile
         $userProfileUpdate = $this->userProfileModel->where('user_id', $id)->set($userProfileData)->update();
-        if($userUpdate && $userProfileUpdate) {
+        if ($userUpdate && $userProfileUpdate) {
             return redirect()->to('admin/users/index')->with('success', 'User updated successfully.');
         }
     }
@@ -211,4 +211,19 @@ class UserController extends BaseController
         return redirect()->to('admin/users/index')->with('success', 'User deleted successfully.');
     }
 
+    public function showStudentLists()
+    {
+        $params = new DataParams([
+            'search' => $this->request->getGet('search'),
+        ]);
+        $results = $this->userProfileModel->getFilteredUserProfiles($params);
+        return $this->response->setJSON(array_map(function ($user) {
+            return [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'email' => $user->email,
+            ];
+        }, $results['user_profiles']));
+    }
 }

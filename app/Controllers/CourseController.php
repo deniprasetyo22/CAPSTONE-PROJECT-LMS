@@ -8,6 +8,7 @@ use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
 use App\Models\LevelCourseModel;
+use App\Models\UserProfileModel;
 
 class CourseController extends BaseController
 {
@@ -15,6 +16,7 @@ class CourseController extends BaseController
     private LevelCourseModel $levelCourseModel;
     private CourseLecturersModel $courseLecturersModel;
     private EnrollmentModel $enrollmentModel;
+    private UserProfileModel $userProfileModel;
 
 
     public function __construct()
@@ -23,6 +25,7 @@ class CourseController extends BaseController
         $this->levelCourseModel = new LevelCourseModel();
         $this->courseLecturersModel = new courseLecturersModel();
         $this->enrollmentModel = new EnrollmentModel();
+        $this->userProfileModel = new \App\Models\UserProfileModel();
     }
 
     public function index(): string
@@ -167,6 +170,12 @@ class CourseController extends BaseController
 
     public function detailCourse($id)
     {
+        $params = new DataParams([
+            'search' => $this->request->getGet('search'),
+        ]);
+
+        $users = $this->userProfileModel->getFilteredUserProfiles($params);
+
         $course = $this->courseModel->select('courses.*, level_courses.name as levelName')
             ->join('level_courses', 'level_courses.id = courses.level_course_id')->find($id);
 
@@ -190,6 +199,8 @@ class CourseController extends BaseController
             'course' => $course,
             'students' => $students,
             'lecturers' => $lecturers,
+            'params' => $params,
+            'users' => $users['user_profiles'],
             'page_title' => 'Course Detail',
         ]);
     }

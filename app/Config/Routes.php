@@ -53,3 +53,5 @@ $routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Con
         $routes->get('index', 'CourseController::studentCourseList', ['as' => 'student_courses']);
     });
 });
+
+$routes->get('/search-users', 'UserController::showStudentLists');
