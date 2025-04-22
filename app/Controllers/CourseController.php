@@ -15,24 +15,15 @@ class CourseController extends BaseController
     private CourseModel $courseModel;
     private LevelCourseModel $levelCourseModel;
     private CourseLecturersModel $courseLecturersModel;
-<<<<<<< HEAD
-    protected $userProfileModel;
-    protected $enrollmentModel;
-=======
-    private EnrollmentModel $enrollmentModel;
-    private UserProfileModel $userProfileModel;
-
->>>>>>> 0aba78a578161e261adb2418633f72c8ac01f321
+    protected UserProfileModel $userProfileModel;
+    protected EnrollmentModel $enrollmentModel;
 
     public function __construct()
     {
         $this->courseModel = new CourseModel();
         $this->levelCourseModel = new LevelCourseModel();
         $this->courseLecturersModel = new courseLecturersModel();
-<<<<<<< HEAD
         $this->userProfileModel = new UserProfileModel();
-=======
->>>>>>> 0aba78a578161e261adb2418633f72c8ac01f321
         $this->enrollmentModel = new EnrollmentModel();
         $this->userProfileModel = new \App\Models\UserProfileModel();
     }
@@ -164,7 +155,6 @@ class CourseController extends BaseController
         }
     }
 
-
     /* Course for Student */
     public function studentCourseList()
     {
@@ -183,7 +173,6 @@ class CourseController extends BaseController
         return view('pages/student/courses/v_index', $data);
     }
 
-<<<<<<< HEAD
     public function myCourses()
     {
         $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
@@ -207,12 +196,6 @@ class CourseController extends BaseController
 
         return view('pages/student/courses/v_my_courses', $data);
     }
-
-
-
-}
-=======
-
     public function detailCourse($id)
     {
         $params = new DataParams([
@@ -250,4 +233,3 @@ class CourseController extends BaseController
         ]);
     }
 }
->>>>>>> 0aba78a578161e261adb2418633f72c8ac01f321
