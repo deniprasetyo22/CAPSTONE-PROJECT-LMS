@@ -25,7 +25,6 @@ class CourseController extends BaseController
         $this->courseLecturersModel = new courseLecturersModel();
         $this->userProfileModel = new UserProfileModel();
         $this->enrollmentModel = new EnrollmentModel();
-        $this->userProfileModel = new \App\Models\UserProfileModel();
     }
 
     public function index(): string
