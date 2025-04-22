@@ -33,12 +33,13 @@ class LevelCourseModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'name'              => 'required',
+        'name' =>   'required',
         'description'       => 'required',
     ];
     protected $validationMessages   = [
         'name' => [
             'required' => 'Course name is required',
+            'is_unique' => 'Course name already exists',
         ],
         'description' => [
             'required' => 'Course description is required',

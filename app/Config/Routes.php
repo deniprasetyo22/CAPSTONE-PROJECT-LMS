@@ -19,7 +19,8 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 $routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('dashboard', 'DashboardController::adminDashboard', ['as' => 'admin_dashboard']);
 
-    $routes->group('users', ['namespace' => 'App\Controllers'], function ($routes) {
+    /* User */
+    $routes->group('users', function ($routes) {
         $routes->get('index', 'UserController::index', ['as' => 'users']);
         $routes->get('show/(:num)', 'UserController::show/$1', ['as' => 'show_user']);
         $routes->get('create', 'UserController::create', ['as' => 'create_user']);
@@ -27,6 +28,16 @@ $routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App
         $routes->get('edit/(:num)', 'UserController::edit/$1', ['as' => 'edit_user']);
         $routes->put('update/(:num)', 'UserController::update/$1', ['as' => 'update_user']);
         $routes->delete('delete/(:num)', 'UserController::delete/$1', ['as' => 'delete_user']);
+    });
+
+    /* Level */
+    $routes->group('levels', function ($routes) {
+        $routes->get('index', 'LevelController::index', ['as' => 'levels']);
+        $routes->get('create', 'LevelController::create', ['as' => 'create_level']);
+        $routes->post('store', 'LevelController::store', ['as' => 'store_level']);
+        $routes->get('edit/(:num)', 'LevelController::edit/$1', ['as' => 'edit_level']);
+        $routes->put('update/(:num)', 'LevelController::update/$1', ['as' => 'update_level']);
+        $routes->delete('delete/(:num)', 'LevelController::delete/$1', ['as' => 'delete_level']);
     });
 });
 
@@ -45,12 +56,13 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 $routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Controllers'], function ($routes) {
     /* Enrollemnt */
     $routes->group('enrollment', function ($routes) {
-        $routes->post('store', 'EnrollmentController::store', ['as' => 'store_enrollment']);
+        $routes->post('store/(:num)', 'EnrollmentController::store/$1', ['as' => 'store_enrollment']);
     });
 
     /* Courses */
     $routes->group('courses', function ($routes) {
         $routes->get('index', 'CourseController::studentCourseList', ['as' => 'student_courses']);
+        $routes->get('my-courses', 'CourseController::myCourses', ['as' => 'my_courses']);
     });
 });
 

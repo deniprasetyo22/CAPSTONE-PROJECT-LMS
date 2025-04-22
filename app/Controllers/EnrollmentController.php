@@ -21,7 +21,7 @@ class EnrollmentController extends BaseController
         $this->userProfileModel = new UserProfileModel();
     }
 
-    public function store()
+    public function store($courseId)
     {
         // Ambil data dari form
         $enrollmentCode = $this->request->getPost('enrollment_code');
@@ -37,16 +37,20 @@ class EnrollmentController extends BaseController
         }
 
         // Cari course berdasarkan kode (atau kamu bisa kirim course_id langsung di form)
-        $course = $this->courseModel->where('enrollment_code', $enrollmentCode)->first();
+        $course = $this->courseModel->find($courseId);
 
         if (!$course) {
+            return redirect()->back()->with('error', 'Course not found.');
+        }
+        
+        if ($course->enrollment_code !== $enrollmentCode) {
             return redirect()->back()->with('error', 'Invalid enrollment code.');
         }
 
         // Cek apakah user sudah pernah enroll
         $existingEnrollment = $this->enrollmentModel
             ->where('student_id', $studentId)
-            ->where('course_id', $course->id)
+            ->where('course_id', $courseId)
             ->first();
 
         if ($existingEnrollment) {
@@ -55,7 +59,7 @@ class EnrollmentController extends BaseController
 
         $enrollmentData = [
             'student_id' => $studentId,
-            'course_id' => $course->id,
+            'course_id' => $courseId,
             'status' => 'enrolled',
             'progress_percentage' => 0,
             'grade' => 0
