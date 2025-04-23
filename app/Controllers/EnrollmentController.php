@@ -42,7 +42,7 @@ class EnrollmentController extends BaseController
         if (!$course) {
             return redirect()->back()->with('error', 'Course not found.');
         }
-        
+
         if ($course->enrollment_code !== $enrollmentCode) {
             return redirect()->back()->with('error', 'Invalid enrollment code.');
         }
@@ -65,11 +65,40 @@ class EnrollmentController extends BaseController
             'grade' => 0
         ];
 
-        if(!$this->enrollmentModel->save($enrollmentData)) {
+        if (!$this->enrollmentModel->save($enrollmentData)) {
             return redirect()->back()->with('error', 'Failed to enroll in the course.');
         }
 
         return redirect()->back()->with('success', 'You have successfully enrolled in the course.');
     }
 
+    public function addNewStudent($courseId)
+    {
+        $studentId = $this->request->getPost('user_id');
+
+
+        // Cek apakah user sudah pernah enroll
+        $existingEnrollment = $this->enrollmentModel
+            ->where('student_id', $studentId)
+            ->where('course_id', $courseId)
+            ->first();
+
+        if ($existingEnrollment) {
+            return redirect()->back()->with('error', 'This student is already enrolled in this course.');
+        }
+
+        $enrollmentData = [
+            'student_id' => $studentId,
+            'course_id' => $courseId,
+            'status' => 'enrolled',
+            'progress_percentage' => 0,
+            'grade' => 0
+        ];
+
+        if (!$this->enrollmentModel->save($enrollmentData)) {
+            return redirect()->back()->with('error', 'Failed to enroll the student in the course.');
+        }
+
+        return redirect()->back()->with('success', 'The student has been successfully enrolled in the course.');
+    }
 }
