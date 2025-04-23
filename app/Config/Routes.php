@@ -64,6 +64,8 @@ $routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Con
         $routes->get('index', 'CourseController::studentCourseList', ['as' => 'student_courses']);
         $routes->get('my-courses', 'CourseController::myCourses', ['as' => 'my_courses']);
         $routes->get('show/(:num)', 'CourseController::show/$1', ['as' => 'show_course']);
+        $routes->get('show-content/(:num)/(:num)', 'CourseController::showContent/$1/$2', ['as' => 'show_course_detail']);
+        $routes->get('file/(:segment)', 'CourseController::file/$1', ['as' => 'file']);
     });
 });
 
