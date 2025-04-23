@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 
 use App\Libraries\DataParams;
+use App\Models\CourseContentModel;
 use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
@@ -17,6 +18,7 @@ class CourseController extends BaseController
     private CourseLecturersModel $courseLecturersModel;
     protected UserProfileModel $userProfileModel;
     protected EnrollmentModel $enrollmentModel;
+    protected $courseContentModel;
 
     public function __construct()
     {
@@ -25,6 +27,7 @@ class CourseController extends BaseController
         $this->courseLecturersModel = new courseLecturersModel();
         $this->userProfileModel = new UserProfileModel();
         $this->enrollmentModel = new EnrollmentModel();
+        $this->courseContentModel = new CourseContentModel();
     }
 
     public function index(): string
@@ -203,13 +206,17 @@ class CourseController extends BaseController
             return redirect()->to('/courses/my-courses')->with('error', 'Course not found!');
         }
 
+        $courseContents = $this->courseContentModel->where('course_id', $id)->findAll();
+
         $data = [
             'page_title' => $course->name,
-            'course' => $course
+            'course' => $course,
+            'courseContents' => $courseContents
         ];
 
         return view('pages/student/courses/v_show', $data);
     }
+
     
     public function detailCourse($id)
     {
