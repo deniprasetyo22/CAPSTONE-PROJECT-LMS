@@ -210,7 +210,7 @@ class CourseController extends BaseController
 
         return view('pages/student/courses/v_show', $data);
     }
-    
+
     public function detailCourse($id)
     {
         $params = new DataParams([
@@ -227,15 +227,18 @@ class CourseController extends BaseController
         }
 
         $students = $this->enrollmentModel
-            ->select('user_profiles.*, users.email')
+            ->select('user_profiles.*, users.email, enrollments.id')
             ->join('user_profiles', 'user_profiles.id = enrollments.student_id')
             ->join('users', 'users.id = user_profiles.user_id')
             ->where('enrollments.course_id', $id)
+            ->where('enrollments.deleted_at', null)
             ->findAll();
 
-        $lecturers = $this->courseLecturersModel->select('user_profiles.*, users.email')->join('user_profiles', 'user_profiles.id = courses_lecturers.lecturer_id')
+        $lecturers = $this->courseLecturersModel->select('user_profiles.*, users.email, courses_lecturers.id')
+            ->join('user_profiles', 'user_profiles.id = courses_lecturers.lecturer_id')
             ->join('users', 'users.id = user_profiles.user_id')
             ->where('courses_lecturers.course_id', $id)
+            ->where('courses_lecturers.deleted_at', null)
             ->findAll();
 
         return view('pages/admin/courses/detail_course', [

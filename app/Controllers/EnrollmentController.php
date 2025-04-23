@@ -81,6 +81,7 @@ class EnrollmentController extends BaseController
         $existingEnrollment = $this->enrollmentModel
             ->where('student_id', $studentId)
             ->where('course_id', $courseId)
+            ->where('deleted_at', null)
             ->first();
 
         if ($existingEnrollment) {
@@ -100,5 +101,18 @@ class EnrollmentController extends BaseController
         }
 
         return redirect()->back()->with('success', 'The student has been successfully enrolled in the course.');
+    }
+    public function removeStudent($id)
+    {
+        $enrollment = $this->enrollmentModel->find($id);
+        if (!$enrollment) {
+            return redirect()->back()->with('error', 'Enrollment not found!');
+        }
+
+        if ($this->enrollmentModel->update($id, ['deleted_at' => date('Y-m-d H:i:s')])) {
+            return redirect()->back()->with('success', 'Enrollment deleted successfully!');
+        } else {
+            return redirect()->back()->with('error', 'Failed to delete enrollment!');
+        }
     }
 }

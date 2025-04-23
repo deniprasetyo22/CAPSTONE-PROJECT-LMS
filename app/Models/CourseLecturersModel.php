@@ -16,6 +16,7 @@ class CourseLecturersModel extends Model
     protected $allowedFields    = [
         'course_id',
         'lecturer_id',
+        'deleted_at',
     ];
 
     protected bool $allowEmptyInserts = false;

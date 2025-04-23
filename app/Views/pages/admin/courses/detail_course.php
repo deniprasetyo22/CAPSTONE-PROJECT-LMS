@@ -71,6 +71,25 @@
                                 <p class="font-semibold"><?= $lecturer->first_name ?> <?= $lecturer->last_name ?></p>
                                 <p class="text-sm text-gray-500"><?= $lecturer->email ?></p>
                             </div>
+                            <button class="ml-auto btn btn-sm btn-ghost text-primary flex items-center gap-1" onclick="document.getElementById('deleteModal<?= $lecturer->id ?>').showModal()">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <dialog id="deleteModal<?= $lecturer->id ?>" class="modal">
+                                <div class="modal-box">
+                                    <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
+                                    <p class="py-4">Are you sure you want to remove this teacher?</p>
+                                    <div class="modal-action">
+                                        <form method="dialog">
+                                            <button class="btn btn-error text-white">Cancel</button>
+                                        </form>
+                                        <form action="<?= site_url('remove_lecturer_course/' . $lecturer->id) ?>" method="post">
+                                            <?= csrf_field() ?>
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </dialog>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -120,6 +139,25 @@
                                 <p class="font-semibold"><?= $student->first_name ?> <?= $student->last_name ?></p>
                                 <p class="text-sm text-gray-500"><?= $student->email ?></p>
                             </div>
+                            <button class="ml-auto btn btn-sm btn-ghost text-primary flex items-center gap-1" onclick="document.getElementById('deleteModalStudent<?= $student->id ?>').showModal()">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <dialog id="deleteModalStudent<?= $student->id ?>" class="modal">
+                                <div class="modal-box">
+                                    <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
+                                    <p class="py-4">Are you sure you want to remove this student?</p>
+                                    <div class="modal-action">
+                                        <form method="dialog">
+                                            <button class="btn btn-error text-white">Cancel</button>
+                                        </form>
+                                        <form action="<?= site_url('remove_student_course/' . $student->id) ?>" method="post">
+                                            <?= csrf_field() ?>
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </dialog>
                         </li>
                     <?php endforeach; ?>
                 </ul>

@@ -70,3 +70,5 @@ $routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Con
 $routes->get('/search-users', 'UserController::showStudentLists');
 $routes->post('enroll_student/(:num)', 'EnrollmentController::addNewStudent/$1');
 $routes->post('add_lecturer_course/(:num)', 'CourseLecturerController::addNewLecturer/$1');
+$routes->delete('remove_lecturer_course/(:num)', 'CourseLecturerController::removeLecturer/$1');
+$routes->delete('remove_student_course/(:num)', 'EnrollmentController::removeStudent/$1');

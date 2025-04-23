@@ -13,7 +13,7 @@ class EnrollmentModel extends Model
     protected $returnType       = Enrollments::class;
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id', 'student_id', 'course_id', 'status', 'progress_percentage', 'grade'];
+    protected $allowedFields    = ['id', 'student_id', 'course_id', 'status', 'progress_percentage', 'grade', 'deleted_at'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

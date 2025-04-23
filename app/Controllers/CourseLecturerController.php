@@ -22,6 +22,7 @@ class CourseLecturerController extends BaseController
         $existingCourseLecturer = $this->courseLecturersModel
             ->where('lecturer_id', $lecturerId)
             ->where('course_id', $courseId)
+            ->where('deleted_at', null)
             ->first();
 
         if ($existingCourseLecturer) {
@@ -38,5 +39,20 @@ class CourseLecturerController extends BaseController
         }
 
         return redirect()->back()->with('success', 'The lecturer has been successfully added in the course.');
+    }
+
+    public function removeLecturer($id)
+    {
+        $courseLecturer = $this->courseLecturersModel->find($id);
+
+        if (!$courseLecturer) {
+            return redirect()->back()->with('error', 'This lecturer is not enrolled in this course.');
+        }
+
+        if (!$this->courseLecturersModel->update($id, ['deleted_at' => date('Y-m-d H:i:s')])) {
+            return redirect()->back()->with('error', 'Failed to remove the lecturer from the course.');
+        }
+
+        return redirect()->back()->with('success', 'The lecturer has been successfully removed from the course.');
     }
 }
