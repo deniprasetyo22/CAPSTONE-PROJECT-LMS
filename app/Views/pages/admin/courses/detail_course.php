@@ -4,6 +4,14 @@
 
 <?= $this->section('admin_content') ?>
 
+<div class="mb-4">
+    <?php if (session()->has('error')) : ?>
+        <div role="alert" class="alert alert-error mb-4">
+            <span><i class="fa fa-xmark mr-2"></i><?= session('error') ?></span>
+        </div>
+    <?php endif ?>
+</div>
+
 <!-- name of each tab group should be unique -->
 <div class="tabs tabs-box">
     <input type="radio" name="my_tabs_6" class="tab" aria-label="Tab 1" />
@@ -17,35 +25,46 @@
 
         <div class="flex flex-col items-center">
             <div class="w-full max-w-2xl">
+
                 <!-- Teachers Heading with Add Icon -->
                 <div class="flex items-center justify-between mb-2">
                     <h2 class="text-lg font-semibold">Teachers</h2>
-                    <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1" onclick="openInviteModal()">
+                    <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1" onclick="openInviteModalLecturers()">
                         <i class="fa-solid fa-user-plus"></i>
                     </button>
-                    <dialog id="my_modal_4" class="modal">
+                    <dialog id="my_modal_5" class="modal">
                         <div class="modal-box w-11/12 max-w-xl">
                             <h3 class="text-lg font-bold">Invite Teachers!</h3>
+
+                            <!-- Label & Select di luar form -->
                             <label class="block mb-2 text-sm font-medium">Search User</label>
-                            <select id="user-select" style="width: 100%"></select>
+                            <select id="user-select-lecturer" name="user_lecturer_id" style="width: 100%"></select>
+
+                            <!-- Tombol-tombol sejajar -->
                             <div class="modal-action">
-                                <button class="btn">Invite</button>
+                                <!-- FORM hanya wrap tombol Invite -->
+                                <form action="<?= site_url('add_lecturer_course/' . $course->id) ?>" method="post">
+                                    <!-- Hidden input untuk user_id -->
+                                    <input type="hidden" name="user_lecturer_id" id="hidden-user-lecturer-id">
+                                    <button class="btn" type="submit">Invite</button>
+                                </form>
+
+                                <!-- Close tetap dialog -->
                                 <form method="dialog">
-                                    <!-- if there is a button, it will close the modal -->
                                     <button class="btn">Close</button>
                                 </form>
                             </div>
                         </div>
                     </dialog>
-
                 </div>
+
                 <!-- Teachers List -->
-                <ul class="mb-6">
+                <ul>
                     <?php foreach ($lecturers as $lecturer) : ?>
                         <li class="flex items-center gap-4 p-4 border rounded-lg mb-2">
                             <div class="avatar">
                                 <div class="w-12 rounded-full">
-                                    <img src="https://i.pravatar.cc/100?img=1" />
+                                    <img src="https://i.pravatar.cc/100?img=2" />
                                 </div>
                             </div>
                             <div>
@@ -58,32 +77,43 @@
                 <!-- Students Heading with Add Icon -->
                 <div class="flex items-center justify-between mb-2">
                     <h2 class="text-lg font-semibold">Students</h2>
-                    <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1" onclick="openInviteModalStudents()">
+                    <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1" onclick="openInviteModal()">
                         <i class="fa-solid fa-user-plus"></i>
                     </button>
-                    <dialog id="my_modal_5" class="modal">
+                    <dialog id="my_modal_4" class="modal">
                         <div class="modal-box w-11/12 max-w-xl">
                             <h3 class="text-lg font-bold">Invite Students!</h3>
+
+                            <!-- Label & Select di luar form -->
                             <label class="block mb-2 text-sm font-medium">Search User</label>
-                            <select id="user-select-student" style="width: 100%"></select>
+                            <select id="user-select" name="user_id" style="width: 100%"></select>
+
+                            <!-- Tombol-tombol sejajar -->
                             <div class="modal-action">
-                                <button class="btn">Invite</button>
+                                <!-- FORM hanya wrap tombol Invite -->
+                                <form action="<?= site_url('enroll_student/' . $course->id) ?>" method="post">
+                                    <!-- Hidden input untuk user_id -->
+                                    <input type="hidden" name="user_id" id="hidden-user-id">
+                                    <button class="btn" type="submit">Invite</button>
+                                </form>
+
+                                <!-- Close tetap dialog -->
                                 <form method="dialog">
-                                    <!-- if there is a button, it will close the modal -->
                                     <button class="btn">Close</button>
                                 </form>
                             </div>
                         </div>
-                    </dialog>
-                </div>
 
+                    </dialog>
+
+                </div>
                 <!-- Students List -->
-                <ul>
+                <ul class="mb-6">
                     <?php foreach ($students as $student) : ?>
                         <li class="flex items-center gap-4 p-4 border rounded-lg mb-2">
                             <div class="avatar">
                                 <div class="w-12 rounded-full">
-                                    <img src="https://i.pravatar.cc/100?img=2" />
+                                    <img src="https://i.pravatar.cc/100?img=1" />
                                 </div>
                             </div>
                             <div>
@@ -149,22 +179,27 @@
             const selectedData = e.params.data;
             console.log('Selected:', selectedData);
         });
+
+        $('#user-select').on('select2:select', function(e) {
+            const selectedData = e.params.data;
+            $('#hidden-user-id').val(selectedData.id);
+        });
     }
 
-    function openInviteModalStudents() {
+    function openInviteModalLecturers() {
         const modal = document.getElementById("my_modal_5");
         modal.showModal();
 
         // Clear sebelumnya dulu
-        $('#user-select-student').empty().val(null).trigger('change');
+        $('#user-select-lecturer').empty().val(null).trigger('change');
 
         // Destroy biar gak dobel init
-        if ($.fn.select2 && $('#user-select-student').hasClass("select2-hidden-accessible")) {
-            $('#user-select-student').select2('destroy');
+        if ($.fn.select2 && $('#user-select-lecturer').hasClass("select2-hidden-accessible")) {
+            $('#user-select-lecturer').select2('destroy');
         }
 
         // Init Select2
-        $('#user-select-student').select2({
+        $('#user-select-lecturer').select2({
             dropdownParent: $('#my_modal_5'),
             placeholder: 'Search users by name or email',
             allowClear: true,
@@ -191,20 +226,18 @@
         });
 
         // Clear handler
-        $('#user-select-student').off('select2:clear').on('select2:clear', function() {
-            $('#user-select-student').val(null).trigger('change'); // Clear value
-            $('#user-select-student').empty(); // Hapus semua opsi biar tidak tersisa
+        $('#user-select-lecturer').off('select2:clear').on('select2:clear', function() {
+            $('#user-select-lecturer').val(null).trigger('change'); // Clear value
+            $('#user-select-lecturer').empty(); // Hapus semua opsi biar tidak tersisa
         });
 
         // Select handler
-        $('#user-select-student').off('select2:select').on('select2:select', function(e) {
+        $('#user-select-lecturer').off('select2:select').on('select2:select', function(e) {
             const selectedData = e.params.data;
-            console.log('Selected:', selectedData);
+            $('#hidden-user-lecturer-id').val(selectedData.id);
         });
     }
 </script>
-
-
 
 
 

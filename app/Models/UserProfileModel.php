@@ -74,7 +74,7 @@ class UserProfileModel extends Model
 
     public function getJoinedTableUserProfiles()
     {
-        return $this->select('user_profiles.first_name, user_profiles.last_name, users.email as email')
+        return $this->select('user_profiles.first_name, user_profiles.last_name, users.email as email, user_profiles.id as id')
             ->join('users', 'users.id = user_profiles.user_id')
             ->where('user_profiles.deleted_at', null);
     }
