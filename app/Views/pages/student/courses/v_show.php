@@ -8,6 +8,14 @@
 
 <div class="container mx-auto mb-4">
 
+    <div class="card bg-blue-200 mt-4">
+        <div class="card-body">
+            <div class="flex justify-center py-4 border-b border-gray-300">
+                <h2 class="card-title"><?= $course->name ?></h2>
+            </div>
+        </div>
+    </div>
+
     <div class="p-4 md:px-0">
         <?php if(session()->has('success')) : ?>
         <div role="alert" class="alert alert-success">
@@ -45,7 +53,8 @@
                         <!-- Content -->
                         <div class="flex-grow">
                             <h2 class="font-medium text-base">
-                                <a href="" class="hover:text-blue-600">
+                                <a href="<?= url_to('show_course_detail', $course->id, $content->id) ?>"
+                                    class="hover:text-blue-600">
                                     Teacher posted a new <?= $content->content_type ?>:
                                     <span class="font-semibold"><?= $content->title ?></span>
                                 </a>

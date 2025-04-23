@@ -10,6 +10,7 @@ use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
 use App\Models\LevelCourseModel;
 use App\Models\UserProfileModel;
+use CodeIgniter\Files\File;
 
 class CourseController extends BaseController
 {
@@ -217,6 +218,44 @@ class CourseController extends BaseController
         return view('pages/student/courses/v_show', $data);
     }
 
+    public function showContent($id, $contentId)
+    {
+        $course = $this->courseModel->find($id);
+        if (!$course) {
+            return redirect()->to('/courses/my-courses')->with('error', 'Course not found!');
+        }
+
+        $courseContent = $this->courseContentModel
+        ->where('id', $contentId)
+        ->where('course_id', $id) // pastikan content milik course yang dimaksud
+        ->first();
+        // dd($courseContent);
+        
+        if (!$courseContent) {
+            return redirect()->to('/courses/my-courses')->with('error', 'Course content not found!');
+        }
+
+        $data = [
+            'page_title' => $course->name . ' - ' . $courseContent->title,
+            'course' => $course,
+            'courseContent' => $courseContent,
+        ];
+        
+        return view('pages/student/courses/v_show_content', $data);
+    }
+
+    public function file($filename)
+    {
+        $filePath = WRITEPATH . 'uploads/files/' . $filename;
+        // dd($filePath);
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File not found');
+        }
+
+        // return $this->response->download($filePath, null);
+        return $this->response->setContentType(mime_content_type($filePath))->setBody(file_get_contents($filePath));
+    }
     
     public function detailCourse($id)
     {
