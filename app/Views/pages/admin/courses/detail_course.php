@@ -53,7 +53,6 @@
 
                         <!-- Content -->
                         <div class="flex-grow">
-                            <?= $content->content_url ?>
                             <h2 class="font-medium text-base">
                                 <a href="<?= site_url('file-material/' . base64_encode($content->content_url)) ?>" target="_blank" class="hover:text-blue-600">
                                     Teacher posted a new <?= $content->content_type ?>:
