@@ -209,6 +209,9 @@ class CourseController extends BaseController
 
     public function show($id)
     {
+        $studentId = $this->userProfileModel->where('user_id', user_id())->first()->id;
+        $enrollment = $this->enrollmentModel->where('student_id', $studentId )->where('course_id', $id)->first();
+
         $course = $this->courseModel->find($id);
         if (!$course) {
             return redirect()->to('/courses/my-courses')->with('error', 'Course not found!');
@@ -219,7 +222,8 @@ class CourseController extends BaseController
         $data = [
             'page_title' => $course->name,
             'course' => $course,
-            'courseContents' => $courseContents
+            'courseContents' => $courseContents,
+            'enrollment' => $enrollment
         ];
 
         return view('pages/student/courses/v_show', $data);

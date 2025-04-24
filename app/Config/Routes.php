@@ -57,6 +57,7 @@ $routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Con
     /* Enrollemnt */
     $routes->group('enrollment', function ($routes) {
         $routes->post('store/(:num)', 'EnrollmentController::store/$1', ['as' => 'store_enrollment']);
+        $routes->delete('leave/(:num)', 'EnrollmentController::leaveCourse/$1', ['as' => 'leave_course']);
     });
 
     /* Courses */

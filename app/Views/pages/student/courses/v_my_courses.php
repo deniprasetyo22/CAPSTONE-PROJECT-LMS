@@ -21,6 +21,14 @@
         <?php endif ?>
     </div>
 
+    <?php if (empty($myCourses)) : ?>
+    <div class="p-4 md:px-0">
+        <div class="divider">
+            <div class="divider-title">No Courses</div>
+        </div>
+    </div>
+    <?php endif ?>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4 md:px-0">
         <?php foreach ($myCourses as $myCourse): ?>
         <div class="card bg-base-100 shadow-md border border-gray-200">

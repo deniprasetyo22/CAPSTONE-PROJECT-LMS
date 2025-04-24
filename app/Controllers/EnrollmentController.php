@@ -23,20 +23,16 @@ class EnrollmentController extends BaseController
 
     public function store($courseId)
     {
-        // Ambil data dari form
         $enrollmentCode = $this->request->getPost('enrollment_code');
 
-        // Ambil ID user yang sedang login (asumsikan sudah login)
         $currentUserId = user_id();
 
         $studentId = $this->userProfileModel->where('user_id', $currentUserId)->first()->id;
 
-        // Validasi input
         if (empty($enrollmentCode)) {
             return redirect()->back()->with('error', 'Enrollment code is required.');
         }
 
-        // Cari course berdasarkan kode (atau kamu bisa kirim course_id langsung di form)
         $course = $this->courseModel->find($courseId);
 
         if (!$course) {
@@ -72,6 +68,21 @@ class EnrollmentController extends BaseController
         return redirect()->back()->with('success', 'You have successfully enrolled in the course.');
     }
 
+    public function leaveCourse($id)
+    {
+        $enrollment = $this->enrollmentModel->find($id);
+
+        if (!$enrollment) {
+            return redirect()->back()->with('error', 'Enrollment not found.');
+        }
+
+        if(!$this->enrollmentModel->delete($id)){
+            return redirect()->back()->with('error', 'Failed to leave the course.');
+        }
+
+        return redirect()->to('/student/courses/my-courses')->with('success', 'You have successfully left the course.');
+    }
+
     public function addNewStudent($courseId)
     {
         $studentId = $this->request->getPost('user_id');
@@ -102,6 +113,7 @@ class EnrollmentController extends BaseController
 
         return redirect()->back()->with('success', 'The student has been successfully enrolled in the course.');
     }
+    
     public function removeStudent($id)
     {
         $enrollment = $this->enrollmentModel->find($id);

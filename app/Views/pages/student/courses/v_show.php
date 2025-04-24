@@ -6,17 +6,13 @@
 
 <?= $this->section('content') ?>
 
-<div class="container mx-auto mb-4">
+<div class="container mx-auto mb-4 px-4 md:px-0">
 
-    <div class="card bg-blue-200 mt-4">
-        <div class="card-body">
-            <div class="flex justify-center py-4 border-b border-gray-300">
-                <h2 class="card-title"><?= $course->name ?></h2>
-            </div>
-        </div>
+    <div class="divider mt-10">
+        <div class="divider-title"><?= $page_title ?></div>
     </div>
 
-    <div class="p-4 md:px-0">
+    <div class="mb-4">
         <?php if(session()->has('success')) : ?>
         <div role="alert" class="alert alert-success">
             <span><i class="fa fa-check mr-2"></i> <?= session('success') ?></span>
@@ -29,8 +25,32 @@
         <?php endif ?>
     </div>
 
-    <!-- name of each tab group should be unique -->
+    <div class="mb-4 flex justify-end">
+        <button class="btn btn-sm bg-red-500 hover:bg-red-600 text-white" onclick="leave_modal.showModal()">
+            <i class="fa fa-sign-out"></i> Leave
+        </button>
+    </div>
+
+    <dialog id="leave_modal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Are you sure?</h3>
+            <p class="py-4">You are about to leave the course. This action cannot be undone.</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn">Cancel</button>
+                </form>
+
+                <form action="<?= url_to('leave_course', $enrollment->id) ?>" method="post">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-error">Yes, Leave</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
     <div class="tabs tabs-box">
+        <!-- Tab 1 -->
         <input type="radio" name="my_tabs_6" class="tab" aria-label="Material" checked="checked" />
         <div class="tab-content bg-base-100 border-base-300 p-6">
             <div class="space-y-4">
@@ -79,8 +99,13 @@
             </div>
         </div>
 
+        <!-- Tab 2 -->
         <input type="radio" name="my_tabs_6" class="tab" aria-label="Tab 2" />
         <div class="tab-content bg-base-100 border-base-300 p-6">Tab content 2</div>
+
+        <!-- Tab 3 -->
+        <input type="radio" name="my_tabs_6" class="tab" aria-label="Tab 3" />
+        <div class="tab-content bg-base-100 border-base-300 p-6">Tab content 3</div>
     </div>
 </div>
 
