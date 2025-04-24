@@ -8,6 +8,7 @@ use App\Models\CourseContentModel;
 use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
+use App\Models\FileModel;
 use App\Models\LevelCourseModel;
 use App\Models\UserProfileModel;
 use CodeIgniter\Files\File;
@@ -20,6 +21,7 @@ class CourseController extends BaseController
     protected UserProfileModel $userProfileModel;
     protected EnrollmentModel $enrollmentModel;
     protected $courseContentModel;
+    protected $fileModel;
 
     public function __construct()
     {
@@ -29,6 +31,7 @@ class CourseController extends BaseController
         $this->userProfileModel = new UserProfileModel();
         $this->enrollmentModel = new EnrollmentModel();
         $this->courseContentModel = new CourseContentModel();
+        $this->fileModel = new FileModel();
     }
 
     public function index(): string
@@ -238,18 +241,20 @@ class CourseController extends BaseController
 
         $courseContent = $this->courseContentModel
             ->where('id', $contentId)
-            ->where('course_id', $id) // pastikan content milik course yang dimaksud
+            ->where('course_id', $id)
             ->first();
-        // dd($courseContent);
 
         if (!$courseContent) {
             return redirect()->to('/courses/my-courses')->with('error', 'Course content not found!');
         }
 
+        $files = $this->fileModel->where('content_id', $contentId)->findAll();
+
         $data = [
             'page_title' => $course->name . ' - ' . $courseContent->title,
             'course' => $course,
             'courseContent' => $courseContent,
+            'files' => $files
         ];
 
         return view('pages/student/courses/v_show_content', $data);
