@@ -16,6 +16,12 @@
     </div>
 </div>
 
+<?php if (session()->has('success')) : ?>
+    <div role="alert" class="alert alert-success">
+        <span><i class="fa fa-check mr-2"></i> <?= session('success') ?></span>
+    </div>
+<?php endif ?>
+
 <div class="flex justify-between gap-2 mb-2">
     <a href="<?= site_url('courses/add') ?>" class="btn btn-primary">
         <i class="fa fa-plus mr-2"></i>Add Course

@@ -152,6 +152,13 @@ class CourseController extends BaseController
         }
 
         if ($this->courseModel->update($id, ['deleted_at' => date('Y-m-d H:i:s')])) {
+            // Delete course lecturers
+            $this->courseLecturersModel
+                ->where('course_id', $id)
+                ->where('deleted_at', null) // pastikan ini ya
+                ->set(['deleted_at' => date('Y-m-d H:i:s')])
+                ->update();
+
             return redirect()->to('/courses')->with('success', 'Course deleted successfully!');
         } else {
             return redirect()->back()->with('error', 'Failed to delete course!');
@@ -272,6 +279,8 @@ class CourseController extends BaseController
             return redirect()->to('/courses')->with('error', 'Course not found!');
         }
 
+        $courseContents = $this->courseContentModel->where('course_id', $id)->findAll();
+
         $students = $this->enrollmentModel
             ->select('user_profiles.*, users.email, enrollments.id')
             ->join('user_profiles', 'user_profiles.id = enrollments.student_id')
@@ -289,6 +298,7 @@ class CourseController extends BaseController
 
         return view('pages/admin/courses/detail_course', [
             'course' => $course,
+            'courseContents' => $courseContents,
             'students' => $students,
             'lecturers' => $lecturers,
             'params' => $params,

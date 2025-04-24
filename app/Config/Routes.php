@@ -74,3 +74,9 @@ $routes->post('enroll_student/(:num)', 'EnrollmentController::addNewStudent/$1')
 $routes->post('add_lecturer_course/(:num)', 'CourseLecturerController::addNewLecturer/$1');
 $routes->delete('remove_lecturer_course/(:num)', 'CourseLecturerController::removeLecturer/$1');
 $routes->delete('remove_student_course/(:num)', 'EnrollmentController::removeStudent/$1');
+$routes->get('course-content/add/(:num)', 'CourseContentController::addContentForm/$1');
+$routes->post('course-content/add/(:num)', 'CourseContentController::addContent/$1');
+$routes->get('/course-lecturers', 'CourseLecturerController::lecturerCourseList', ['as' => 'lecturer_courses']);
+$routes->get('/course-lecturers-archived', 'CourseLecturerController::lecturerCourseListArchived', ['as' => 'archived_lecturer_courses']);
+// $routes->get('file-material/(:any)', 'CourseContentController::showFileContent/$1');
+$routes->get('file-material/(:any)', 'CourseContentController::showFileContent/$1');
