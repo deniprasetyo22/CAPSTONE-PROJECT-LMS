@@ -4,7 +4,7 @@
 
         <?php if (in_groups('administrator')) : ?>
             <h2 class="text-center text-xl font-bold mb-4">Admin Panel</h2>
-        <?php else : ?>
+        <?php else if (in_groups('teacher')) : ?>
             <h2 class="text-center text-xl font-bold mb-4">Teacher Panel</h2>
         <?php endif ?>
         <ul class="menu w-full">
@@ -17,6 +17,13 @@
                         <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                     </a>
                 </li>
+            <?php else if (in_groups('teacher')) : ?>
+                <li>
+                    <a href="<?= url_to('teacher_dashboard') ?>"
+                        class="<?= $currentUrl == url_to('teacher_dashboard') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
+                        <i class="fas fa-book mr-2"></i> Dashboard
+                    </a>
+                </li>
             <?php endif ?>
 
             <?php if (in_groups('administrator')) : ?>
@@ -26,7 +33,7 @@
                         <i class="fas fa-users mr-2"></i> Users
                     </a>
                 </li>
-            <?php else : ?>
+            <?php else if (in_groups('teacher')) : ?>
                 <li>
                     <a href="<?= url_to('lecturer_courses') ?>"
                         class="<?= $currentUrl == url_to('lecturer_courses') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">

@@ -90,7 +90,7 @@ class CourseController extends BaseController
                 'lecturer_id' => $userId,
             ];
             $this->courseLecturersModel->save($courseLecturersData);
-            return redirect()->to('/courses')->with('success', 'Course added successfully!');
+            return redirect()->to('/course-lecturers')->with('success', 'Course added successfully!');
         } else {
             return redirect()->back()->withInput()->with('errors', $this->courseModel->errors());
         }
@@ -139,7 +139,7 @@ class CourseController extends BaseController
         $course->fill($data);
 
         if ($this->courseModel->save($course)) {
-            return redirect()->to('/courses')->with('success', 'Course updated successfully!');
+            return redirect()->to('/course-lecturers')->with('success', 'Course updated successfully!');
         } else {
             return redirect()->back()->withInput()->with('errors', $this->courseModel->errors());
         }
@@ -159,7 +159,7 @@ class CourseController extends BaseController
                 ->set(['deleted_at' => date('Y-m-d H:i:s')])
                 ->update();
 
-            return redirect()->to('/courses')->with('success', 'Course deleted successfully!');
+            return redirect()->to('/course-lecturers')->with('success', 'Course deleted successfully!');
         } else {
             return redirect()->back()->with('error', 'Failed to delete course!');
         }
@@ -210,7 +210,7 @@ class CourseController extends BaseController
     public function show($id)
     {
         $studentId = $this->userProfileModel->where('user_id', user_id())->first()->id;
-        $enrollment = $this->enrollmentModel->where('student_id', $studentId )->where('course_id', $id)->first();
+        $enrollment = $this->enrollmentModel->where('student_id', $studentId)->where('course_id', $id)->first();
 
         $course = $this->courseModel->find($id);
         if (!$course) {
@@ -283,7 +283,9 @@ class CourseController extends BaseController
             return redirect()->to('/courses')->with('error', 'Course not found!');
         }
 
-        $courseContents = $this->courseContentModel->where('course_id', $id)->findAll();
+        $courseContents = $this->courseContentModel->where('course_id', $id)
+            ->orderBy('id', 'desc')
+            ->findAll();
 
         $students = $this->enrollmentModel
             ->select('user_profiles.*, users.email, enrollments.id')

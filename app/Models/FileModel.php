@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
-use App\Entities\CourseContent;
+use App\Entities\Files;
 use CodeIgniter\Model;
 
-class CourseContentModel extends Model
+class FileModel extends Model
 {
-    protected $table            = 'course_contents';
+    protected $table            = 'files';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = CourseContent::class;
+    protected $returnType       = Files::class;
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id', 'course_id', 'title', 'content_type'];
+    protected $allowedFields    = [
+        'content_id',
+        'file_url',
+        'deleted_at'
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -30,19 +34,15 @@ class CourseContentModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'course_id' => 'required',
-        'title' => 'required',
-        'content_type' => 'required',
+        'content_id' => 'required',
+        'file_url' => 'required',
     ];
     protected $validationMessages   = [
-        'course_id' => [
-            'required' => 'Course ID is required.',
+        'content_id' => [
+            'required' => 'Content ID is required.',
         ],
-        'title' => [
-            'required' => 'Title is required.',
-        ],
-        'content_type' => [
-            'required' => 'Content Type is required.',
+        'file_url' => [
+            'required' => 'File URL is required.',
         ]
     ];
     protected $skipValidation       = false;

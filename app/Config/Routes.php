@@ -44,12 +44,6 @@ $routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('/courses', 'CourseController::index', ['as' => 'courses']);
     $routes->get('/admin/courses', 'CourseController::listCoursesAdmin', ['as' => 'list_courses']);
-    $routes->get('/courses/detail/(:num)', 'CourseController::detailCourse/$1');
-    $routes->get('/courses/add', 'CourseController::addCourseForm');
-    $routes->post('/courses/add', 'CourseController::addCourse');
-    $routes->get('/courses/edit/(:num)', 'CourseController::editCourseForm/$1', ['as' => 'edit_course']);
-    $routes->put('/courses/edit/(:num)', 'CourseController::editCourse/$1');
-    $routes->delete('/courses/delete/(:num)', 'CourseController::deleteCourse/$1');
 });
 
 /* Student Routes */
@@ -70,14 +64,36 @@ $routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Con
     });
 });
 
-$routes->get('/search-users', 'UserController::showStudentLists');
-$routes->post('enroll_student/(:num)', 'EnrollmentController::addNewStudent/$1');
-$routes->post('add_lecturer_course/(:num)', 'CourseLecturerController::addNewLecturer/$1');
-$routes->delete('remove_lecturer_course/(:num)', 'CourseLecturerController::removeLecturer/$1');
-$routes->delete('remove_student_course/(:num)', 'EnrollmentController::removeStudent/$1');
-$routes->get('course-content/add/(:num)', 'CourseContentController::addContentForm/$1');
-$routes->post('course-content/add/(:num)', 'CourseContentController::addContent/$1');
-$routes->get('/course-lecturers', 'CourseLecturerController::lecturerCourseList', ['as' => 'lecturer_courses']);
-$routes->get('/course-lecturers-archived', 'CourseLecturerController::lecturerCourseListArchived', ['as' => 'archived_lecturer_courses']);
-// $routes->get('file-material/(:any)', 'CourseContentController::showFileContent/$1');
-$routes->get('file-material/(:any)', 'CourseContentController::showFileContent/$1');
+$routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controllers'], function ($routes) {
+    /* Get a list of a course based on logged in teacher*/
+    $routes->get('/course-lecturers', 'CourseLecturerController::lecturerCourseList', ['as' => 'lecturer_courses']);
+    $routes->get('/course-lecturers-archived', 'CourseLecturerController::lecturerCourseListArchived', ['as' => 'archived_lecturer_courses']);
+    $routes->get('/courses/detail/(:num)', 'CourseController::detailCourse/$1');
+    $routes->get('/courses/add', 'CourseController::addCourseForm');
+    $routes->post('/courses/add', 'CourseController::addCourse');
+    $routes->get('/courses/edit/(:num)', 'CourseController::editCourseForm/$1', ['as' => 'edit_course']);
+    $routes->put('/courses/edit/(:num)', 'CourseController::editCourse/$1');
+    $routes->delete('/courses/delete/(:num)', 'CourseController::deleteCourse/$1');
+    /* Add or Remove User to become a student or teacher at a course*/
+    $routes->get('/search-users/(:num)', 'UserController::showStudentLists/$1');
+    $routes->post('enroll_student/(:num)', 'EnrollmentController::addNewStudent/$1');
+    $routes->post('add_lecturer_course/(:num)', 'CourseLecturerController::addNewLecturer/$1');
+    $routes->delete('remove_lecturer_course/(:num)', 'CourseLecturerController::removeLecturer/$1');
+    $routes->delete('remove_student_course/(:num)', 'EnrollmentController::removeStudent/$1');
+
+    /* Add,Edit or Remove Content of a course*/
+    $routes->get('course-content/add/(:num)', 'CourseContentController::addContentForm/$1');
+    $routes->post('course-content/add/(:num)', 'CourseContentController::addContent/$1');
+    $routes->get('course-content/edit/(:num)', 'CourseContentController::editContentForm/$1');
+    $routes->put('course-content/edit/(:num)', 'CourseContentController::editContent/$1');
+    $routes->delete('course-content/delete/(:num)', 'CourseContentController::deleteContent/$1');
+    $routes->get('course-content/(:num)/(:num)', 'CourseContentController::showContent/$1/$2');
+
+    /* Add,Edit or Remove File of a course*/
+    $routes->get('file-material/(:any)', 'CourseContentController::showFileContent/$1');
+    $routes->get('file-form/(:num)', 'CourseContentController::addFileContentForm/$1');
+    $routes->post('file/(:num)', 'CourseContentController::addFileContent/$1');
+    $routes->delete('file/(:num)', 'CourseContentController::deleteFileContent/$1');
+    $routes->get('file-form-edit/(:any)', 'CourseContentController::editFileContentForm/$1');
+    $routes->put('file-edit/(:any)', 'CourseContentController::editFileContent/$1');
+});

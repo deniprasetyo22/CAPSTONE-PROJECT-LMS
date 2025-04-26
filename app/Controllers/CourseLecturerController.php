@@ -68,6 +68,7 @@ class CourseLecturerController extends BaseController
             ->join('courses', 'courses.id = courses_lecturers.course_id')
             ->join('level_courses', 'level_courses.id = courses.level_course_id')
             ->where('courses_lecturers.lecturer_id', $currentUser->id)
+            ->where('courses.deleted_at', null)
             ->where('courses_lecturers.deleted_at', null)
             ->findAll();
         $enrolledCourseIds = array_column($courseLecturers, 'course_id');
@@ -85,13 +86,25 @@ class CourseLecturerController extends BaseController
     public function lecturerCourseListArchived()
     {
         $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
+
+        $builderSub = $this->courseLecturersModel->builder();
+        $subQuery = $builderSub
+            ->select('MIN(id) as id')
+            ->where('deleted_at IS NOT NULL')
+            ->groupBy('course_id')
+            ->getCompiledSelect();
+
+
         $courseLecturers = $this->courseLecturersModel
             ->select('courses_lecturers.*, courses.name, courses.code, courses.description, courses.expected_duration, level_courses.name as levelName')
             ->join('courses', 'courses.id = courses_lecturers.course_id')
             ->join('level_courses', 'level_courses.id = courses.level_course_id')
+            ->where('courses.deleted_at IS NOT NULL')
             ->where('courses_lecturers.lecturer_id', $currentUser->id)
-            ->where('courses_lecturers.deleted_at IS NOT NULL')
-            ->findAll();
+            ->where("courses_lecturers.id IN ($subQuery)", null, false)
+            ->get()
+            ->getResult();
+
         $enrolledCourseIds = array_column($courseLecturers, 'course_id');
 
         $data = [
