@@ -102,13 +102,68 @@ class CourseModel extends Model
                 ->groupEnd(); 
         }
 
-        $query->orderBy($params->sort ?? 'id', $params->order ?? 'asc');
+        if (!empty($params->level)) {
+            $query->where('courses.level_course_id', $params->level);
+        }
+
+        $query->orderBy($params->sort ?? 'id', $params->order ?? 'desc');
 
         $result = [
-            'courses' => $this->paginate($params->perPage ?? 5, 'courses', $params->page),
-            'pager' => $this->pager,
-            'total' => $this->countAllResults(false)
+            'courses' => $query->paginate($params->perPage ?? 4, 'courses', $params->page),
+            'pager' => $query->pager,
+            'total' => $query->countAllResults(false)
         ];
         return $result;
     }
+
+    public function getMyCourses()
+    {
+        $studentId = $this->db->table('user_profiles')
+            ->select('id')
+            ->where('user_id', user_id())
+            ->get()
+            ->getRow()
+            ->id ?? null;
+
+        if (!$studentId) {
+            return $this->builder()
+                ->where('0=1'); // return empty query
+        }
+
+        $subQuery = $this->db->table('enrollments')
+            ->select('course_id')
+            ->where('student_id', $studentId);
+
+        return $this->select('courses.*, level_courses.name as levelName')
+            ->join('level_courses', 'level_courses.id = courses.level_course_id')
+            ->where('courses.deleted_at', null)
+            ->whereIn('courses.id', $subQuery);
+    }
+
+    public function getFilteredMyCourses(DataParams $params)
+    {
+        $query = $this->getMyCourses();
+
+        if (!empty($params->search)) {
+            $query->groupStart()
+                ->where('CAST(courses.expected_duration as TEXT) LIKE', "%$params->search%")
+                ->orLike('courses.name', $params->search, 'both', null, true)
+                ->orLike('courses.code', $params->search, 'both', null, true)
+                ->groupEnd();
+        }
+
+        if (!empty($params->level)) {
+            $query->where('courses.level_course_id', $params->level);
+        }
+
+        $query->orderBy($params->sort ?? 'id', $params->order ?? 'desc');
+
+        return [
+            'myCourses' => $query->paginate($params->perPage ?? 4, 'myCourses', $params->page),
+            'pager' => $query->pager,
+            'total' => $query->countAllResults(false)
+        ];
+    }
+
+
 }

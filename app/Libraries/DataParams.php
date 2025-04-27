@@ -8,14 +8,18 @@ class DataParams
     public $order = 'asc';
     public $page = 1;
     public $perPage = null;
+    public $level = null;
+    public $enrolledCourseIds = null;
 
     public function  __construct(array $params = [])
     {
         $this->search = $params['search'] ?? '';
         $this->sort = $params['sort'] ?? 'id';
-        $this->order = $params['order'] ?? 'asc';
+        $this->order = $params['order'] ?? 'desc';
         $this->page = $params['page'] ?? 1;
         $this->perPage = $params['perPage'] ?? null;
+        $this->level = $params['level'] ?? null;
+        $this->enrolledCourseIds = $params['enrolledCourseIds'] ?? null;
     }
 
     public function getParams()
@@ -25,7 +29,9 @@ class DataParams
             'sort' => $this->sort,
             'order' => $this->order,
             'page' => $this->page,
-            'perPage' => $this->perPage
+            'perPage' => $this->perPage,
+            'level' => $this->level,
+            'enrolledCourseIds' => $this->enrolledCourseIds
         ];
     }
 

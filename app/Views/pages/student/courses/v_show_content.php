@@ -9,9 +9,9 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
     <!-- Header -->
     <div class="flex items-start gap-4 mb-4">
-        <div class="avatar">
-            <div class="w-12 rounded-full bg-primary text-white flex items-center justify-center">
-                <i class="fas fa-file-pdf text-xl"></i>
+        <div class="avatar avatar-placeholder">
+            <div class="bg-primary text-neutral-content w-12 rounded-full">
+                <i class="fas fa-file text-md"></i>
             </div>
         </div>
         <div>

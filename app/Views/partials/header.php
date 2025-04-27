@@ -36,6 +36,14 @@
 
                         <?php if(in_groups('student')) : ?>
                         <li>
+                            <a href="" class="text-white font-semibold">
+                                Profile
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
+                        <?php if(in_groups('student')) : ?>
+                        <li>
                             <a href="<?= url_to('my_courses') ?>" class="text-white font-semibold">
                                 My Courses
                             </a>
