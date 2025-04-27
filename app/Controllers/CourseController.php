@@ -72,7 +72,7 @@ class CourseController extends BaseController
     }
     public function addCourse()
     {
-        $userId = user_id();
+        $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
         $data = [
             'code'              => $this->request->getPost('code'),
             'name'              => $this->request->getPost('name'),
@@ -87,7 +87,7 @@ class CourseController extends BaseController
             $courseId = $this->courseModel->insertID();
             $courseLecturersData = [
                 'course_id' => $courseId,
-                'lecturer_id' => $userId,
+                'lecturer_id' => $currentUser->id,
             ];
             $this->courseLecturersModel->save($courseLecturersData);
             return redirect()->to('/course-lecturers')->with('success', 'Course added successfully!');
