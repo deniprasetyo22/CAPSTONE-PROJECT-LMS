@@ -22,8 +22,38 @@
 <div class="tabs tabs-box">
 
     <!-- tabs 1 for detail course -->
-    <input type="radio" name="my_tabs_6" class="tab" aria-label="Detail Course" />
-    <div class="tab-content bg-base-100 border-base-300 p-6">Detail Course</div>
+    <input type="radio" name="my_tabs_6" class="tab" aria-label="Detail Course" checked />
+    <div class="tab-content bg-base-100 border border-base-300 p-6 rounded-box">
+
+        <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-primary"><?= esc($course->name) ?></h2>
+
+            <div>
+                <span class="font-semibold">Course Code:</span>
+                <span class="badge badge-secondary ml-2"><?= esc($course->code) ?></span>
+            </div>
+
+            <div>
+                <span class="font-semibold">Description:</span>
+                <p class="mt-1 text-sm text-gray-700">
+                    <?= esc($course->description) ?>
+                </p>
+            </div>
+
+            <div>
+                <span class="font-semibold">Expected Duration:</span>
+                <span class="badge badge-outline ml-2"><?= esc($course->expected_duration) ?> months</span>
+            </div>
+
+            <div>
+                <span class="font-semibold">Course Level:</span>
+                <span class="badge badge-primary ml-2"><?= esc($course->levelName) ?></span>
+            </div>
+        </div>
+
+    </div>
+
+
 
     <!-- tabs 2 for list materials -->
     <input type="radio" name="my_tabs_6" class="tab" aria-label="Material" checked="checked" />
@@ -54,7 +84,7 @@
                     <!-- Content -->
                     <div class="flex-grow">
                         <h2 class="font-medium text-base">
-                            <a href="<?= site_url('file-material/' . base64_encode($content->content_url)) ?>"
+                            <a href="<?= site_url('course-content/' . $course->id . '/' . $content->id) ?>"
                                 target="_blank" class="hover:text-blue-600">
                                 Teacher posted a new <?= $content->content_type ?>:
                                 <span class="font-semibold"><?= $content->title ?></span>
@@ -71,10 +101,39 @@
                             <i class="fas fa-ellipsis-v"></i>
                         </label>
                         <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
-                            <li><a href="<?= $content->content_url ?>" target="_blank">Open</a></li>
+                            <li>
+                                <a href="<?= site_url('course-content/' . $content->course_id . '/' . $content->id) ?>"
+                                    target="_blank">Open</a>
+                            </li>
+                            <li>
+                                <a href="<?= site_url('course-content/edit/' . $content->id) ?>">Edit</a>
+                            </li>
+                            <li>
+                                <button
+                                    onclick="document.getElementById('deleteModalContent<?= $content->id ?>').showModal()"
+                                    class="w-full text-left">
+                                    Delete
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>
+                <dialog id="deleteModalContent<?= $content->id ?>" class="modal">
+                    <div class="modal-box">
+                        <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
+                        <p class="py-4">Are you sure you want to delete this content?</p>
+                        <div class="modal-action">
+                            <form method="dialog">
+                                <button class="btn btn-error text-white">Cancel</button>
+                            </form>
+                            <form action="<?= site_url('course-content/delete/' . $content->id) ?>" method="post">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </dialog>
             </div>
             <?php endforeach; ?>
         </div>
@@ -264,7 +323,7 @@ function openInviteModal() {
         minimumInputLength: 1,
         delay: 250,
         ajax: {
-            url: '<?= base_url('/search-users') ?>',
+            url: '<?= base_url('search-users/' . $course->id) ?>',
             dataType: 'json',
             cache: false,
             data: function(params) {
@@ -321,7 +380,7 @@ function openInviteModalLecturers() {
         minimumInputLength: 1,
         delay: 250,
         ajax: {
-            url: '<?= base_url('/search-users') ?>',
+            url: '<?= base_url('search-users/' . $course->id) ?>',
             dataType: 'json',
             cache: false,
             data: function(params) {

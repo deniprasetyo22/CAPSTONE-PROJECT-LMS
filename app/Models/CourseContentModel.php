@@ -13,7 +13,7 @@ class CourseContentModel extends Model
     protected $returnType       = CourseContent::class;
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id', 'course_id', 'title', 'content_type', 'content_url'];
+    protected $allowedFields    = ['id', 'course_id', 'title', 'content_type'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -33,7 +33,6 @@ class CourseContentModel extends Model
         'course_id' => 'required',
         'title' => 'required',
         'content_type' => 'required',
-        'content_url' => 'required',
     ];
     protected $validationMessages   = [
         'course_id' => [
@@ -44,10 +43,7 @@ class CourseContentModel extends Model
         ],
         'content_type' => [
             'required' => 'Content Type is required.',
-        ],
-        'content_url' => [
-            'required' => 'Content URL is required.',
-        ],
+        ]
     ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;

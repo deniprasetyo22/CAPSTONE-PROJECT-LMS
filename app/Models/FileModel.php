@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Entities\File;
+use App\Entities\Files;
 use CodeIgniter\Model;
 
 class FileModel extends Model
@@ -10,10 +10,14 @@ class FileModel extends Model
     protected $table            = 'files';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = File::class;
+    protected $returnType       = Files::class;
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id', 'content_id', 'file_url'];
+    protected $allowedFields    = [
+        'content_id',
+        'file_url',
+        'deleted_at'
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -29,8 +33,18 @@ class FileModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
+    protected $validationRules      = [
+        'content_id' => 'required',
+        'file_url' => 'required',
+    ];
+    protected $validationMessages   = [
+        'content_id' => [
+            'required' => 'Content ID is required.',
+        ],
+        'file_url' => [
+            'required' => 'File URL is required.',
+        ]
+    ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 

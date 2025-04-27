@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\DataParams;
+use App\Models\CourseLecturersModel;
+use App\Models\EnrollmentModel;
 use App\Models\UserProfileModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use Myth\Auth\Models\GroupModel;
@@ -13,13 +15,17 @@ class UserController extends BaseController
 {
     protected $userModel;
     protected $userProfileModel;
+    protected $courseLecturersModel;
     protected $groupModel;
+    protected $enrollmentModel;
 
     public function __construct()
     {
         $this->userModel = new UserModel();
         $this->userProfileModel = new UserProfileModel();
         $this->groupModel = new GroupModel();
+        $this->courseLecturersModel = new CourseLecturersModel();
+        $this->enrollmentModel = new EnrollmentModel();
     }
 
     public function index()
@@ -211,19 +217,37 @@ class UserController extends BaseController
         return redirect()->to('admin/users/index')->with('success', 'User deleted successfully.');
     }
 
-    public function showStudentLists()
+    public function showStudentLists($courseId)
     {
         $params = new DataParams([
             'search' => $this->request->getGet('search'),
         ]);
         $results = $this->userProfileModel->getFilteredUserProfiles($params);
-        return $this->response->setJSON(array_map(function ($user) {
+        // filtered by lecturers which is not in the course
+        $includedLecturers = $this->courseLecturersModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
+        $includedLecturerIds = array_column($includedLecturers, 'lecturer_id');
+
+        $filteredLecturers = array_filter($results['user_profiles'], function ($user) use ($includedLecturerIds) {
+            return !in_array($user->id, $includedLecturerIds);
+        });
+
+        // filtered by students which is not in the course
+        $includedStudents = $this->enrollmentModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
+        $includedIds = array_column($includedStudents, 'student_id');
+
+        $filteredStudents = array_filter($filteredLecturers, function ($user) use ($includedIds) {
+            return !in_array($user->id, $includedIds);
+        });
+        // REINDEX pakai array_values
+        $formattedUsers = array_values(array_map(function ($user) {
             return [
                 'id' => $user->id,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
                 'email' => $user->email,
             ];
-        }, $results['user_profiles']));
+        }, $filteredStudents));
+
+        return $this->response->setJSON($formattedUsers);
     }
 }
