@@ -48,7 +48,7 @@ class CreateDiscussionStudentsTable extends Migration
         $this->forge->addKey('id', true); // Primary key
         $this->forge->addForeignKey('student_id', 'user_profiles', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('discussion_id', 'discussions', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('enrollments', true);
+        $this->forge->createTable('discussion_students', true);
     }
 
     public function down()
