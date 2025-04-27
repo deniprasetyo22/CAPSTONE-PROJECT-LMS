@@ -29,7 +29,9 @@
                 </div>
             <?php endif ?>
 
-            <?= form_open_multipart('file/' . $file_id, ['id' => 'courseContentFileForm', 'class' => 'container mt-4']) ?>
+            <?= form_open_multipart('file-edit/' . $file_id, ['id' => 'courseContentFileForm', 'class' => 'container mt-4']) ?>
+            <?= csrf_field() ?>
+            <input type="hidden" name="_method" value="PUT">
             <div>
                 <h4 class="text-lg font-semibold mb-4">Upload Course Content File</h4>
 

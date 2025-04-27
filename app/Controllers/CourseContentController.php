@@ -187,6 +187,8 @@ class CourseContentController extends BaseController
             return redirect()->back()->with('error', 'File not found!');
         }
 
+        $courseContent = $this->courseContentModel->where('id', $file->content_id)->first();
+
         $filePath = WRITEPATH . $file->file_url;
         if (file_exists($filePath)) {
             unlink($filePath);
@@ -195,8 +197,7 @@ class CourseContentController extends BaseController
         if (!$this->fileModel->delete($fileId)) {
             return redirect()->back()->with('error', 'Failed to delete file!');
         }
-
-        return redirect()->back()->with('success', 'File deleted successfully!');
+        return redirect()->to('course-content/' .  $courseContent->course_id  . '/' . $courseContent->id)->with('success', 'File deleted successfully!');
     }
 
     public function editFileContentForm($fileId)
@@ -218,6 +219,9 @@ class CourseContentController extends BaseController
     public function editFileContent($fileId)
     {
         $file = $this->fileModel->find($fileId);
+
+        $courseContent = $this->courseContentModel->where('id', $file->content_id)->first();
+
         if (!$file) {
             return redirect()->back()->with('error', 'File not found!');
         }
@@ -243,7 +247,7 @@ class CourseContentController extends BaseController
             return redirect()->back()->with('error', 'Failed to update file!');
         }
 
-        return redirect()->to('/courses/detail/' . $this->request->getPost('course_id'))->with('success', 'File updated successfully!');
+        return redirect()->to('course-content/' . $courseContent->course_id  . '/' . $courseContent->id)->with('success', 'File updated successfully!');
     }
 
     public function editContentForm($contentId)
