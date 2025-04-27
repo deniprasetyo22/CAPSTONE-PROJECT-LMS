@@ -8,6 +8,7 @@ use App\Models\CourseContentModel;
 use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
+use App\Models\FileModel;
 use App\Models\LevelCourseModel;
 use App\Models\UserProfileModel;
 use CodeIgniter\Files\File;
@@ -20,6 +21,7 @@ class CourseController extends BaseController
     protected UserProfileModel $userProfileModel;
     protected EnrollmentModel $enrollmentModel;
     protected $courseContentModel;
+    protected $fileModel;
 
     public function __construct()
     {
@@ -29,6 +31,7 @@ class CourseController extends BaseController
         $this->userProfileModel = new UserProfileModel();
         $this->enrollmentModel = new EnrollmentModel();
         $this->courseContentModel = new CourseContentModel();
+        $this->fileModel = new FileModel();
     }
 
     public function index(): string
@@ -168,16 +171,32 @@ class CourseController extends BaseController
     /* Course for Student */
     public function studentCourseList()
     {
-        $courses = $this->courseModel->getJoinedTableCourses()->findAll();
+        $params = new DataParams([
+            'search' => $this->request->getGet('search'),
+            'sort' => $this->request->getGet('sort'),
+            'order' => $this->request->getGet('order'),
+            'page' => $this->request->getGet('page_courses'),
+            'perPage' => $this->request->getGet('perPage'),
+            'level' => $this->request->getGet('level'),
+        ]);
+
+        // $courses = $this->courseModel->getJoinedTableCourses()->findAll();
+        $courses = $this->courseModel->getFilteredCourses($params);
+
         $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
         $enrollments = $this->enrollmentModel->where('student_id', $currentUser->id)->findAll();
         $enrolledCourseIds = array_column($enrollments, 'course_id');
 
         $data = [
             'page_title' => 'Course List',
-            'courses' => $courses,
+            'courses' => $courses['courses'],
+            'pager' => $courses['pager'],
+            'total' => $courses['total'],
+            'params' => $params,
             'studentId' => $currentUser->id,
-            'enrolledCourseIds' => $enrolledCourseIds
+            'enrolledCourseIds' => $enrolledCourseIds,
+            'level' => $this->levelCourseModel->findAll(),
+            'baseUrl' => base_url('student/courses/index'),
         ];
 
         return view('pages/student/courses/v_index', $data);
@@ -185,23 +204,25 @@ class CourseController extends BaseController
 
     public function myCourses()
     {
-        $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
-        $enrollments = $this->enrollmentModel->where('student_id', $currentUser->id)->findAll();
-        $enrolledCourseIds = array_column($enrollments, 'course_id');
+        $params = new DataParams([
+            'search' => $this->request->getGet('search'),
+            'sort' => $this->request->getGet('sort'),
+            'order' => $this->request->getGet('order'),
+            'page' => $this->request->getGet('page_my_courses'),
+            'perPage' => $this->request->getGet('perPage'),
+            'level' => $this->request->getGet('level'),
+        ]);
 
-        $myCourses = [];
-        if (!empty($enrolledCourseIds)) {
-            $myCourses = $this->courseModel
-                ->getJoinedTableCourses()
-                ->whereIn('courses.id', $enrolledCourseIds)
-                ->findAll();
-        }
+        $myCourses = $this->courseModel->getFilteredMyCourses($params);
 
         $data = [
             'page_title' => 'My Courses',
-            'studentId' => $currentUser->id,
-            'enrolledCourseIds' => $enrolledCourseIds,
-            'myCourses' => $myCourses
+            'myCourses' => $myCourses['myCourses'],
+            'pager' => $myCourses['pager'],
+            'total' => $myCourses['total'],
+            'params' => $params,
+            'level' => $this->levelCourseModel->findAll(),
+            'baseUrl' => base_url('student/courses/my-courses'),
         ];
 
         return view('pages/student/courses/v_my_courses', $data);
@@ -238,18 +259,20 @@ class CourseController extends BaseController
 
         $courseContent = $this->courseContentModel
             ->where('id', $contentId)
-            ->where('course_id', $id) // pastikan content milik course yang dimaksud
+            ->where('course_id', $id)
             ->first();
-        // dd($courseContent);
 
         if (!$courseContent) {
             return redirect()->to('/courses/my-courses')->with('error', 'Course content not found!');
         }
 
+        $files = $this->fileModel->where('content_id', $contentId)->findAll();
+
         $data = [
             'page_title' => $course->name . ' - ' . $courseContent->title,
             'course' => $course,
             'courseContent' => $courseContent,
+            'files' => $files
         ];
 
         return view('pages/student/courses/v_show_content', $data);
@@ -310,6 +333,7 @@ class CourseController extends BaseController
             'params' => $params,
             'users' => $users['user_profiles'],
             'page_title' => 'Course Detail',
+            'hideHeader' => true
         ]);
     }
 }

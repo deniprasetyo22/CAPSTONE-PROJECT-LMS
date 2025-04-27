@@ -21,8 +21,14 @@ class CreateFilesTable extends Migration
                 'unsigned' => true,
                 'null'     => false,
             ],
+            'file_name' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => false,
+            ],
             'file_url' => [
-                'type' => 'TEXT',
+                'type' => 'varchar',
+                'constraint' => 255,
                 'null' => false,
             ],
             'created_at'       => [

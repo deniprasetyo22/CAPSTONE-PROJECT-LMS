@@ -6,14 +6,21 @@
             <div class="container mx-auto flex justify-between items-center">
                 <!-- Left: Brand & Hamburger (mobile) -->
                 <div class="flex items-center">
-                    <?php if(logged_in()) : ?>
+                    <?php if (in_groups('student')) : ?>
                     <label for="my-drawer-3" class="btn btn-square btn-ghost lg:hidden">
                         <i class="fa-solid fa-bars text-white"></i>
                     </label>
-                    <?php endif ?>
-                    <a href="/" class="text-lg font-medium text-white ml-2">
+                    <a href="<?= url_to('student_courses') ?>" class="text-lg font-medium text-white ml-2">
                         Learning Management System
                     </a>
+                    <?php elseif (in_groups('teacher')) : ?>
+                    <label for="my-drawer-3" class="btn btn-square btn-ghost lg:hidden">
+                        <i class="fa-solid fa-bars text-white"></i>
+                    </label>
+                    <a href="<?= url_to('courses') ?>" class="text-lg font-medium text-white ml-2">
+                        Learning Management System
+                    </a>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Right: Menu (desktop) -->
@@ -23,6 +30,14 @@
                         <li>
                             <a href="<?= url_to('student_courses') ?>" class="text-white font-semibold">
                                 Home
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
+                        <?php if(in_groups('student')) : ?>
+                        <li>
+                            <a href="" class="text-white font-semibold">
+                                Profile
                             </a>
                         </li>
                         <?php endif; ?>

@@ -21,6 +21,62 @@
         <?php endif ?>
     </div>
 
+    <form action="<?= $baseUrl ?>" method="get" class="space-y-4 px-4 md:px-0">
+
+        <div class="w-full">
+            <div class="flex rounded-md shadow-sm">
+                <input type="text" name="search" value="<?= $params->search ?>"
+                    class="input input-bordered w-full rounded-l-md focus:outline-none"
+                    placeholder="Search by Code or Name">
+                <button type="submit" class="btn btn-primary rounded-r-md">Search</button>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-5">
+            <div class="w-full md:w-2/10">
+                <select name="level" class="select select-bordered w-full" onchange="this.form.submit()">
+                    <option value="">All Level</option>
+                    <?php foreach ($level as $l): ?>
+                    <option value="<?= $l->id ?>" <?= ($params->level == $l->id) ? 'selected' : '' ?>>
+                        <?= ucfirst($l->name) ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="w-full md:w-2/10">
+                <select name="perPage" class="select select-bordered w-full" onchange="this.form.submit()">
+                    <?php foreach ([4, 8, 12, 36] as $perPage): ?>
+                    <option value="<?= $perPage ?>" <?= ($params->perPage == $perPage) ? 'selected' : '' ?>>
+                        <?= $perPage ?> / page
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="w-full md:w-2/10">
+                <select name="sort" class="select select-bordered w-full" onchange="this.form.submit()">
+                    <option value="">Sort By</option>
+                    <option value="code" <?= ($params->sort == 'code') ? 'selected' : '' ?>>Code</option>
+                    <option value="name" <?= ($params->sort == 'name') ? 'selected' : '' ?>>name</option>
+                </select>
+            </div>
+
+            <div class="w-full md:w-2/10">
+                <select name="order" class="select select-bordered w-full" onchange="this.form.submit()">
+                    <option value="asc" <?= ($params->order == 'asc') ? 'selected' : '' ?>>Ascending</option>
+                    <option value="desc" <?= ($params->order == 'desc') ? 'selected' : '' ?>>Descending</option>
+                </select>
+            </div>
+
+            <div class="w-full md:flex-1">
+                <a href="<?= $params->getResetUrl($baseUrl) ?>" class="btn btn-secondary w-full">
+                    Reset
+                </a>
+            </div>
+        </div>
+    </form>
+
     <?php if (empty($myCourses)) : ?>
     <div class="p-4 md:px-0">
         <div class="divider">
@@ -52,6 +108,14 @@
             </div>
         </div>
         <?php endforeach; ?>
+    </div>
+
+    <div class="flex justify-center mt-2">
+        <?= $pager->links('myCourses', 'custom_pager') ?>
+    </div>
+    <div class="text-center mt-2">
+        <small>Displaying <?= count($myCourses) ?> out of <?= $total ?> total courses (Page
+            <?= $params->page ?>)</small>
     </div>
 </div>
 
