@@ -7,6 +7,7 @@ use App\Libraries\DataParams;
 use App\Models\CourseContentModel;
 use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
+use App\Models\DiscussionModel;
 use App\Models\EnrollmentModel;
 use App\Models\FileModel;
 use App\Models\LevelCourseModel;
@@ -22,6 +23,7 @@ class CourseController extends BaseController
     protected EnrollmentModel $enrollmentModel;
     protected $courseContentModel;
     protected $fileModel;
+    protected $discussionModel;
 
     public function __construct()
     {
@@ -32,6 +34,7 @@ class CourseController extends BaseController
         $this->enrollmentModel = new EnrollmentModel();
         $this->courseContentModel = new CourseContentModel();
         $this->fileModel = new FileModel();
+        $this->discussionModel = new DiscussionModel();
     }
 
     public function index(): string
@@ -325,11 +328,18 @@ class CourseController extends BaseController
             ->where('courses_lecturers.deleted_at', null)
             ->findAll();
 
+        $discussions = $this->discussionModel
+            ->where('course_id', $id)
+            ->where('deleted_at', null)
+            ->orderBy('id', 'desc')
+            ->findAll();
+
         return view('pages/admin/courses/detail_course', [
             'course' => $course,
             'courseContents' => $courseContents,
             'students' => $students,
             'lecturers' => $lecturers,
+            'discussions' => $discussions,
             'params' => $params,
             'users' => $users['user_profiles'],
             'page_title' => 'Course Detail',
