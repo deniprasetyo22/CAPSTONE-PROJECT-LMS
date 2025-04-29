@@ -68,7 +68,7 @@ $routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controller
     /* Get a list of a course based on logged in teacher*/
     $routes->get('/course-lecturers', 'CourseLecturerController::lecturerCourseList', ['as' => 'lecturer_courses']);
     $routes->get('/course-lecturers-archived', 'CourseLecturerController::lecturerCourseListArchived', ['as' => 'archived_lecturer_courses']);
-    $routes->get('/courses/detail/(:num)', 'CourseController::detailCourse/$1');
+    $routes->get('/courses/detail/(:num)', 'CourseController::detailCourse/$1', ['as' => 'course_detail']);
     $routes->get('/courses/add', 'CourseController::addCourseForm');
     $routes->post('/courses/add', 'CourseController::addCourse');
     $routes->get('/courses/edit/(:num)', 'CourseController::editCourseForm/$1', ['as' => 'edit_course']);
@@ -96,4 +96,22 @@ $routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controller
     $routes->delete('file/(:num)', 'CourseContentController::deleteFileContent/$1');
     $routes->get('file-form-edit/(:any)', 'CourseContentController::editFileContentForm/$1');
     $routes->put('file-edit/(:any)', 'CourseContentController::editFileContent/$1');
+});
+
+
+/* Courses Routes for Teacher and Student */
+$routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 'App\Controllers'], function ($routes) {
+    /* Assignments */
+    $routes->group('assignments', function ($routes) {
+        $routes->get('show/(:num)', 'AssignmentController::showAssignment/$1', ['as' => 'show_assignment']);
+        $routes->get('create/(:num)', 'AssignmentController::createAssignment/$1', ['as' => 'create_assignment']);
+        $routes->post('store/(:num)', 'AssignmentController::storeAssignment/$1', ['as' => 'store_assignment']);
+        $routes->get('edit/(:num)', 'AssignmentController::editAssignment/$1', ['as' => 'edit_assignment']);
+        $routes->put('update/(:num)', 'AssignmentController::updateAssignment/$1', ['as' => 'update_assignment']);
+        $routes->delete('delete/(:num)', 'AssignmentController::deleteAssignment/$1', ['as' => 'delete_assignment']);
+        $routes->get('file/(:num)/(:segment)', 'AssignmentController::file/$1/$2', ['as' => 'file_assignment']);
+        $routes->post('submit/(:num)', 'AssignmentController::submitAssignment/$1', ['as' => 'submit_assignment']);
+        $routes->get('submissionFile/(:num)/(:segment)', 'AssignmentController::submissionFile/$1/$2', ['as' => 'submission_file']);
+        $routes->delete('deleteSubmission/(:num)', 'AssignmentController::deleteSubmission/$1', ['as' => 'delete_submission']);
+    });
 });

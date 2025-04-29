@@ -16,22 +16,9 @@ class CreateAssignmentSubmissionsTable extends Migration
                 'auto_increment' => true,
                 'null'           => false,
             ],
-            'file_path'       => [
+            'file_name'       => [
                 'type' => 'TEXT',
                 'null' => true,
-            ],
-            'submission_date'       => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
-            ],
-            'feedback'       => [
-                'type' => 'TEXT',
-                'null' => true,
-            ],
-            'score'       => [
-                'type'       => 'NUMERIC',
-                'constraint' => '5,2',
-                'null'       => true
             ],
             'student_id'     => [
                 'type'       => 'INTEGER',

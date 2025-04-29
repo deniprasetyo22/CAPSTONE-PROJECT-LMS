@@ -34,6 +34,11 @@ class CreateAssignmentsTable extends Migration
                 'type' => 'TIMESTAMP',
                 'null' => true,
             ],
+            'file_url'       => [
+                'type' => 'varchar',
+                'constraint' => 255,
+                'null' => true,
+            ],
             'created_at'       => [
                 'type' => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),

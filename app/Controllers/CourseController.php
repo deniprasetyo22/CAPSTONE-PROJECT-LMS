@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 
 use App\Libraries\DataParams;
+use App\Models\AssignmentModel;
 use App\Models\CourseContentModel;
 use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
@@ -22,6 +23,7 @@ class CourseController extends BaseController
     protected EnrollmentModel $enrollmentModel;
     protected $courseContentModel;
     protected $fileModel;
+    protected $assignmentModel;
 
     public function __construct()
     {
@@ -32,6 +34,7 @@ class CourseController extends BaseController
         $this->enrollmentModel = new EnrollmentModel();
         $this->courseContentModel = new CourseContentModel();
         $this->fileModel = new FileModel();
+        $this->assignmentModel = new AssignmentModel();
     }
 
     public function index(): string
@@ -240,11 +243,14 @@ class CourseController extends BaseController
 
         $courseContents = $this->courseContentModel->where('course_id', $id)->findAll();
 
+        $assignments = $this->assignmentModel->where('course_id', $id)->findAll();
+
         $data = [
             'page_title' => $course->name,
             'course' => $course,
             'courseContents' => $courseContents,
-            'enrollment' => $enrollment
+            'enrollment' => $enrollment,
+            'assignments' => $assignments
         ];
 
         return view('pages/student/courses/v_show', $data);
@@ -325,11 +331,14 @@ class CourseController extends BaseController
             ->where('courses_lecturers.deleted_at', null)
             ->findAll();
 
+        $assignments = $this->assignmentModel->where('course_id', $id)->findAll();
+
         return view('pages/admin/courses/detail_course', [
             'course' => $course,
             'courseContents' => $courseContents,
             'students' => $students,
             'lecturers' => $lecturers,
+            'assignments' => $assignments,
             'params' => $params,
             'users' => $users['user_profiles'],
             'page_title' => 'Course Detail',
