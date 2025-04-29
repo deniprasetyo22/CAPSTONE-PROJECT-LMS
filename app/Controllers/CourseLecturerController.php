@@ -62,7 +62,7 @@ class CourseLecturerController extends BaseController
     /* Course for Lecturer */
     public function lecturerCourseList()
     {
-        $currentUser = $this->userProfileModel->where('user_id', 16)->first();
+        $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
         $courseLecturers = $this->courseLecturersModel
             ->select('courses_lecturers.*, courses.name, courses.code, courses.description, courses.expected_duration, level_courses.name as levelName')
             ->join('courses', 'courses.id = courses_lecturers.course_id')

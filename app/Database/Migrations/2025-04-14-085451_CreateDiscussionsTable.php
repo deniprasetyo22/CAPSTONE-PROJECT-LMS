@@ -30,6 +30,11 @@ class CreateDiscussionsTable extends Migration
                 'unsigned'   => true,
                 'null'       => false,
             ],
+            'created_by' => [
+                'type'       => 'INTEGER',
+                'unsigned'   => true,
+                'null'       => false,
+            ],
             'created_at'       => [
                 'type' => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -47,6 +52,7 @@ class CreateDiscussionsTable extends Migration
         ]);
         $this->forge->addKey('id', true); // Primary key
         $this->forge->addForeignKey('course_id', 'courses', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('created_by', 'user_profiles', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('discussions', true);
     }
 

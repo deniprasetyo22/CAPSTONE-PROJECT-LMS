@@ -96,6 +96,19 @@ $routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controller
     $routes->delete('file/(:num)', 'CourseContentController::deleteFileContent/$1');
     $routes->get('file-form-edit/(:any)', 'CourseContentController::editFileContentForm/$1');
     $routes->put('file-edit/(:any)', 'CourseContentController::editFileContent/$1');
+
+    /* Add,Edit, Remove, show Detail Discussion of a course*/
+    $routes->get('discussion-form/(:num)', 'DiscussionController::addDiscussionForm/$1');
+    $routes->post('discussion/(:num)', 'DiscussionController::addDiscussion/$1');
+    $routes->get('discussion-form-edit/(:any)', 'DiscussionController::editDiscussionForm/$1');
+    $routes->put('discussion-edit/(:any)', 'DiscussionController::editDiscussion/$1');
+    $routes->delete('discussion/(:any)', 'DiscussionController::deleteDiscussion/$1');
+    $routes->get('discussion/(:any)', 'DiscussionController::showDiscussionDetail/$1');
+
+    /* Add Discussion comment of a course*/
+    $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1');
+    $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1');
+    $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1');
 });
 
 

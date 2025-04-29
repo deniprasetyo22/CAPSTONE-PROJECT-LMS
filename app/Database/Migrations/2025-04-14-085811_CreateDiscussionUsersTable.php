@@ -5,7 +5,7 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-class CreateDiscussionStudentsTable extends Migration
+class CreateDiscussionUsersTable extends Migration
 {
     public function up()
     {
@@ -25,7 +25,7 @@ class CreateDiscussionStudentsTable extends Migration
                 'unsigned'   => true,
                 'null'       => false,
             ],
-            'student_id'     => [
+            'user_profile_id'     => [
                 'type'       => 'INTEGER',
                 'unsigned'   => true,
                 'null'       => false,
@@ -46,13 +46,13 @@ class CreateDiscussionStudentsTable extends Migration
             ],
         ]);
         $this->forge->addKey('id', true); // Primary key
-        $this->forge->addForeignKey('student_id', 'user_profiles', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('user_profile_id', 'user_profiles', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('discussion_id', 'discussions', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('discussion_students', true);
+        $this->forge->createTable('discussion_users', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('discussion_students', true);
+        $this->forge->dropTable('discussion_users', true);
     }
 }
