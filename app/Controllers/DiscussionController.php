@@ -30,10 +30,12 @@ class DiscussionController extends BaseController
 
     public function addDiscussion($courseId)
     {
+        $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
         $data = [
             'topic' => $this->request->getPost('topic'),
             'description' => $this->request->getPost('description'),
             'course_id' => $courseId,
+            'created_by' => $currentUser->id,
         ];
 
         if (!$this->discussionModel->save($data)) {
@@ -93,13 +95,44 @@ class DiscussionController extends BaseController
         return redirect()->to('courses/detail/' . $discussion->course_id)->with('success', 'Discussion deleted successfully.');
     }
 
+    private function getTimeAgo($dateTime)
+    {
+        $now = new \DateTime();
+        $createdAt = new \DateTime($dateTime);
+        $interval = $now->diff($createdAt);
+
+        if ($interval->y > 0) {
+            return $interval->y . ' years ago';
+        } elseif ($interval->m > 0) {
+            return $interval->m . ' months ago';
+        } elseif ($interval->d > 0) {
+            return $interval->d . ' days ago';
+        } elseif ($interval->h > 0) {
+            return $interval->h . ' hours ago';
+        } elseif ($interval->i > 0) {
+            return $interval->i . ' minutes ago';
+        } else {
+            return 'just now';
+        }
+    }
+
     public function showDiscussionDetail($discussionId)
     {
-        $discussion = $this->discussionModel->find($discussionId);
+        $discussion = $this->discussionModel
+            ->select('discussions.*, user_profiles.first_name, user_profiles.last_name')
+            ->join('user_profiles', 'user_profiles.id = discussions.created_by')
+            ->where('discussions.id', $discussionId)
+            ->first();
 
         if (!$discussion) {
             return redirect()->back()->with('error', 'Discussion not found.');
         }
+
+        $currentUser = $this->userProfileModel
+            ->select('id')
+            ->where('user_id', user_id())->first();
+
+        $discussion->timeAgo = $this->getTimeAgo($discussion->created_at);
 
         $discussionUser = $this->discussionUserModel
             ->select('discussion_users.*, user_profiles.first_name, user_profiles.last_name')
@@ -107,26 +140,14 @@ class DiscussionController extends BaseController
             ->where('discussion_users.discussion_id', $discussionId)
             ->findAll();
 
-        $discussionUserFormat = array_map(function ($d) {
-            $now = new \DateTime();
-            $createdAt = new \DateTime($d->created_at);
-            $interval = $now->diff($createdAt);
-
-            if ($interval->y > 0) {
-                $timeAgo = $interval->y . ' years ago';
-            } elseif ($interval->m > 0) {
-                $timeAgo = $interval->m . ' months ago';
-            } elseif ($interval->d > 0) {
-                $timeAgo = $interval->d . ' days ago';
-            } elseif ($interval->h > 0) {
-                $timeAgo = $interval->h . ' hours ago';
-            } elseif ($interval->i > 0) {
-                $timeAgo = $interval->i . ' minutes ago';
-            } else {
-                $timeAgo = 'just now';
-            }
-
+        $discussionUserFormat = array_map(function ($d) use ($currentUser) {
+            $timeAgo = $this->getTimeAgo($d->created_at);
             $d->timeAgo = $timeAgo;
+            if ($currentUser->id == $d->user_profile_id) {
+                $d->isCurrentUser = true;
+            } else {
+                $d->isCurrentUser = false;
+            }
             return $d;
         }, $discussionUser);
 
@@ -134,6 +155,7 @@ class DiscussionController extends BaseController
             'page_title' => 'Discussion Detail',
             'discussion' => $discussion,
             'discussions_users' => $discussionUserFormat,
+            'hideHeader' => true
         ];
         return view('pages/courses/discussions/detail_discussion', $data);
     }

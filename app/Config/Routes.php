@@ -107,4 +107,6 @@ $routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controller
 
     /* Add Discussion comment of a course*/
     $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1');
+    $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1');
+    $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1');
 });
