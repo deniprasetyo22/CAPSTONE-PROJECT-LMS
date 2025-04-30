@@ -11,9 +11,9 @@
     </div>
     <?php endif ?>
     <?php if (session()->has('success')) : ?>
-    <div role="alert" class="alert alert-success">
-        <span><i class="fa fa-check mr-2"></i> <?= session('success') ?></span>
-    </div>
+        <div role="alert" class="alert alert-success">
+            <span><i class="fa fa-check mr-2"></i> <?= session('success') ?></span>
+        </div>
     <?php endif ?>
 </div>
 
@@ -147,66 +147,66 @@
 
         <div class="space-y-4">
             <?php foreach ($assignments as $assignment): ?>
-            <div class="card card-sm bg-base-100 border border-gray-300 hover:bg-base-200">
-                <div class="card-body flex-row items-start gap-4">
-                    <!-- Icon -->
-                    <div class="avatar avatar-placeholder">
-                        <div class="bg-primary text-neutral-content w-10 rounded-full">
-                            <i class="fas fa-tasks"></i>
+                <div class="card card-sm bg-base-100 border border-gray-300 hover:bg-base-200">
+                    <div class="card-body flex-row items-start gap-4">
+                        <!-- Icon -->
+                        <div class="avatar avatar-placeholder">
+                            <div class="bg-primary text-neutral-content w-10 rounded-full">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="flex-grow">
+                            <h2 class="font-medium text-base">
+                                <a href="<?= url_to('show_assignment', $assignment->id) ?>" class="hover:text-blue-600">
+                                    <span class="font-semibold"><?= $assignment->title ?></span>
+                                </a>
+                            </h2>
+                            <p class="text-sm text-gray-500">
+                                <?= date('j M', strtotime($assignment->created_at)) ?>
+                            </p>
+                        </div>
+
+                        <!-- More options -->
+                        <div class="dropdown dropdown-end ml-auto">
+                            <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </label>
+                            <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
+                                <li>
+                                    <a href="<?= url_to('show_assignment', $assignment->id) ?>">Open</a>
+                                </li>
+                                <li>
+                                    <a href="<?= url_to('edit_assignment', $assignment->id) ?>">Edit</a>
+                                </li>
+                                <li>
+                                    <button
+                                        onclick="document.getElementById('deleteModalAssignment<?= $assignment->id ?>').showModal()"
+                                        class="w-full text-left">
+                                        Delete
+                                    </button>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-
-                    <!-- Content -->
-                    <div class="flex-grow">
-                        <h2 class="font-medium text-base">
-                            <a href="<?= url_to('show_assignment', $assignment->id) ?>" class="hover:text-blue-600">
-                                <span class="font-semibold"><?= $assignment->title ?></span>
-                            </a>
-                        </h2>
-                        <p class="text-sm text-gray-500">
-                            <?= date('j M', strtotime($assignment->created_at)) ?>
-                        </p>
-                    </div>
-
-                    <!-- More options -->
-                    <div class="dropdown dropdown-end ml-auto">
-                        <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </label>
-                        <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
-                            <li>
-                                <a href="<?= url_to('show_assignment', $assignment->id) ?>">Open</a>
-                            </li>
-                            <li>
-                                <a href="<?= url_to('edit_assignment', $assignment->id) ?>">Edit</a>
-                            </li>
-                            <li>
-                                <button
-                                    onclick="document.getElementById('deleteModalAssignment<?= $assignment->id ?>').showModal()"
-                                    class="w-full text-left">
-                                    Delete
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
-            </div>
-            <dialog id="deleteModalAssignment<?= $assignment->id ?>" class="modal">
-                <div class="modal-box">
-                    <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
-                    <p class="py-4">Are you sure you want to delete this assignment?</p>
-                    <div class="modal-action">
-                        <form method="dialog">
-                            <button class="btn btn-error text-white">Cancel</button>
-                        </form>
-                        <form action="<?= url_to('delete_assignment', $assignment->id) ?>" method="post">
-                            <?= csrf_field() ?>
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
-                        </form>
+                <dialog id="deleteModalAssignment<?= $assignment->id ?>" class="modal">
+                    <div class="modal-box">
+                        <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
+                        <p class="py-4">Are you sure you want to delete this assignment?</p>
+                        <div class="modal-action">
+                            <form method="dialog">
+                                <button class="btn btn-error text-white">Cancel</button>
+                            </form>
+                            <form action="<?= url_to('delete_assignment', $assignment->id) ?>" method="post">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            </dialog>
+                </dialog>
             <?php endforeach; ?>
         </div>
     </div>

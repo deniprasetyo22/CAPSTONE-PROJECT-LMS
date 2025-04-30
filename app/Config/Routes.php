@@ -111,12 +111,6 @@ $routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controller
     $routes->get('discussion-form-edit/(:any)', 'DiscussionController::editDiscussionForm/$1');
     $routes->put('discussion-edit/(:any)', 'DiscussionController::editDiscussion/$1');
     $routes->delete('discussion/(:any)', 'DiscussionController::deleteDiscussion/$1');
-    $routes->get('discussion/(:any)', 'DiscussionController::showDiscussionDetail/$1');
-
-    /* Add Discussion comment of a course*/
-    $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1');
-    $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1');
-    $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1');
 });
 
 
@@ -135,4 +129,13 @@ $routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 
         $routes->get('submissionFile/(:num)/(:segment)', 'AssignmentController::submissionFile/$1/$2', ['as' => 'submission_file']);
         $routes->delete('deleteSubmission/(:num)', 'AssignmentController::deleteSubmission/$1', ['as' => 'delete_submission']);
     });
+});
+
+
+$routes->group('', ['filter' => 'role:teacher,student'], ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->get('discussion/(:any)', 'DiscussionController::showDiscussionDetail/$1');
+    /* Add Discussion comment of a course*/
+    $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1');
+    $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1');
+    $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1');
 });

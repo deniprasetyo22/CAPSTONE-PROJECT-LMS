@@ -24,8 +24,8 @@ class CourseController extends BaseController
     protected EnrollmentModel $enrollmentModel;
     protected $courseContentModel;
     protected $fileModel;
-    protected $assignmentModel;
     protected $discussionModel;
+    protected $assignmentModel;
 
     public function __construct()
     {
@@ -36,8 +36,8 @@ class CourseController extends BaseController
         $this->enrollmentModel = new EnrollmentModel();
         $this->courseContentModel = new CourseContentModel();
         $this->fileModel = new FileModel();
-        $this->assignmentModel = new AssignmentModel();
         $this->discussionModel = new DiscussionModel();
+        $this->assignmentModel = new AssignmentModel();
     }
 
     public function index(): string
@@ -247,13 +247,19 @@ class CourseController extends BaseController
         $courseContents = $this->courseContentModel->where('course_id', $id)->findAll();
 
         $assignments = $this->assignmentModel->where('course_id', $id)->findAll();
+        $discussions = $this->discussionModel
+            ->where('course_id', $id)
+            ->where('deleted_at', null)
+            ->orderBy('id', 'desc')
+            ->findAll();
 
         $data = [
             'page_title' => $course->name,
             'course' => $course,
             'courseContents' => $courseContents,
             'enrollment' => $enrollment,
-            'assignments' => $assignments
+            'assignments' => $assignments,
+            'discussions' => $discussions,
         ];
 
         return view('pages/student/courses/v_show', $data);
@@ -319,6 +325,8 @@ class CourseController extends BaseController
             ->orderBy('id', 'desc')
             ->findAll();
 
+        $assignments = $this->assignmentModel->where('course_id', $id)->findAll();
+
         $students = $this->enrollmentModel
             ->select('user_profiles.*, users.email, enrollments.id')
             ->join('user_profiles', 'user_profiles.id = enrollments.student_id')
@@ -334,8 +342,6 @@ class CourseController extends BaseController
             ->where('courses_lecturers.deleted_at', null)
             ->findAll();
 
-        $assignments = $this->assignmentModel->where('course_id', $id)->findAll();
-
         $discussions = $this->discussionModel
             ->where('course_id', $id)
             ->where('deleted_at', null)
@@ -347,11 +353,11 @@ class CourseController extends BaseController
             'courseContents' => $courseContents,
             'students' => $students,
             'lecturers' => $lecturers,
-            'assignments' => $assignments,
             'discussions' => $discussions,
             'params' => $params,
             'users' => $users['user_profiles'],
             'page_title' => 'Course Detail',
+            'assignments' => $assignments,
             'hideHeader' => true
         ]);
     }
