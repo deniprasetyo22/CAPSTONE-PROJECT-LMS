@@ -39,62 +39,94 @@
     <?php endif ?>
 </div>
 
-<div class="overflow-x-auto">
+<div class="overflow-x-auto bg-white rounded-box border border-gray-300 shadow-lg p-6">
     <h2 class="text-center text-2xl font-bold mb-4"><?= esc($assignment->title) ?></h2>
-    <table class="table">
+
+    <table class="table mb-10">
         <tbody>
-            <tr>
+            <tr class="hover:bg-gray-100">
                 <th>Title</th>
                 <td><?= esc($assignment->title) ?></td>
             </tr>
-            <tr>
+            <tr class="hover:bg-gray-100">
                 <th>Description</th>
                 <td><?= esc($assignment->description) ?></td>
             </tr>
-            <tr>
+            <tr class="hover:bg-gray-100">
                 <th>Due Date</th>
                 <td><?= esc($assignment->due_date) ?></td>
             </tr>
-            <tr>
-                <th class="flex items-top">File</th>
-                <td>
-                    <iframe src="<?= url_to('file_assignment', $assignment->course_id, $assignment->file_url) ?>"
-                        class="w-full border rounded-xl shadow-md" height="500">
-                    </iframe>
+            <tr class="hover:bg-gray-100">
+                <th>File</th>
+                <td class="flex justify-between items-center">
+                    <a href="<?= url_to('file_assignment', $assignment->course_id, $assignment->file_url) ?>"
+                        class="text-blue-600 hover:underline" target="_blank">
+                        <i class="fa fa-file mr-2"></i> <?= esc($assignment->file_url) ?>
+                    </a>
+
+                    <div class="dropdown dropdown-end ml-auto">
+                        <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </label>
+                        <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
+                            <li>
+                                <a href="<?= url_to('file_assignment', $assignment->course_id, $assignment->file_url) ?>"
+                                    target="_blank">
+                                    Open
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </td>
             </tr>
+
             <?php if (in_groups('student')) : ?>
-            <tr>
+            <tr class="hover:bg-gray-100">
                 <th>Submission</th>
                 <td>
                     <?php if ($getAssignmentSubmission === null) : ?>
                     <form action="<?= url_to('submit_assignment', $assignment->id) ?>" method="post"
                         enctype="multipart/form-data" id="submissionForm" class="mt-4">
                         <?= csrf_field() ?>
-
                         <div class="flex items-center gap-4">
                             <fieldset class="fieldset flex-1">
                                 <input type="file" name="file" id="fileInput" class="file-input w-full" required>
                             </fieldset>
                             <button type="submit" class="btn btn-primary whitespace-nowrap">Submit</button>
                         </div>
-
                         <div class="mt-4">
                             <iframe id="submission-preview" class="w-full border rounded-xl shadow-md" height="500"
-                                style="display: none;"></iframe>
+                                style="display: none;">
+                            </iframe>
                         </div>
                     </form>
                     <?php else : ?>
-                    <iframe src="<?= url_to('submission_file', $assignment->id, $getAssignmentSubmission->file_name) ?>"
-                        class="w-full border rounded-xl shadow-md" height="500"></iframe>
+                    <div class="flex justify-between items-center">
+                        <a href="<?= url_to('submission_file', $assignment->id, $getAssignmentSubmission->file_name) ?>"
+                            target="_blank" class="text-blue-600 hover:underline flex items-center"
+                            id="submission-preview">
+                            <i class="fa fa-file mr-2"></i>
+                            <span><?= esc($getAssignmentSubmission->file_name) ?></span>
+                        </a>
 
-                    <div class="flex justify-end mt-2">
-                        <button class="btn btn-sm btn-error text-white"
-                            onclick="document.getElementById('deleteModal<?= $getAssignmentSubmission->id ?>').showModal()">
-                            Delete
-                        </button>
+                        <div class="dropdown dropdown-end ml-auto">
+                            <div tabindex="0" role="button" class="btn btn-ghost btn-sm btn-circle">
+                                <i class="fas fa-ellipsis-v text-gray-600"></i>
+                            </div>
+                            <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
+                                <li>
+                                    <a href="<?= url_to('submission_file', $assignment->id, $getAssignmentSubmission->file_name) ?>"
+                                        target="_blank">
+                                        Open
+                                    </a>
+                                    <button
+                                        onclick="document.getElementById('deleteModal<?= $getAssignmentSubmission->id ?>').showModal()">
+                                        Delete
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-
                     <dialog id="deleteModal<?= $getAssignmentSubmission->id ?>" class="modal">
                         <div class="modal-box">
                             <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
@@ -115,31 +147,45 @@
                     <?php endif; ?>
                 </td>
             </tr>
+
             <?php elseif (in_groups('teacher')) : ?>
-            <tr>
-                <th class="flex items-top">Submission</th>
+            <tr class="hover:bg-gray-100">
+                <th class="align-top">Submission</th>
                 <td>
                     <?php if (empty($getAllAssignmentSubmissions)) : ?>
                     <div class="text-center">No Submission</div>
                     <?php else : ?>
-                    <?php foreach ($getAllAssignmentSubmissions as $submission) : ?>
-                    <a href="<?= url_to('submission_file', $assignment->id, $submission->file_name) ?>" target="_blank">
-                        <div class="flex items-center gap-2 mb-2 text-blue-600">
-                            <i class="fa fa-file mr-2"></i>
-                            <?= $submission->first_name?> <?= $submission->last_name?> - <?= $submission->file_name?>
-                        </div>
-                    </a>
-                    <?php endforeach; ?>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>File</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($getAllAssignmentSubmissions as $submission) : ?>
+                                <tr class="hover:bg-gray-100">
+                                    <td><?= $submission->first_name ?> <?= $submission->last_name ?></td>
+                                    <td>
+                                        <a href="<?= url_to('submission_file', $assignment->id, $submission->file_name) ?>"
+                                            class="text-blue-600 hover:underline" target="_blank">
+                                            <i class="fa fa-file mr-2"></i> <?= $submission->file_name ?>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                     <?php endif; ?>
                 </td>
             </tr>
             <?php endif; ?>
-
         </tbody>
     </table>
-
-
 </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

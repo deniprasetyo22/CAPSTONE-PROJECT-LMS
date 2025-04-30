@@ -19,6 +19,14 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 $routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('dashboard', 'DashboardController::adminDashboard', ['as' => 'admin_dashboard']);
 
+    /* Report */
+    $routes->group('reports', function ($routes) {
+        $routes->get('index', 'ReportController::index', ['as' => 'reports']);
+        $routes->post('exportUsersPDF', 'ReportController::exportUsersPDF', ['as' => 'export_users_pdf']);
+        $routes->post('exportCoursesPDF', 'ReportController::exportCoursesPDF', ['as' => 'export_courses_pdf']);
+
+    });
+
     /* User */
     $routes->group('users', function ($routes) {
         $routes->get('index', 'UserController::index', ['as' => 'users']);

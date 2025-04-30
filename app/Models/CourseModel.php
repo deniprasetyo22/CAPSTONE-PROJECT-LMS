@@ -165,5 +165,31 @@ class CourseModel extends Model
         ];
     }
 
+    public function getAllCourseWithTeacherStudentLevel($courseLevel = null)
+    {
+        $builder = $this->db->table('courses')
+            ->select("
+                courses.id,
+                courses.name,
+                level_courses.name AS levelName,
+                STRING_AGG(DISTINCT teacher.first_name || ' ' || teacher.last_name, ', ') AS teachers,
+                STRING_AGG(DISTINCT student.first_name || ' ' || student.last_name, ', ') AS students
+            ")
+            ->join('level_courses', 'level_courses.id = courses.level_course_id', 'left')
+            ->join('courses_lecturers', 'courses_lecturers.course_id = courses.id', 'left')
+            ->join('user_profiles AS teacher', 'teacher.id = courses_lecturers.lecturer_id', 'left')
+            ->join('enrollments', 'enrollments.course_id = courses.id', 'left')
+            ->join('user_profiles AS student', 'student.id = enrollments.student_id', 'left')
+            ->groupBy('courses.id, courses.name, level_courses.name');
+        
+        // Menambahkan filter berdasarkan course level jika ada
+        if ($courseLevel) {
+            $builder->where('courses.level_course_id', $courseLevel);
+        }
+
+        return $builder->get()->getResult();
+    }
+
+
 
 }
