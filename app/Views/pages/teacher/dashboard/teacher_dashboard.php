@@ -5,25 +5,9 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('admin_content') ?>
-<h1 class="text-3xl font-bold text-center text-primary mb-8">Admin Dashboard</h1>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+<h1 class="text-3xl font-bold text-center text-primary mb-8">Teacher Dashboard</h1>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
     <!-- Total Students -->
-    <div class="card bg-base-100 shadow-xl border">
-        <div class="card-body items-center text-center">
-            <h2 class="card-title text-primary">Total Students</h2>
-            <p class="text-3xl font-bold text-neutral"><?= esc($total_students ?? 0) ?></p>
-        </div>
-    </div>
-
-    <!-- Total Teachers -->
-    <div class="card bg-base-100 shadow-xl border">
-        <div class="card-body items-center text-center">
-            <h2 class="card-title text-primary">Total Teachers</h2>
-            <p class="text-3xl font-bold text-neutral"><?= esc($total_teachers ?? 0) ?></p>
-        </div>
-    </div>
-
-    <!-- Total Courses -->
     <div class="card bg-base-100 shadow-xl border">
         <div class="card-body items-center text-center">
             <h2 class="card-title text-primary">Total Courses</h2>
@@ -31,41 +15,46 @@
         </div>
     </div>
 
-    <!-- Total Enrollments -->
+    <!-- Total Teachers -->
     <div class="card bg-base-100 shadow-xl border">
         <div class="card-body items-center text-center">
-            <h2 class="card-title text-primary">Total Enrollments</h2>
-            <p class="text-3xl font-bold text-neutral"><?= esc($total_enrollments ?? 0) ?></p>
+            <h2 class="card-title text-primary">Total Assignments</h2>
+            <p class="text-3xl font-bold text-neutral"><?= esc($total_assignments ?? 0) ?></p>
         </div>
     </div>
 
-
+    <!-- Total Courses -->
+    <div class="card bg-base-100 shadow-xl border">
+        <div class="card-body items-center text-center">
+            <h2 class="card-title text-primary">Total Discussions</h2>
+            <p class="text-3xl font-bold text-neutral"><?= esc($total_discussions ?? 0) ?></p>
+        </div>
+    </div>
 </div>
 
 <!-- Charts Row -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
-    <!-- Pie Chart: User Distribution by Role -->
-    <div class="card bg-base-100 shadow-xl border">
-        <div class="card-body">
-            <h2 class="card-title text-primary text-center">User Distribution by Role</h2>
-            <div class="flex justify-center mt-4">
-                <canvas id="userChart" class="w-full max-w-md" height="200"></canvas>
-            </div>
-        </div>
-    </div>
-
     <!-- Bar Chart: Total Academic Records -->
     <div class="card bg-base-100 shadow-xl border">
         <div class="card-body">
-            <h2 class="card-title text-primary text-center">Total Academic Records</h2>
+            <h2 class="card-title text-primary text-center">Total Academic Teacher Courses Records</h2>
             <div class="flex justify-center mt-4">
-                <canvas id="academicRecordChart" class="w-full max-w-md" height="200"></canvas>
+                <canvas id="totalAcademicTeacherCoursesChart" class="w-full max-w-md" height="200"></canvas>
             </div>
         </div>
     </div>
 
-
+    <!-- Pie Chart: Assignemnt Distribution by Status -->
+    <div class="card bg-base-100 shadow-xl border">
+        <div class="card-body">
+            <h2 class="card-title text-primary text-center">Assignment Distribution by Status</h2>
+            <div class="flex justify-center mt-4">
+                <canvas id="assignmentChart" class="w-full max-w-md" height="200"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
+
 <!-- Line Chart: Enrollment Growth -->
 <div class="p-4">
     <div class="card bg-base-100 shadow-xl border">
@@ -78,17 +67,16 @@
     </div>
 </div>
 
-
 <script>
-    const listTotalUserDistribution = <?= $users_by_role ?>;
-    const totalAcademicRecords = <?= $total_academic_records ?>;
+    const totalAcademicTeacherCourses = <?= $total_academic_teacher_courses ?>;
     const enrollmentGrowthMonth = <?= $enrollment_growth_month ?>;
+    const assignmentByStatus = <?= $assignment_by_status ?>;
     const currentYear = new Date().getFullYear();
     document.getElementById('titleGrowthChart').textContent = `Enrollment Growth Month ${currentYear}`;
     const userChart = new Chart(
-        document.getElementById('userChart'), {
+        document.getElementById('assignmentChart'), {
             type: 'pie',
-            data: listTotalUserDistribution,
+            data: assignmentByStatus,
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -100,11 +88,10 @@
             }
         }
     );
-
     const academicRecordChart = new Chart(
-        document.getElementById('academicRecordChart'), {
+        document.getElementById('totalAcademicTeacherCoursesChart'), {
             type: 'bar',
-            data: totalAcademicRecords,
+            data: totalAcademicTeacherCourses,
             options: {
                 responsive: true,
                 maintainAspectRatio: false,

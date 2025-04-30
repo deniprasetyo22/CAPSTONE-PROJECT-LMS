@@ -151,11 +151,17 @@ class DiscussionController extends BaseController
             return $d;
         }, $discussionUser);
 
+        $isTrue = true;
+        if (in_groups('student')) {
+            $isTrue = false;
+        }
+
+
         $data = [
             'page_title' => 'Discussion Detail',
             'discussion' => $discussion,
             'discussions_users' => $discussionUserFormat,
-            'hideHeader' => true
+            'hideHeader' => $isTrue
         ];
         return view('pages/courses/discussions/detail_discussion', $data);
     }

@@ -99,7 +99,7 @@ class CourseModel extends Model
                 ->orLike('courses.code', $params->search, 'both', null, true)
                 ->orLike('courses.description', $params->search, 'both', null, true)
                 ->orLike('level_courses.name', $params->search, 'both', null, true)
-                ->groupEnd(); 
+                ->groupEnd();
         }
 
         if (!empty($params->level)) {
@@ -165,5 +165,12 @@ class CourseModel extends Model
         ];
     }
 
-
+    public function getAllCoursesDashboard()
+    {
+        $builder = $this->selectCount('id', 'total_courses')
+            ->where('deleted_at', null);
+        $query = $builder->get();
+        $result = $query->getRow();
+        return $result;
+    }
 }

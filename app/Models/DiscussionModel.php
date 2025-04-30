@@ -62,4 +62,15 @@ class DiscussionModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getAllCountTeacherDiscussions($lecturerId)
+    {
+        $result = $this->select('COUNT(*) as total_discussions')
+            ->join('courses', 'courses.id = discussions.course_id')
+            ->where('created_by', $lecturerId)
+            ->where('courses.deleted_at', null)
+            ->where('discussions.deleted_at', null)
+            ->countAllResults();
+        return $result;
+    }
 }

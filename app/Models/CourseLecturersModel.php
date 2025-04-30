@@ -58,4 +58,23 @@ class CourseLecturersModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getAllCourseTeachersDashboard()
+    {
+        $builder = $this->select('COUNT(DISTINCT lecturer_id) AS total_unique_teachers')->where('deleted_at', null);
+        $query = $builder->get();
+        $result = $query->getRow();
+        return $result;
+    }
+
+    public function getAllCountTeacherCourses($lecturerId)
+    {
+        $result = $this->join('courses', 'courses.id = courses_lecturers.course_id')
+            ->where('courses_lecturers.lecturer_id', $lecturerId)
+            ->where('courses.deleted_at', null)
+            ->where('courses_lecturers.deleted_at', null)
+            ->countAllResults();
+
+        return $result;
+    }
 }

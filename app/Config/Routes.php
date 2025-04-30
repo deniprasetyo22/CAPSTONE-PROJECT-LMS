@@ -103,6 +103,9 @@ $routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controller
     $routes->get('discussion-form-edit/(:any)', 'DiscussionController::editDiscussionForm/$1');
     $routes->put('discussion-edit/(:any)', 'DiscussionController::editDiscussion/$1');
     $routes->delete('discussion/(:any)', 'DiscussionController::deleteDiscussion/$1');
+
+    // dashboard
+    $routes->get('teacher/dashboard', 'DashboardController::teacherDashboard', ['as' => 'teacher_dashboard']);
 });
 
 

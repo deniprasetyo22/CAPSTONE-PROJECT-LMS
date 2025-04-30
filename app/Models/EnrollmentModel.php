@@ -54,4 +54,41 @@ class EnrollmentModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getAllStudentsDashboard()
+    {
+        $builder = $this->select('COUNT(DISTINCT student_id) AS total_unique_students')->where('deleted_at', null);
+        $query = $builder->get();
+        $result = $query->getRow();
+        return $result;
+    }
+
+    public function getAllEnrollmentsDashboard()
+    {
+        $builder = $this->selectCount('id', 'total_enrollments')->where('deleted_at', null);
+        $query = $builder->get();
+        $result = $query->getRow();
+        return $result;
+    }
+
+    public function getTotalEnrollmentsPerMonth($lecturerId = null)
+    {
+        if ($lecturerId) {
+            return $this->select("EXTRACT(MONTH FROM enrollments.created_at) AS month, COUNT(enrollments.id) AS total_enrollments")
+                ->join('courses', 'enrollments.course_id = courses.id')
+                ->join('courses_lecturers', 'courses_lecturers.course_id = courses.id')
+                ->where('courses_lecturers.lecturer_id', $lecturerId)
+                ->where('courses.deleted_at', null)
+                ->where('courses_lecturers.deleted_at', null)
+                ->where("EXTRACT(YEAR FROM enrollments.created_at)", date('Y'))
+                ->groupBy("EXTRACT(MONTH FROM enrollments.created_at)")
+                ->orderBy("EXTRACT(MONTH FROM enrollments.created_at)")
+                ->findAll();
+        }
+        return $this->select("EXTRACT(MONTH FROM created_at) AS month, COUNT(id) AS total_enrollments")
+            ->where("EXTRACT(YEAR FROM created_at)", date('Y'))
+            ->groupBy("EXTRACT(MONTH FROM created_at)")
+            ->orderBy("EXTRACT(MONTH FROM created_at)")
+            ->findAll();
+    }
 }

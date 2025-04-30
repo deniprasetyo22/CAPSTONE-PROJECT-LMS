@@ -1,10 +1,18 @@
-<?= $this->extend('layouts/admin_layout') ?>
+<?php if (in_groups('student')) : ?>
+    <?= $this->extend('layouts/main_layout') ?>
+<?php elseif (in_groups('teacher')) : ?>
+    <?= $this->extend('layouts/admin_layout') ?>
+<?php endif ?>
 
 <?= $this->section('title') ?>
 <?= $page_title ?>
 <?= $this->endSection() ?>
 
-<?= $this->section('admin_content') ?>
+<?php if (in_groups('student')) : ?>
+    <?= $this->section('content') ?>
+<?php elseif (in_groups('teacher')) : ?>
+    <?= $this->section('admin_content') ?>
+<?php endif ?>
 
 <div>
     <!-- Breadcrumbs -->
