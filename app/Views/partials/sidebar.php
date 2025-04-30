@@ -28,6 +28,15 @@
 
             <?php if (in_groups('administrator')) : ?>
                 <li>
+                    <a href="<?= url_to('reports') ?>"
+                        class="<?= $currentUrl == url_to('reports') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
+                        <i class="fas fa-chart-bar mr-2"></i> Reports
+                    </a>
+                </li>
+            <?php endif ?>
+
+            <?php if (in_groups('administrator')) : ?>
+                <li>
                     <a href="<?= url_to('users') ?>"
                         class="<?= $currentUrl == url_to('users') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
                         <i class="fas fa-users mr-2"></i> Users
