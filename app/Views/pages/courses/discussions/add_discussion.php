@@ -12,7 +12,7 @@
         <div class="breadcrumbs mb-6">
             <ul>
                 <ul>
-                    <li><a href="<?= url_to('show_course', $discussion->course_id) ?>">Courses</a></li>
+                    <li><a href="<?= url_to('show_course', $course_id) ?>">Courses</a></li>
                     <li class="font-semibold">Create Discussions</li>
                 </ul>
             </ul>

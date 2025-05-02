@@ -173,7 +173,7 @@ document.querySelectorAll('.edit-btn').forEach(function(button) {
         contentTextarea.value = content; // Isi ke textarea
 
         // Ubah form action ke endpoint update
-        form.action = '<?= base_url('discussion-comment') ?>/' + commentId;
+        form.action = '<?= base_url('courses/discussion/discussion-comment') ?>/' + commentId;
 
         // Tambah atau update input hidden untuk method spoofing
         methodInputContainer.innerHTML = '<input type="hidden" name="_method" value="PUT">';

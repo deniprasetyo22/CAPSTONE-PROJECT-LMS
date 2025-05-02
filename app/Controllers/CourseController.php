@@ -236,7 +236,7 @@ class CourseController extends BaseController
             'expected_duration' => $this->request->getPost('expected_duration'),
             'level_course_id'   => $this->request->getPost('level_course_id'),
         ];
-
+ 
         if ($this->courseModel->save($data)) {
             // Save the course ID to the course_lecturers table
             $courseId = $this->courseModel->insertID();
@@ -245,7 +245,7 @@ class CourseController extends BaseController
                 'teacher_id' => $currentUser->id,
             ];
             $this->courseTeacherModel->save($courseTeachersData);
-            return redirect()->to(route_to('course_list'))->with('success', 'Course added successfully!');
+            return redirect()->to(route_to('teacher_courses'))->with('success', 'Course added successfully!');
         } else {
             return redirect()->back()->withInput()->with('errors', $this->courseModel->errors());
         }
@@ -296,7 +296,7 @@ class CourseController extends BaseController
         $course->fill($data);
 
         if ($this->courseModel->save($course)) {
-            return redirect()->to(route_to('course_list'))->with('success', 'Course updated successfully!');
+            return redirect()->to(route_to('teacher_courses'))->with('success', 'Course updated successfully!');
         } else {
             return redirect()->back()->withInput()->with('errors', $this->courseModel->errors());
         }
@@ -306,10 +306,10 @@ class CourseController extends BaseController
     {
         $course = $this->courseModel->find($id);
         if (!$course) {
-            return redirect()->to(route_to('course_list'))->with('error', 'Course not found!');
+            return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
         
         $this->courseModel->delete($id);
-        return redirect()->to(route_to('course_list'))->with('success', 'Course deleted successfully!');
+        return redirect()->to(route_to('teacher_courses'))->with('success', 'Course deleted successfully!');
     }
 }

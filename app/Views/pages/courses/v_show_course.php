@@ -266,7 +266,7 @@
             <?php if(empty($discussions)) : ?>
             <div class="p-4 md:px-0">
                 <div class="divider">
-                    <div class="divider-title">No Assignments</div>
+                    <div class="divider-title">No Discussions</div>
                 </div>
             </div>
             <?php endif ?>
@@ -348,6 +348,7 @@
                     <!-- Teachers Heading with Add Icon -->
                     <div class="flex items-center justify-between mb-2">
                         <h2 class="text-lg font-semibold">Teachers</h2>
+                        <?php if(in_groups('teacher')) : ?>
                         <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1"
                             onclick="openInviteModalLecturers()">
                             <i class="fa-solid fa-user-plus"></i>
@@ -363,9 +364,9 @@
                                 <!-- Tombol-tombol sejajar -->
                                 <div class="modal-action">
                                     <!-- FORM hanya wrap tombol Invite -->
-                                    <form action="<?= site_url('add_lecturer_course/' . $course->id) ?>" method="post">
+                                    <form action="<?= url_to('add_teacher_course', $course->id) ?>" method="post">
                                         <!-- Hidden input untuk user_id -->
-                                        <input type="hidden" name="user_lecturer_id" id="hidden-user-lecturer-id">
+                                        <input type="hidden" name="user_teacher_id" id="hidden-user-lecturer-id">
                                         <button class="btn" type="submit">Invite</button>
                                     </form>
 
@@ -376,6 +377,7 @@
                                 </div>
                             </div>
                         </dialog>
+                        <?php endif ?>
                     </div>
 
                     <!-- Teachers List -->
@@ -391,6 +393,7 @@
                                 <p class="font-semibold"><?= $teacher->first_name ?> <?= $teacher->last_name ?></p>
                                 <p class="text-sm text-gray-500"><?= $teacher->email ?></p>
                             </div>
+                            <?php if(in_groups('teacher')) : ?>
                             <button class="ml-auto btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                 onclick="document.getElementById('deleteModal<?= $teacher->id ?>').showModal()">
                                 <i class="fa-solid fa-xmark"></i>
@@ -403,7 +406,7 @@
                                         <form method="dialog">
                                             <button class="btn btn-error text-white">Cancel</button>
                                         </form>
-                                        <form action="<?= site_url('remove_teacher_course/' . $teacher->id) ?>"
+                                        <form action="<?= url_to('remove_teacher_course',  $teacher->id) ?>"
                                             method="post">
                                             <?= csrf_field() ?>
                                             <input type="hidden" name="_method" value="DELETE">
@@ -413,12 +416,14 @@
                                     </div>
                                 </div>
                             </dialog>
+                            <?php endif ?>
                         </li>
                         <?php endforeach; ?>
                     </ul>
                     <!-- Students Heading with Add Icon -->
                     <div class="flex items-center justify-between mb-2">
                         <h2 class="text-lg font-semibold">Students</h2>
+                        <?php if(in_groups('teacher')) : ?>
                         <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1"
                             onclick="openInviteModal()">
                             <i class="fa-solid fa-user-plus"></i>
@@ -434,7 +439,7 @@
                                 <!-- Tombol-tombol sejajar -->
                                 <div class="modal-action">
                                     <!-- FORM hanya wrap tombol Invite -->
-                                    <form action="<?= site_url('enroll_student/' . $course->id) ?>" method="post">
+                                    <form action="<?= url_to('enroll_student' , $course->id) ?>" method="post">
                                         <!-- Hidden input untuk user_id -->
                                         <input type="hidden" name="user_id" id="hidden-user-id">
                                         <button class="btn" type="submit">Invite</button>
@@ -446,9 +451,8 @@
                                     </form>
                                 </div>
                             </div>
-
                         </dialog>
-
+                        <?php endif ?>
                     </div>
                     <!-- Students List -->
                     <ul class="mb-6">
@@ -463,6 +467,7 @@
                                 <p class="font-semibold"><?= $student->first_name ?> <?= $student->last_name ?></p>
                                 <p class="text-sm text-gray-500"><?= $student->email ?></p>
                             </div>
+                            <?php if(in_groups('teacher')) : ?>
                             <button class="ml-auto btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                 onclick="document.getElementById('deleteModalStudent<?= $student->id ?>').showModal()">
                                 <i class="fa-solid fa-xmark"></i>
@@ -475,7 +480,7 @@
                                         <form method="dialog">
                                             <button class="btn btn-error text-white">Cancel</button>
                                         </form>
-                                        <form action="<?= site_url('remove_student_course/' . $student->id) ?>"
+                                        <form action="<?= url_to('remove_student_course' , $student->id) ?>"
                                             method="post">
                                             <?= csrf_field() ?>
                                             <input type="hidden" name="_method" value="DELETE">
@@ -485,6 +490,7 @@
                                     </div>
                                 </div>
                             </dialog>
+                            <?php endif ?>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -544,7 +550,7 @@ function openInviteModal() {
         minimumInputLength: 1,
         delay: 250,
         ajax: {
-            url: '<?= base_url('search-users/' . $course->id) ?>',
+            url: '<?= url_to('search_users', $course->id) ?>',
             dataType: 'json',
             cache: false,
             data: function(params) {
@@ -601,7 +607,7 @@ function openInviteModalLecturers() {
         minimumInputLength: 1,
         delay: 250,
         ajax: {
-            url: '<?= base_url('search-users/' . $course->id) ?>',
+            url: '<?= url_to('search_users', $course->id) ?> ?>',
             dataType: 'json',
             cache: false,
             data: function(params) {

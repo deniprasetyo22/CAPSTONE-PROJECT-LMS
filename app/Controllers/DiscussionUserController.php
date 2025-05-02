@@ -76,6 +76,6 @@ class DiscussionUserController extends BaseController
             return redirect()->back()->with('error', 'Failed to update discussion user.');
         }
 
-        return redirect()->to('discussion/' . $discussionUser->discussion_id)->with('success', 'Discussion user updated successfully.');
+        return redirect()->to(route_to('show_discussion', $discussionUser->discussion_id))->with('success', 'Discussion user updated successfully.');
     }
 }

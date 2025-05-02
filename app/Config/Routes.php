@@ -63,11 +63,11 @@ $routes->group('students', ['filter' => 'role:student'], ['namespace' => 'App\Co
 
 /* Teacher Routes */
 $routes->group('teachers', ['filter' => 'role:teacher'], ['namespace' => 'App\Controllers'], function ($routes) {
-    $routes->get('search-users/(:num)', 'UserController::showStudentLists/$1');
-    $routes->post('enroll_student/(:num)', 'EnrollmentController::addNewStudent/$1');
-    $routes->post('add_teacher_course/(:num)', 'CourseTeacherController::addNewTeacher/$1');
-    $routes->delete('remove_teacher_course/(:num)', 'CourseTeacherController::removeTeacher/$1');
-    $routes->delete('remove_student_course/(:num)', 'EnrollmentController::removeStudent/$1');
+    $routes->get('search-users/(:num)', 'UserController::showStudentLists/$1', ['as' => 'search_users']);
+    $routes->post('enroll_student/(:num)', 'EnrollmentController::addNewStudent/$1', ['as' => 'enroll_student']);
+    $routes->post('add_teacher_course/(:num)', 'CourseTeacherController::addNewTeacher/$1', ['as' => 'add_teacher_course']);
+    $routes->delete('remove_teacher_course/(:num)', 'CourseTeacherController::removeTeacher/$1', ['as' => 'remove_teacher_course']);
+    $routes->delete('remove_student_course/(:num)', 'EnrollmentController::removeStudent/$1', ['as' => 'remove_student_course']);
 
     // dashboard
     $routes->get('teacher/dashboard', 'DashboardController::teacherDashboard', ['as' => 'teacher_dashboard']);
@@ -127,7 +127,7 @@ $routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 
         /* Add Discussion comment of a course*/
         $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1', ['as' => 'add_comment_discussion']);
         $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1', ['as' => 'delete_comment_discussion']);
-        $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1', ['as' => 'edit_comment_discussion']);
+        $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1', ['as' => 'update_comment_discussion']);
 
         /* Add,Edit, Remove, show Detail Discussion of a course*/
         $routes->get('discussion-form/(:num)', 'DiscussionController::addDiscussionForm/$1', ['as' => 'create_discussion']);
