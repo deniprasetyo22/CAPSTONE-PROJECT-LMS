@@ -31,16 +31,6 @@ class CreateEnrollmentsTable extends Migration
                 'constraint' => 100,
                 'null'       => false,
             ],
-            'progress_percentage'       => [
-                'type'       => 'NUMERIC',
-                'constraint' => '10,2',  // Maksimal 10 digit dengan 2 angka di belakang koma
-                'null'       => false,
-            ],
-            'grade' => [
-                'type'       => 'NUMERIC',
-                'constraint' => '5,2',
-                'null'       => true
-            ],
             'created_at'       => [
                 'type' => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),

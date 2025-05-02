@@ -40,11 +40,18 @@
 </div>
 
 <div class="card card-lg border border-gray-300 shadow-lg w-full p-4">
+    <div class="mb-4 text-blue-500 hover:text-blue-600 hover:underline">
+        <a href="<?= url_to('show_course', $assignment->course_id) ?>">
+            <i class="fa fa-arrow-left mr-2"></i>Back
+        </a>
+    </div>
     <form id="assignmentForm" action="<?= url_to('update_assignment', $assignment->id) ?>" method="post"
         enctype="multipart/form-data" class="w-full space-y-2">
         <?= csrf_field(); ?>
 
         <input type="hidden" name="_method" value="PUT">
+
+        <h2 class="text-center text-xl font-bold mb-4">Edit Assignment</h2>
 
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Title</legend>

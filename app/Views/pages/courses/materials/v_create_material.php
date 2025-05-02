@@ -17,6 +17,12 @@
     </div>
     <div class="card card-lg border border-gray-300 shadow-lg w-full">
         <div class="card-body">
+            <div class="mb-4 text-blue-500 hover:text-blue-600 hover:underline">
+                <a href="<?= url_to('show_course', $course_id) ?>">
+                    <i class="fa fa-arrow-left mr-2"></i>Back
+                </a>
+            </div>
+
             <div class="flex justify-center border-b border-gray-300 pb-2 mb-4">
                 <h2 class="card-title">Add Course Content</h2>
             </div>

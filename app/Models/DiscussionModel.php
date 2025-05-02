@@ -17,6 +17,7 @@ class DiscussionModel extends Model
         'topic',
         'description',
         'course_id',
+        'created_by'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -37,6 +38,7 @@ class DiscussionModel extends Model
         'topic'              => 'required',
         'description'       => 'required',
         'course_id'         => 'required',
+        'created_by'        => 'required',
     ];
     protected $validationMessages   = [
         'topic' => [
@@ -47,6 +49,9 @@ class DiscussionModel extends Model
         ],
         'course_id' => [
             'required' => 'Course ID is required',
+        ],
+        'created_by' => [
+            'required' => 'Created by is required',
         ],
     ];
     protected $skipValidation       = false;

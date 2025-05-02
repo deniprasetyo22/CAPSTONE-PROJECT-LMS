@@ -14,6 +14,7 @@ class DiscussionUserModel extends Model
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
+        'id',
         'content',
         'discussion_id',
         'user_profile_id',

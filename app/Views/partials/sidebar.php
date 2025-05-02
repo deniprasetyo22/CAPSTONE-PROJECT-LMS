@@ -49,12 +49,6 @@
                     <i class="fa-solid fa-book mr-2"></i> Courses
                 </a>
             </li>
-            <li>
-                <a href="<?= url_to('archived_teacher_courses') ?>"
-                    class="<?= $currentUrl == url_to('archived_teacher_courses') ? 'bg-gray-700' : '' ?> hover:bg-gray-700">
-                    <i class="fa-solid fa-folder-open mr-2"></i> Archived courses
-                </a>
-            </li>
             <?php endif ?>
 
             <?php if (in_groups('administrator')) : ?>

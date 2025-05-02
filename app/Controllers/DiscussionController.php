@@ -77,7 +77,7 @@ class DiscussionController extends BaseController
             return redirect()->back()->with('error', 'Failed to update discussion.');
         }
 
-        return redirect()->to('courses/detail/' . $discussion->course_id)->with('success', 'Discussion updated successfully.');
+        return redirect()->to(route_to('show_course', $discussion->course_id))->with('success', 'Discussion updated successfully.');
     }
 
     public function deleteDiscussion($discussionId)
@@ -92,7 +92,7 @@ class DiscussionController extends BaseController
             return redirect()->back()->with('error', 'Failed to delete discussion.');
         }
 
-        return redirect()->to('courses/detail/' . $discussion->course_id)->with('success', 'Discussion deleted successfully.');
+        return redirect()->to(route_to('show_course', $discussion->course_id))->with('success', 'Discussion deleted successfully.');
     }
 
     private function getTimeAgo($dateTime)

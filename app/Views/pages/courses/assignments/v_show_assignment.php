@@ -51,6 +51,11 @@
     </div>
 
     <div class="overflow-x-auto bg-white rounded-box border border-gray-300 shadow-lg p-6">
+        <div class="mb-4 text-blue-500 hover:text-blue-600 hover:underline">
+            <a href="<?= url_to('show_course', $assignment->course_id) ?>">
+                <i class="fa fa-arrow-left mr-2"></i>Back
+            </a>
+        </div>
         <h2 class="text-center text-2xl font-bold mb-4"><?= esc($assignment->title) ?></h2>
 
         <table class="table mb-10">

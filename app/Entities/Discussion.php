@@ -10,6 +10,7 @@ class Discussion extends Entity
         'id' => null,
         'topic' => null,
         'description' => null,
+        'created_by' => null,
         'course_id' => null,
         'created_at' => null,
         'updated_at' => null,
@@ -21,6 +22,7 @@ class Discussion extends Entity
         'topic' => 'string',
         'description' => 'string',
         'course_id' =>  'integer',
+        'created_by' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime'

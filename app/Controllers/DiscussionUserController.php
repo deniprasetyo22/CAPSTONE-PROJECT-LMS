@@ -30,7 +30,7 @@ class DiscussionUserController extends BaseController
             return redirect()->back()->with('error', 'Failed to add discussion user.');
         }
 
-        return redirect()->to('discussion/' . $discussionId)->with('success', 'Discussion user added successfully.');
+        return redirect()->to(route_to('show_discussion', $discussionId))->with('success', 'Discussion user added successfully.');
     }
 
     public function deleteCommentDiscussion($id)

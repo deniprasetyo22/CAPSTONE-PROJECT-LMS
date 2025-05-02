@@ -125,15 +125,15 @@ $routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 
     $routes->group('discussion', function ($routes) {
         $routes->get('discussion/(:segment)', 'DiscussionController::showDiscussionDetail/$1', ['as' => 'show_discussion']);
         /* Add Discussion comment of a course*/
-        $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1');
-        $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1');
-        $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1');
+        $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1', ['as' => 'add_comment_discussion']);
+        $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1', ['as' => 'delete_comment_discussion']);
+        $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1', ['as' => 'edit_comment_discussion']);
 
         /* Add,Edit, Remove, show Detail Discussion of a course*/
-        $routes->get('discussion-form/(:num)', 'DiscussionController::addDiscussionForm/$1');
-        $routes->post('discussion/(:num)', 'DiscussionController::addDiscussion/$1');
-        $routes->get('discussion-form-edit/(:any)', 'DiscussionController::editDiscussionForm/$1');
-        $routes->put('discussion-edit/(:any)', 'DiscussionController::editDiscussion/$1');
-        $routes->delete('discussion/(:any)', 'DiscussionController::deleteDiscussion/$1');
+        $routes->get('discussion-form/(:num)', 'DiscussionController::addDiscussionForm/$1', ['as' => 'create_discussion']);
+        $routes->post('discussion/(:num)', 'DiscussionController::addDiscussion/$1', ['as' => 'store_discussion']);
+        $routes->get('discussion-form-edit/(:any)', 'DiscussionController::editDiscussionForm/$1', ['as' => 'edit_discussion']);
+        $routes->put('discussion-edit/(:any)', 'DiscussionController::editDiscussion/$1', ['as' => 'update_discussion']);
+        $routes->delete('discussion/(:any)', 'DiscussionController::deleteDiscussion/$1', ['as' => 'delete_discussion']);
     });
 });

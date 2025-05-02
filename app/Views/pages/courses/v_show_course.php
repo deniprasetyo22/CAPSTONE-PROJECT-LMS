@@ -89,6 +89,14 @@
             </div>
             <?php endif ?>
 
+            <?php if(empty($courseContents)) : ?>
+            <div class="p-4 md:px-0">
+                <div class="divider">
+                    <div class="divider-title">No Materials</div>
+                </div>
+            </div>
+            <?php endif ?>
+
             <div class="space-y-4">
                 <?php foreach ($courseContents as $content): ?>
                 <div class="card card-sm bg-base-100 border border-gray-300 hover:bg-base-200">
@@ -249,7 +257,7 @@
         <div class="tab-content bg-base-100 border-base-300 p-6">
             <?php if(in_groups('teacher')) : ?>
             <div class="flex justify-end mb-4">
-                <a href="<?= site_url('discussion-form/' . $course->id) ?>" class="btn btn-primary btn-sm">
+                <a href="<?= url_to('create_discussion', $course->id) ?>" class="btn btn-primary btn-sm">
                     <i class="fa fa-plus mr-2"></i>Add Discussion
                 </a>
             </div>
@@ -297,7 +305,7 @@
                                     <a href="<?= site_url('discussion/' . $discussion->id) ?>" target="_blank">Open</a>
                                 </li>
                                 <li>
-                                    <a href="<?= site_url('discussion-form-edit/' . $discussion->id) ?>">Edit</a>
+                                    <a href="<?= url_to('edit_discussion', $discussion->id) ?>">Edit</a>
                                 </li>
                                 <li>
                                     <button
@@ -317,7 +325,7 @@
                                 <form method="dialog">
                                     <button class="btn btn-error text-white">Cancel</button>
                                 </form>
-                                <form action="<?= site_url('discussion/' . $discussion->id) ?>" method="post">
+                                <form action="<?= url_to('delete_discussion', $discussion->id) ?>" method="post">
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
