@@ -71,15 +71,15 @@ class EnrollmentModel extends Model
         return $result;
     }
 
-    public function getTotalEnrollmentsPerMonth($lecturerId = null)
+    public function getTotalEnrollmentsPerMonth($teacherId = null)
     {
-        if ($lecturerId) {
+        if ($teacherId) {
             return $this->select("EXTRACT(MONTH FROM enrollments.created_at) AS month, COUNT(enrollments.id) AS total_enrollments")
                 ->join('courses', 'enrollments.course_id = courses.id')
-                ->join('courses_lecturers', 'courses_lecturers.course_id = courses.id')
-                ->where('courses_lecturers.lecturer_id', $lecturerId)
+                ->join('course_teachers', 'course_teachers.course_id = courses.id')
+                ->where('course_teachers.teacher_id', $teacherId)
                 ->where('courses.deleted_at', null)
-                ->where('courses_lecturers.deleted_at', null)
+                ->where('course_teachers.deleted_at', null)
                 ->where("EXTRACT(YEAR FROM enrollments.created_at)", date('Y'))
                 ->groupBy("EXTRACT(MONTH FROM enrollments.created_at)")
                 ->orderBy("EXTRACT(MONTH FROM enrollments.created_at)")

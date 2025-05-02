@@ -68,15 +68,15 @@ class AssignmentModel extends Model
     {
         return $this->select('COUNT(assignments.id) as total_assignments')
             ->join('courses', 'assignments.course_id = courses.id')
-            ->join('courses_lecturers', 'courses_lecturers.course_id = courses.id')
-            ->where('courses_lecturers.lecturer_id', $lecturerId)
+            ->join('course_teachers', 'course_teachers.course_id = courses.id')
+            ->where('course_teachers.teacher_id', $lecturerId)
             ->where('courses.deleted_at', null)
             ->where('assignments.deleted_at', null)
             ->get()
             ->getRowArray();
     }
 
-    public function getLecturerAssignmentSubmissionStats($lecturerId)
+    public function getTeacherAssignmentSubmissionStats($teacherId)
     {
         return $this->from('assignments a')
             ->select("
@@ -87,10 +87,10 @@ class AssignmentModel extends Model
         COUNT(e.student_id) AS total_enrollments
     ", false)
             ->join('courses c', 'a.course_id = c.id')
-            ->join('courses_lecturers cl', 'cl.course_id = c.id')
+            ->join('course_teachers cl', 'cl.course_id = c.id')
             ->join('enrollments e', 'e.course_id = c.id')
             ->join('assignment_submissions s', 's.assignment_id = a.id AND s.student_id = e.student_id', 'left')
-            ->where('cl.lecturer_id', $lecturerId)
+            ->where('cl.teacher_id', $teacherId)
             ->where('c.deleted_at', null)
             ->where('a.deleted_at', null)
             ->groupBy('a.id')

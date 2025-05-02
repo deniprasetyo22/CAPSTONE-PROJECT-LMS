@@ -10,8 +10,8 @@
 <div class="bg-gray-200 rounded-md px-4">
     <div class="breadcrumbs mb-6">
         <ul>
-            <li><a href="<?= url_to('lecturer_courses') ?>">Course</a></li>
-            <li><a href="<?= url_to('course_detail', $course->id) ?>">Course Details</a></li>
+            <li><a href="<?= url_to('teacher_courses') ?>">Course</a></li>
+            <li><a href="<?= url_to('show_course', $course->id) ?>">Course Details</a></li>
             <li class="font-semibold">Create Courses</li>
         </ul>
     </div>

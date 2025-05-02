@@ -10,7 +10,7 @@
                     <label for="my-drawer-3" class="btn btn-square btn-ghost lg:hidden">
                         <i class="fa-solid fa-bars text-white"></i>
                     </label>
-                    <a href="<?= url_to('student_courses') ?>" class="text-lg font-medium text-white ml-2">
+                    <a href="<?= url_to('course_list') ?>" class="text-lg font-medium text-white ml-2">
                         Learning Management System
                     </a>
                     <?php elseif (in_groups('teacher')) : ?>
@@ -18,6 +18,13 @@
                         <i class="fa-solid fa-bars text-white"></i>
                     </label>
                     <a href="<?= url_to('courses') ?>" class="text-lg font-medium text-white ml-2">
+                        Learning Management System
+                    </a>
+                    <?php else : ?>
+                    <label for="my-drawer-3" class="btn btn-square btn-ghost lg:hidden">
+                        <i class="fa-solid fa-bars text-white"></i>
+                    </label>
+                    <a href="/" class="text-lg font-medium text-white ml-2">
                         Learning Management System
                     </a>
                     <?php endif; ?>
@@ -28,7 +35,7 @@
                     <ul class="menu menu-horizontal items-center">
                         <?php if(in_groups('student')) : ?>
                         <li>
-                            <a href="<?= url_to('student_courses') ?>" class="text-white font-semibold">
+                            <a href="<?= url_to('course_list') ?>" class="text-white font-semibold">
                                 Home
                             </a>
                         </li>
@@ -44,7 +51,7 @@
 
                         <?php if(in_groups('student')) : ?>
                         <li>
-                            <a href="<?= url_to('my_courses') ?>" class="text-white font-semibold">
+                            <a href="<?= url_to('student_courses') ?>" class="text-white font-semibold">
                                 My Courses
                             </a>
                         </li>

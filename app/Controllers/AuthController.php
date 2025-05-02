@@ -45,11 +45,11 @@ class AuthController extends MythAuthController
             
         foreach ($userGroups as $group) {
             if ($group['name'] === 'administrator') {
-                return redirect()->to('admin/dashboard');
+                return redirect()->to(route_to('admin_dashboard'));
             } else if ($group['name'] === 'teacher') {
-                return redirect()->to('teacher/dashboard');
+                return redirect()->to(route_to('teacher_dashboard'));
             } else if ($group['name'] === 'student') {
-                return redirect()->to('student/courses/my-courses');
+                return redirect()->to(route_to('student_courses'));
             }
         }
     

@@ -5,7 +5,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('admin_content') ?>
-<!-- Breadcrumbs -->
+
 <div class="bg-gray-200 rounded-md px-4">
     <div class="breadcrumbs mb-6">
         <ul>

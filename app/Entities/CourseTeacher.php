@@ -4,12 +4,12 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
-class CourseLecturers extends Entity
+class CourseTeacher extends Entity
 {
     protected $attributes = [
         'id'         => null,
         'course_id'  => null,
-        'lecturer_id' => null,
+        'teacher_id' => null,
         'created_at' => null,
         'updated_at' => null,
         'deleted_at' => null,
@@ -17,7 +17,7 @@ class CourseLecturers extends Entity
     protected $casts = [
         'id'         => 'int',
         'course_id'  => 'int',
-        'lecturer_id' => 'int',
+        'teacher_id' => 'int',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => '?datetime',

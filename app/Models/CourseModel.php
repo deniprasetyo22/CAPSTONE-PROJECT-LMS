@@ -116,7 +116,7 @@ class CourseModel extends Model
         return $result;
     }
 
-    public function getMyCourses()
+    public function getStudentCourses()
     {
         $studentId = $this->db->table('user_profiles')
             ->select('id')
@@ -140,9 +140,9 @@ class CourseModel extends Model
             ->whereIn('courses.id', $subQuery);
     }
 
-    public function getFilteredMyCourses(DataParams $params)
+    public function getFilteredStudentCourses(DataParams $params)
     {
-        $query = $this->getMyCourses();
+        $query = $this->getStudentCourses();
 
         if (!empty($params->search)) {
             $query->groupStart()
@@ -165,6 +165,47 @@ class CourseModel extends Model
         ];
     }
 
+    public function getTeacherCourses()
+    {
+        $teacherId = $this->db->table('user_profiles')
+            ->select('id')
+            ->where('user_id', user_id())
+            ->get()
+            ->getRow()
+            ->id ?? null;
+
+        return $this->select('courses.*, level_courses.name as levelName, user_profiles.first_name, user_profiles.last_name')
+            ->join('level_courses', 'level_courses.id = courses.level_course_id', 'left')
+            ->join('course_teachers', 'course_teachers.course_id = courses.id', 'left')
+            ->join('user_profiles', 'user_profiles.id = course_teachers.teacher_id', 'left')
+            ->where('user_profiles.id', $teacherId);
+    }
+
+    public function getFilteredTeacherCourses(DataParams $params)
+    {
+        $query = $this->getTeacherCourses();
+
+        if (!empty($params->search)) {
+            $query->groupStart()
+                ->where('CAST(courses.expected_duration as TEXT) LIKE', "%$params->search%")
+                ->orLike('courses.name', $params->search, 'both', null, true)
+                ->orLike('courses.code', $params->search, 'both', null, true)
+                ->groupEnd();
+        }
+
+        if (!empty($params->level)) {
+            $query->where('courses.level_course_id', $params->level);
+        }
+
+        $query->orderBy($params->sort ?? 'id', $params->order ?? 'desc');
+
+        return [
+            'teacherCourses' => $query->paginate($params->perPage ?? 4, 'teacherCourses', $params->page),
+            'pager' => $query->pager,
+            'total' => $query->countAllResults(false)
+        ];
+    }
+
     public function getAllCourseWithTeacherStudentLevel($courseLevel = null)
     {
         $builder = $this->db->table('courses')
@@ -176,8 +217,8 @@ class CourseModel extends Model
                 STRING_AGG(DISTINCT student.first_name || ' ' || student.last_name, ', ') AS students
             ")
             ->join('level_courses', 'level_courses.id = courses.level_course_id', 'left')
-            ->join('courses_lecturers', 'courses_lecturers.course_id = courses.id', 'left')
-            ->join('user_profiles AS teacher', 'teacher.id = courses_lecturers.lecturer_id', 'left')
+            ->join('course_teachers', 'course_teachers.course_id = courses.id', 'left')
+            ->join('user_profiles AS teacher', 'teacher.id = course_teachers.teacher_id', 'left')
             ->join('enrollments', 'enrollments.course_id = courses.id', 'left')
             ->join('user_profiles AS student', 'student.id = enrollments.student_id', 'left')
             ->groupBy('courses.id, courses.name, level_courses.name');

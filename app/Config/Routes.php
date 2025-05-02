@@ -6,8 +6,6 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-$routes->get('home', 'Home::index', ['as' => 'home']);
-
 /* Public Routes */
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('/', 'AuthController::login');
@@ -55,62 +53,21 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 });
 
 /* Student Routes */
-$routes->group('student', ['filter' => 'role:student'], ['namespace' => 'App\Controllers'], function ($routes) {
+$routes->group('students', ['filter' => 'role:student'], ['namespace' => 'App\Controllers'], function ($routes) {
     /* Enrollemnt */
     $routes->group('enrollment', function ($routes) {
         $routes->post('store/(:num)', 'EnrollmentController::store/$1', ['as' => 'store_enrollment']);
         $routes->delete('leave/(:num)', 'EnrollmentController::leaveCourse/$1', ['as' => 'leave_course']);
     });
-
-    /* Courses */
-    $routes->group('courses', function ($routes) {
-        $routes->get('index', 'CourseController::studentCourseList', ['as' => 'student_courses']);
-        $routes->get('my-courses', 'CourseController::myCourses', ['as' => 'my_courses']);
-        $routes->get('show/(:num)', 'CourseController::show/$1', ['as' => 'show_course']);
-        $routes->get('show-content/(:num)/(:num)', 'CourseController::showContent/$1/$2', ['as' => 'show_course_detail']);
-        $routes->get('file/(:segment)', 'CourseController::file/$1', ['as' => 'file']);
-    });
 });
 
-$routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controllers'], function ($routes) {
-    /* Get a list of a course based on logged in teacher*/
-    $routes->get('/course-lecturers', 'CourseLecturerController::lecturerCourseList', ['as' => 'lecturer_courses']);
-    $routes->get('/course-lecturers-archived', 'CourseLecturerController::lecturerCourseListArchived', ['as' => 'archived_lecturer_courses']);
-    $routes->get('/courses/detail/(:num)', 'CourseController::detailCourse/$1', ['as' => 'course_detail']);
-    $routes->get('/courses/add', 'CourseController::addCourseForm');
-    $routes->post('/courses/add', 'CourseController::addCourse');
-    $routes->get('/courses/edit/(:num)', 'CourseController::editCourseForm/$1', ['as' => 'edit_course']);
-    $routes->put('/courses/edit/(:num)', 'CourseController::editCourse/$1');
-    $routes->delete('/courses/delete/(:num)', 'CourseController::deleteCourse/$1');
-    /* Add or Remove User to become a student or teacher at a course*/
-    $routes->get('/search-users/(:num)', 'UserController::showStudentLists/$1');
+/* Teacher Routes */
+$routes->group('teachers', ['filter' => 'role:teacher'], ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->get('search-users/(:num)', 'UserController::showStudentLists/$1');
     $routes->post('enroll_student/(:num)', 'EnrollmentController::addNewStudent/$1');
-    $routes->post('add_lecturer_course/(:num)', 'CourseLecturerController::addNewLecturer/$1');
-    $routes->delete('remove_lecturer_course/(:num)', 'CourseLecturerController::removeLecturer/$1');
+    $routes->post('add_teacher_course/(:num)', 'CourseTeacherController::addNewTeacher/$1');
+    $routes->delete('remove_teacher_course/(:num)', 'CourseTeacherController::removeTeacher/$1');
     $routes->delete('remove_student_course/(:num)', 'EnrollmentController::removeStudent/$1');
-
-    /* Add,Edit or Remove Content of a course*/
-    $routes->get('course-content/add/(:num)', 'CourseContentController::addContentForm/$1');
-    $routes->post('course-content/add/(:num)', 'CourseContentController::addContent/$1');
-    $routes->get('course-content/edit/(:num)', 'CourseContentController::editContentForm/$1');
-    $routes->put('course-content/edit/(:num)', 'CourseContentController::editContent/$1');
-    $routes->delete('course-content/delete/(:num)', 'CourseContentController::deleteContent/$1');
-    $routes->get('course-content/(:num)/(:num)', 'CourseContentController::showContent/$1/$2');
-
-    /* Add,Edit or Remove File of a course*/
-    $routes->get('file-material/(:any)', 'CourseContentController::showFileContent/$1');
-    $routes->get('file-form/(:num)', 'CourseContentController::addFileContentForm/$1');
-    $routes->post('file/(:num)', 'CourseContentController::addFileContent/$1');
-    $routes->delete('file/(:num)', 'CourseContentController::deleteFileContent/$1');
-    $routes->get('file-form-edit/(:any)', 'CourseContentController::editFileContentForm/$1');
-    $routes->put('file-edit/(:any)', 'CourseContentController::editFileContent/$1');
-
-    /* Add,Edit, Remove, show Detail Discussion of a course*/
-    $routes->get('discussion-form/(:num)', 'DiscussionController::addDiscussionForm/$1');
-    $routes->post('discussion/(:num)', 'DiscussionController::addDiscussion/$1');
-    $routes->get('discussion-form-edit/(:any)', 'DiscussionController::editDiscussionForm/$1');
-    $routes->put('discussion-edit/(:any)', 'DiscussionController::editDiscussion/$1');
-    $routes->delete('discussion/(:any)', 'DiscussionController::deleteDiscussion/$1');
 
     // dashboard
     $routes->get('teacher/dashboard', 'DashboardController::teacherDashboard', ['as' => 'teacher_dashboard']);
@@ -119,26 +76,64 @@ $routes->group('', ['filter' => 'role:teacher'], ['namespace' => 'App\Controller
 
 /* Courses Routes for Teacher and Student */
 $routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->get('index', 'CourseController::courseList', ['as' => 'course_list']);
+    $routes->get('student-courses', 'CourseController::studentCourses', ['as' => 'student_courses']);
+    $routes->get('teacher-courses', 'CourseController::teacherCourses', ['as' => 'teacher_courses']);
+
+    $routes->get('show-course/(:num)', 'CourseController::showCourse/$1', ['as' => 'show_course']);
+    $routes->get('create-course', 'CourseController::createCourse', ['as' => 'create_course']);
+    $routes->post('store-course', 'CourseController::storeCourse', ['as' => 'store_course']);
+    $routes->get('edit-course/(:num)', 'CourseController::editCourse/$1', ['as' => 'edit_course']);
+    $routes->put('update-course/(:num)', 'CourseController::updateCourse/$1', ['as' => 'update_course']);
+    $routes->delete('delete-course/(:num)', 'CourseController::deleteCourse/$1', ['as' => 'delete_course']);
+        
+        // $routes->get('file/(:segment)', 'CourseController::file/$1', ['as' => 'file']);
+    $routes->group('materials', function ($routes) {
+        $routes->get('show-material/(:num)/(:num)', 'MaterialController::showMaterial/$1/$2', ['as' => 'show_material']);
+        $routes->get('create-material/(:num)', 'MaterialController::createMaterial/$1', ['as' => 'create_material']);
+        $routes->post('store-material/(:num)', 'MaterialController::storeMaterial/$1', ['as' => 'store_material']);
+        $routes->get('edit-material/(:num)', 'MaterialController::editMaterial/$1', ['as' => 'edit_material']);
+        $routes->put('update-material/(:num)', 'MaterialController::updateMaterial/$1', ['as' => 'update_material']);
+        $routes->delete('delete-material/(:num)', 'MaterialController::deleteMaterial/$1', ['as' => 'delete_material']);
+
+        $routes->get('show-file-material/(:num)/(:segment)', 'MaterialController::showFileMaterial/$1/$2', ['as' => 'show_file_material']);
+        $routes->get('add-file-material/(:num)', 'MaterialController::addFileMaterial/$1', ['as' => 'add_file_material']);
+        $routes->post('store-file-material/(:num)', 'MaterialController::storeFileMaterial/$1', ['as' => 'store_file_material']);
+        $routes->get('edit-file-material/(:num)', 'MaterialController::editFileMaterial/$1', ['as' => 'edit_file_material']);
+        $routes->put('update-file-material/(:num)', 'MaterialController::updateFileMaterial/$1', ['as' => 'update_file_material']);
+        $routes->delete('delete-file-material/(:num)', 'MaterialController::deleteFileMaterial/$1', ['as' => 'delete_file_material']);
+    });
+    
+    // $routes->get('detail/(:num)', 'CourseController::detailCourse/$1', ['as' => 'course_detail']);
+    $routes->get('course-teacher-archived', 'CourseTeacherController::teacherCourseListArchived', ['as' => 'archived_teacher_courses']);
+    
     /* Assignments */
     $routes->group('assignments', function ($routes) {
-        $routes->get('show/(:num)', 'AssignmentController::showAssignment/$1', ['as' => 'show_assignment']);
-        $routes->get('create/(:num)', 'AssignmentController::createAssignment/$1', ['as' => 'create_assignment']);
-        $routes->post('store/(:num)', 'AssignmentController::storeAssignment/$1', ['as' => 'store_assignment']);
-        $routes->get('edit/(:num)', 'AssignmentController::editAssignment/$1', ['as' => 'edit_assignment']);
-        $routes->put('update/(:num)', 'AssignmentController::updateAssignment/$1', ['as' => 'update_assignment']);
-        $routes->delete('delete/(:num)', 'AssignmentController::deleteAssignment/$1', ['as' => 'delete_assignment']);
-        $routes->get('file/(:num)/(:segment)', 'AssignmentController::file/$1/$2', ['as' => 'file_assignment']);
-        $routes->post('submit/(:num)', 'AssignmentController::submitAssignment/$1', ['as' => 'submit_assignment']);
-        $routes->get('submissionFile/(:num)/(:segment)', 'AssignmentController::submissionFile/$1/$2', ['as' => 'submission_file']);
-        $routes->delete('deleteSubmission/(:num)', 'AssignmentController::deleteSubmission/$1', ['as' => 'delete_submission']);
+        $routes->get('show-assignment/(:num)', 'AssignmentController::showAssignment/$1', ['as' => 'show_assignment']);
+        $routes->get('create-assignment/(:num)', 'AssignmentController::createAssignment/$1', ['as' => 'create_assignment']);
+        $routes->post('store-assignment/(:num)', 'AssignmentController::storeAssignment/$1', ['as' => 'store_assignment']);
+        $routes->get('edit-assignment/(:num)', 'AssignmentController::editAssignment/$1', ['as' => 'edit_assignment']);
+        $routes->put('update-assignment/(:num)', 'AssignmentController::updateAssignment/$1', ['as' => 'update_assignment']);
+        $routes->delete('delete-assignment/(:num)', 'AssignmentController::deleteAssignment/$1', ['as' => 'delete_assignment']);
+        $routes->get('file-assignment/(:num)/(:segment)', 'AssignmentController::file/$1/$2', ['as' => 'file_assignment']);
+        $routes->post('submit-assignment/(:num)', 'AssignmentController::submitAssignment/$1', ['as' => 'submit_assignment']);
+        $routes->get('submissionFile-assignment/(:num)/(:segment)', 'AssignmentController::submissionFile/$1/$2', ['as' => 'submission_file']);
+        $routes->delete('deleteSubmission-assignment/(:num)', 'AssignmentController::deleteSubmission/$1', ['as' => 'delete_submission']);
     });
-});
 
+    /* Discussion */
+    $routes->group('discussion', function ($routes) {
+        $routes->get('discussion/(:segment)', 'DiscussionController::showDiscussionDetail/$1', ['as' => 'show_discussion']);
+        /* Add Discussion comment of a course*/
+        $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1');
+        $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1');
+        $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1');
 
-$routes->group('', ['filter' => 'role:teacher,student'], ['namespace' => 'App\Controllers'], function ($routes) {
-    $routes->get('discussion/(:any)', 'DiscussionController::showDiscussionDetail/$1');
-    /* Add Discussion comment of a course*/
-    $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1');
-    $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1');
-    $routes->put('discussion-comment/(:any)', 'DiscussionUserController::editCommentDiscussion/$1');
+        /* Add,Edit, Remove, show Detail Discussion of a course*/
+        $routes->get('discussion-form/(:num)', 'DiscussionController::addDiscussionForm/$1');
+        $routes->post('discussion/(:num)', 'DiscussionController::addDiscussion/$1');
+        $routes->get('discussion-form-edit/(:any)', 'DiscussionController::editDiscussionForm/$1');
+        $routes->put('discussion-edit/(:any)', 'DiscussionController::editDiscussion/$1');
+        $routes->delete('discussion/(:any)', 'DiscussionController::deleteDiscussion/$1');
+    });
 });

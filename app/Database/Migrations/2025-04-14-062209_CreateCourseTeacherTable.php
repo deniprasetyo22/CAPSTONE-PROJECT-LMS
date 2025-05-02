@@ -5,7 +5,7 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-class CreateCourseLecturersTable extends Migration
+class CreateCourseTeacherTable extends Migration
 {
     public function up()
     {
@@ -16,7 +16,7 @@ class CreateCourseLecturersTable extends Migration
                 'auto_increment' => true,
                 'null'           => false,
             ],
-            'lecturer_id'     => [
+            'teacher_id'     => [
                 'type'       => 'INTEGER',
                 'unsigned'   => true,
                 'null'       => false,
@@ -42,13 +42,13 @@ class CreateCourseLecturersTable extends Migration
             ],
         ]);
         $this->forge->addKey('id', true); // Primary key
-        $this->forge->addForeignKey('lecturer_id', 'user_profiles', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('teacher_id', 'user_profiles', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('course_id', 'courses', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('courses_lecturers', true);
+        $this->forge->createTable('course_teachers', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('courses_lecturers', true);
+        $this->forge->dropTable('course_teachers', true);
     }
 }

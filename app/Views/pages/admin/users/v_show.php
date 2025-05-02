@@ -72,7 +72,7 @@
                         <tr>
                             <th>Profile Picture</th>
                             <td>
-                                <img src="<?= base_url( $user->profile_picture) ?>" alt="Profile Picture" width="50"
+                                <img src="<?= base_url($user->profile_picture) ?>" alt="Profile Picture" width="50"
                                     height="50">
                             </td>
                         </tr>

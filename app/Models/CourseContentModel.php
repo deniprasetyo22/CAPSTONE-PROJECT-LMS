@@ -58,4 +58,21 @@ class CourseContentModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getCourseContentWithFiles($id, $fileName)
+    {
+        return $this->select('course_contents.*, courses.name as course_name, files.file_url as file_url, files.file_name as file_name')
+            ->join('courses', 'courses.id = course_contents.course_id')
+            ->join('files', 'files.content_id = course_contents.id')
+            ->where('course_contents.id', $id)
+            ->where('files.file_url', $fileName)
+            ->first();
+    }
+
+    public function getAllCourseContentWithFiles()
+    {
+        return $this->select('course_contents.*, courses.name as course_name, files.file_url as file_url, files.file_name as file_name')
+            ->join('courses', 'courses.id = course_contents.course_id', 'left')
+            ->join('files', 'files.content_id = course_contents.id', 'left');
+    }
 }

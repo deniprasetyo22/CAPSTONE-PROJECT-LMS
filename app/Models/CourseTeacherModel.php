@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
-use App\Entities\CourseLecturers;
+use App\Entities\CourseTeacher;
 use CodeIgniter\Model;
 
-class CourseLecturersModel extends Model
+class CourseTeacherModel extends Model
 {
-    protected $table            = 'courses_lecturers';
+    protected $table            = 'course_teachers';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = CourseLecturers::class;
+    protected $returnType       = CourseTeacher::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'course_id',
-        'lecturer_id',
+        'teacher_id',
         'deleted_at',
     ];
 
@@ -35,14 +35,14 @@ class CourseLecturersModel extends Model
     // Validation
     protected $validationRules      = [
         'course_id'  => 'required',
-        'lecturer_id' => 'required',
+        'teacher_id' => 'required',
     ];
     protected $validationMessages   = [
         'course_id' => [
             'required' => 'Course ID is required',
         ],
-        'lecturer_id' => [
-            'required' => 'Lecturer ID is required',
+        'teacher_id' => [
+            'required' => 'Teacher ID is required',
         ]
     ];
     protected $skipValidation       = false;
@@ -61,7 +61,7 @@ class CourseLecturersModel extends Model
 
     public function getAllCourseTeachersDashboard()
     {
-        $builder = $this->select('COUNT(DISTINCT lecturer_id) AS total_unique_teachers')->where('deleted_at', null);
+        $builder = $this->select('COUNT(DISTINCT teacher_id) AS total_unique_teachers')->where('deleted_at', null);
         $query = $builder->get();
         $result = $query->getRow();
         return $result;
@@ -69,10 +69,10 @@ class CourseLecturersModel extends Model
 
     public function getAllCountTeacherCourses($lecturerId)
     {
-        $result = $this->join('courses', 'courses.id = courses_lecturers.course_id')
-            ->where('courses_lecturers.lecturer_id', $lecturerId)
+        $result = $this->join('courses', 'courses.id = course_teachers.course_id')
+            ->where('course_teachers.teacher_id', $lecturerId)
             ->where('courses.deleted_at', null)
-            ->where('courses_lecturers.deleted_at', null)
+            ->where('course_teachers.deleted_at', null)
             ->countAllResults();
 
         return $result;

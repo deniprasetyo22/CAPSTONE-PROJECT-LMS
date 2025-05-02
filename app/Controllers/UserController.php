@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\DataParams;
-use App\Models\CourseLecturersModel;
+use App\Models\CourseTeacherModel;
 use App\Models\EnrollmentModel;
 use App\Models\UserProfileModel;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -15,7 +15,7 @@ class UserController extends BaseController
 {
     protected $userModel;
     protected $userProfileModel;
-    protected $courseLecturersModel;
+    protected $courseTeacherModel;
     protected $groupModel;
     protected $enrollmentModel;
 
@@ -24,7 +24,7 @@ class UserController extends BaseController
         $this->userModel = new UserModel();
         $this->userProfileModel = new UserProfileModel();
         $this->groupModel = new GroupModel();
-        $this->courseLecturersModel = new CourseLecturersModel();
+        $this->courseTeacherModel = new CourseTeacherModel();
         $this->enrollmentModel = new EnrollmentModel();
     }
 
@@ -223,19 +223,18 @@ class UserController extends BaseController
             'search' => $this->request->getGet('search'),
         ]);
         $results = $this->userProfileModel->getFilteredUserProfiles($params);
-        // filtered by lecturers which is not in the course
-        $includedLecturers = $this->courseLecturersModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
-        $includedLecturerIds = array_column($includedLecturers, 'lecturer_id');
+        $includedTeachers = $this->courseTeacherModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
+        $includedTeacherIds = array_column($includedTeachers, 'teacher_id');
 
-        $filteredLecturers = array_filter($results['user_profiles'], function ($user) use ($includedLecturerIds) {
-            return !in_array($user->id, $includedLecturerIds);
+        $filteredTeachers = array_filter($results['user_profiles'], function ($user) use ($includedTeacherIds) {
+            return !in_array($user->id, $includedTeacherIds);
         });
 
         // filtered by students which is not in the course
         $includedStudents = $this->enrollmentModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
         $includedIds = array_column($includedStudents, 'student_id');
 
-        $filteredStudents = array_filter($filteredLecturers, function ($user) use ($includedIds) {
+        $filteredStudents = array_filter($filteredTeachers, function ($user) use ($includedIds) {
             return !in_array($user->id, $includedIds);
         });
         // REINDEX pakai array_values

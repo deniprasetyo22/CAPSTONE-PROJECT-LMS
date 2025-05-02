@@ -50,7 +50,7 @@ class AssignmentController extends BaseController
     {
         $course = $this->courseModel->find($id);
         if (!$course) {
-            return redirect()->to('/courses/my-courses')->with('error', 'Course not found!');
+            return redirect()->to(route_to('show_course', $id))->with('error', 'Course not found!');
         }
 
         $data = [
@@ -102,7 +102,7 @@ class AssignmentController extends BaseController
         }
 
         if ($this->assignmentModel->save($data)) {
-            return redirect()->to('/courses/detail/' . $id)->with('success', 'Assignment created successfully!');
+            return redirect()->to(route_to('show_course', $id))->with('success', 'Assignment created successfully!');
         } else {
             return redirect()->back()->withInput()->with('errors', $this->assignmentModel->errors());
         }
@@ -146,7 +146,7 @@ class AssignmentController extends BaseController
 
         $course = $this->courseModel->find($assignment->course_id);
         if (!$course) {
-            return redirect()->to('/courses/my-courses')->with('error', 'Course not found.');
+            return redirect()->to(route_to('show_course', $assignment->course_id))->with('error', 'Course not found.');
         }
 
         $file = $this->request->getFile('file');
@@ -193,7 +193,7 @@ class AssignmentController extends BaseController
         }
     
         if ($this->assignmentModel->save($data)) {
-            return redirect()->to('/courses/detail/' . $course->id)->with('success', 'Assignment updated successfully!');
+            return redirect()->to(route_to('show_course', $assignment->course_id))->with('success', 'Assignment updated successfully!');
         } else {
             return redirect()->back()->withInput()->with('errors', $this->assignmentModel->errors());
         }
@@ -222,7 +222,7 @@ class AssignmentController extends BaseController
 
         // Hapus assignment dari database
         if ($this->assignmentModel->delete($id)) {
-            return redirect()->to('/courses/detail/' . $course->id)->with('success', 'Assignment deleted successfully!');
+            return redirect()->to(route_to('show_course', $course->id))->with('success', 'Assignment deleted successfully!');
         } else {
             return redirect()->back()->with('error', 'Failed to delete assignment.');
         }

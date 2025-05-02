@@ -15,6 +15,7 @@ class FileModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'content_id',
+        'file_name',
         'file_url',
         'deleted_at'
     ];
@@ -35,11 +36,15 @@ class FileModel extends Model
     // Validation
     protected $validationRules      = [
         'content_id' => 'required',
+        'file_name' => 'required',
         'file_url' => 'required',
     ];
     protected $validationMessages   = [
         'content_id' => [
             'required' => 'Content ID is required.',
+        ],
+        'file_name' => [
+            'required' => 'File Name is required.',
         ],
         'file_url' => [
             'required' => 'File URL is required.',

@@ -42,7 +42,7 @@ class DiscussionController extends BaseController
             return redirect()->back()->with('error', 'Failed to add discussion.');
         }
 
-        return redirect()->to('courses/detail/' . $courseId)->with('success', 'Discussion added successfully.');
+        return redirect()->to(route_to('show_course', $courseId))->with('success', 'Discussion added successfully.');
     }
 
     public function editDiscussionForm($discussionId)

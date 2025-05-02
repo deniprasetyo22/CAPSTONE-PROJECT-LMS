@@ -1,12 +1,20 @@
-<?= $this->extend('layouts/main_layout') ?>
+<?= $this->extend('layouts/admin_layout') ?>
 
 <?= $this->section('title') ?>
 <?= $page_title ?>
 <?= $this->endSection() ?>
 
-<?= $this->section('content') ?>
+<?= $this->section('admin_content') ?>
 
 <div class="container mx-auto mb-4">
+
+    <div class="bg-gray-200 rounded-md px-4">
+        <div class="breadcrumbs">
+            <ul>
+                <li class="font-semibold">Courses</li>
+            </ul>
+        </div>
+    </div>
 
     <div class="p-4 md:px-0">
         <?php if(session()->has('success')) : ?>
@@ -77,7 +85,13 @@
         </div>
     </form>
 
-    <?php if (empty($courses)) : ?>
+    <div class="flex justify-start my-4">
+        <a href="<?= url_to('create_course') ?>" class="btn btn-primary">
+            <i class="fa fa-plus mr-2"></i>Add Course
+        </a>
+    </div>
+
+    <?php if (empty($teacherCourses)) : ?>
     <div class="p-4 md:px-0">
         <div class="divider">
             <div class="divider-title">No Courses</div>
@@ -86,60 +100,61 @@
     <?php endif ?>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4 md:px-0">
-        <?php foreach ($courses as $index => $course): ?>
-        <?php $modalId = 'modal_' . $index; ?>
+        <?php foreach ($teacherCourses as $teacherCourse): ?>
         <div class="card bg-base-100 shadow-md border border-gray-200">
             <figure class="py-20 bg-blue-200">
-                <span class="text-xl font-semibold"><?= esc($course->name) ?></span>
+                <span class="text-xl font-semibold"><?= esc($teacherCourse->name) ?></span>
             </figure>
             <div class="card-body">
                 <h2 class="card-title text-lg font-semibold text-primary">
-                    <?= esc($course->code) ?> - <?= esc($course->name) ?>
+                    <?= esc($teacherCourse->code) ?> - <?= esc($teacherCourse->name) ?>
                 </h2>
-                <p class="text-sm text-gray-600"><?= esc($course->description) ?></p>
+                <p class="text-sm text-gray-600"><?= esc($teacherCourse->description) ?></p>
                 <div class="mt-4 text-sm text-gray-500">
-                    <p><strong>Duration:</strong> <?= esc($course->expected_duration) ?> months</p>
-                    <p><strong>Level:</strong> <?= esc($course->levelName) ?></p>
+                    <p><strong>Duration:</strong> <?= esc($teacherCourse->expected_duration) ?> months</p>
+                    <p><strong>Level:</strong> <?= esc($teacherCourse->levelName) ?></p>
                 </div>
-                <div class="card-actions justify-end mt-4">
-                    <?php if (in_array($course->id, $enrolledCourseIds)) : ?>
-                    <span class="btn btn-sm bg-gray-200 cursor-not-allowed">Enrolled</span>
-                    <?php else : ?>
-                    <button class="btn btn-sm btn-primary"
-                        onclick="document.getElementById('<?= $modalId ?>').showModal()">
-                        Enroll
+
+                <div class="flex justify-end gap-2">
+                    <a href="<?= url_to('show_course', $teacherCourse->id) ?>" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    <a href="<?= url_to('edit_course', $teacherCourse->id) ?>" class="btn btn-warning btn-sm">
+                        <i class="fa fa-edit text-white"></i>
+                    </a>
+                    <button type="button" class="btn btn-error btn-sm text-white"
+                        onclick="document.getElementById('deleteModal<?= $teacherCourse->id ?>').showModal()">
+                        <i class="fa fa-trash"></i>
                     </button>
-                    <?php endif ?>
-
-
-                    <!-- Modal -->
-                    <dialog id="<?= $modalId ?>" class="modal">
+                    <dialog id="deleteModal<?= $teacherCourse->id ?>" class="modal">
                         <div class="modal-box">
-                            <h3 class="text-lg font-bold mb-4">Enroll to <?= esc($course->name) ?> Class</h3>
-                            <form action="<?= url_to('store_enrollment', $course->id) ?>" method="post">
-                                <?= csrf_field() ?>
-                                <fieldset>
-                                    <input type="text" name="enrollment_code" class="input w-full"
-                                        placeholder="Enter Enrollment Code" required>
-                                </fieldset>
-                                <div class="modal-action">
-                                    <button type="submit" class="btn btn-primary">Enroll</button>
-                                    <button type="submit" formmethod="dialog" formnovalidate class="btn">Close</button>
-                                </div>
-                            </form>
+                            <h3 class="font-bold text-lg text-red-600">Delete Confirmation</h3>
+                            <p class="py-4">Are you sure you want to delete this course?</p>
+                            <div class="modal-action">
+                                <form method="dialog">
+                                    <button class="btn btn-error text-white">Cancel</button>
+                                </form>
+                                <form action="<?= url_to('delete_course', $teacherCourse->id) ?>" method="post">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-success text-white">Yes, Delete</button>
+                                </form>
+                            </div>
                         </div>
                     </dialog>
                 </div>
+
             </div>
         </div>
         <?php endforeach; ?>
     </div>
 
     <div class="flex justify-center mt-2">
-        <?= $pager->links('courses', 'custom_pager') ?>
+        <?= $pager->links('teacherCourses', 'custom_pager') ?>
     </div>
     <div class="text-center mt-2">
-        <small>Displaying <?= count($courses) ?> out of <?= $total ?> total courses (Page <?= $params->page ?>)</small>
+        <small>Displaying <?= count($teacherCourses) ?> out of <?= $total ?> total courses (Page
+            <?= $params->page ?>)</small>
     </div>
 </div>
 

@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\AssignmentModel;
-use App\Models\CourseLecturersModel;
 use App\Models\CourseModel;
+use App\Models\CourseTeacherModel;
 use App\Models\DiscussionModel;
 use App\Models\EnrollmentModel;
 use App\Models\UserProfileModel;
@@ -14,7 +14,7 @@ class DashboardController extends BaseController
 {
     private $enrollmentModel;
     private $courseModel;
-    protected $courseLecturersModel;
+    protected $courseTeacherModel;
     protected $userProfileModel;
     protected $discussionModel;
     protected $assignmentModel;
@@ -23,7 +23,7 @@ class DashboardController extends BaseController
     {
         $this->enrollmentModel = new EnrollmentModel();
         $this->courseModel = new CourseModel();
-        $this->courseLecturersModel = new CourseLecturersModel();
+        $this->courseTeacherModel = new CourseTeacherModel();
         $this->userProfileModel = new UserProfileModel();
         $this->discussionModel = new DiscussionModel();
         $this->assignmentModel = new AssignmentModel();
@@ -32,7 +32,7 @@ class DashboardController extends BaseController
     {
         $countStudents = $this->enrollmentModel->getAllStudentsDashboard();
         $countCourses =  $this->courseModel->getAllCoursesDashboard();
-        $countTeachers = $this->courseLecturersModel->getAllCourseTeachersDashboard();
+        $countTeachers = $this->courseTeacherModel->getAllCourseTeachersDashboard();
         $countEnrollments = $this->enrollmentModel->getAllEnrollmentsDashboard();
 
         // Create Data for Pie Chart
@@ -103,7 +103,7 @@ class DashboardController extends BaseController
     {
         $currentUser = $this->userProfileModel->select('id')->where('user_id', user_id())->first();
 
-        $courseLecturers = $this->courseLecturersModel->getAllCountTeacherCourses($currentUser->id);
+        $courseLecturers = $this->courseTeacherModel->getAllCountTeacherCourses($currentUser->id);
         $discussions = $this->discussionModel->getAllCountTeacherDiscussions($currentUser->id);
         $assignments = $this->assignmentModel->getAllCountTeacherAssignments($currentUser->id);
 
@@ -139,7 +139,7 @@ class DashboardController extends BaseController
         $enrollmentGrowthMonth = $this->createLineChart($labelMonths, $total_enrollments);
 
         // Create Data for Pie Chart
-        $assignmentStatusesCount = $this->assignmentModel->getLecturerAssignmentSubmissionStats($currentUser->id);
+        $assignmentStatusesCount = $this->assignmentModel->getTeacherAssignmentSubmissionStats($currentUser->id);
         $totalExpected = 0;
         $totalOnTime = 0;
         $totalLate = 0;

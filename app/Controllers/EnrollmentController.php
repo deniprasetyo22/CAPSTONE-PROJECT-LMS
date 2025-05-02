@@ -80,7 +80,7 @@ class EnrollmentController extends BaseController
             return redirect()->back()->with('error', 'Failed to leave the course.');
         }
 
-        return redirect()->to('/student/courses/my-courses')->with('success', 'You have successfully left the course.');
+        return redirect()->to(route_to('my_courses'))->with('success', 'You have successfully left the course.');
     }
 
     public function addNewStudent($courseId)
