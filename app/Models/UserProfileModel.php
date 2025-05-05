@@ -72,16 +72,19 @@ class UserProfileModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getJoinedTableUserProfiles()
+    public function getJoinedTableUserProfiles($role)
     {
         return $this->select('user_profiles.first_name, user_profiles.last_name, users.email as email, user_profiles.id as id')
             ->join('users', 'users.id = user_profiles.user_id')
+            ->join('auth_groups_users', 'auth_groups_users.user_id = user_profiles.user_id')
+            ->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id')
+            ->where('auth_groups.name', $role)
             ->where('user_profiles.deleted_at', null);
     }
 
-    public function getFilteredUserProfiles(DataParams $params)
+    public function getFilteredUserProfiles(DataParams $params, $role)
     {
-        $query = $this->getJoinedTableUserProfiles();
+        $query = $this->getJoinedTableUserProfiles($role);
 
         //Search
         if (!empty($params->search)) {

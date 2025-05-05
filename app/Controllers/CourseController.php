@@ -164,6 +164,13 @@ class CourseController extends BaseController
         $course = $this->courseModel->select('courses.*, level_courses.name as levelName')
             ->join('level_courses', 'level_courses.id = courses.level_course_id')->find($id);
 
+        if (!$course) {
+            if (in_groups('teacher')) {
+                return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
+            } elseif (in_groups('student')) {
+                return redirect()->to(route_to('student_courses'))->with('error', 'Course not found!');
+            }
+        }
         $courseContents = $this->courseContentModel->where('course_id', $id)->findAll();
 
         $assignments = $this->assignmentModel->where('course_id', $id)->findAll();
@@ -227,16 +234,20 @@ class CourseController extends BaseController
 
     public function storeCourse()
     {
+        $enrollmentCode = trim($this->request->getPost('enrollment_code'));
+        if (!$enrollmentCode) {
+            $enrollmentCode = generate_enrollment_code();
+        }
         $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
         $data = [
             'code'              => $this->request->getPost('code'),
             'name'              => $this->request->getPost('name'),
             'description'       => $this->request->getPost('description'),
-            'enrollment_code'   => generate_enrollment_code(),
+            'enrollment_code'   => $enrollmentCode,
             'expected_duration' => $this->request->getPost('expected_duration'),
             'level_course_id'   => $this->request->getPost('level_course_id'),
         ];
- 
+
         if ($this->courseModel->save($data)) {
             // Save the course ID to the course_lecturers table
             $courseId = $this->courseModel->insertID();
@@ -256,7 +267,7 @@ class CourseController extends BaseController
         $course = $this->courseModel->find($id);
         $levelCourses = $this->levelCourseModel->findAll();
         if (!$course) {
-            return redirect()->to(route_to('course_list'))->with('error', 'Course not found!');
+            return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
 
         return view('pages/courses/v_edit_course', [
@@ -269,7 +280,7 @@ class CourseController extends BaseController
     {
         $course = $this->courseModel->find($id);
         if (!$course) {
-            return redirect()->to(route_to('course_list'))->with('error', 'Course not found!');
+            return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
 
         $data = [
@@ -308,7 +319,12 @@ class CourseController extends BaseController
         if (!$course) {
             return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
-        
+
+        $course->enrollment_code = $course->enrollment_code . '_deleted';
+        $course->code = $course->code . '_deleted';
+
+        $this->courseModel->save($course);
+
         $this->courseModel->delete($id);
         return redirect()->to(route_to('teacher_courses'))->with('success', 'Course deleted successfully!');
     }
