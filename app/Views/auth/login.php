@@ -46,13 +46,13 @@
                     <?php endif ?>
                 </fieldset>
 
-                <fieldset class="mb-4">
+                <!-- <fieldset class="mb-4">
                     <label class="fieldset-label text-black text-sm">
                         <input type="checkbox" class="checkbox checkbox-primary checkbox-xs" name="remember"
                             id="remember" />
                         Remember me
                     </label>
-                </fieldset>
+                </fieldset> -->
 
                 <button type="submit" class="btn btn-primary w-full">Login</button>
             </form>

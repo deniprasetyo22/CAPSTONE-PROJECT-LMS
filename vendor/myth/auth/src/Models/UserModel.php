@@ -24,8 +24,8 @@ class UserModel extends Model
     protected $useTimestamps   = true;
     protected $validationRules = [
         'id'            => 'is_natural_no_zero|permit_empty',
-        'email'         => 'required|valid_email|is_unique[users.email,id,{id}]',
-        'username'      => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
+        'email'         => 'required|valid_email',
+        'username'      => 'required|alpha_numeric_punct|min_length[3]|max_length[30]',
         'password_hash' => 'required',
     ];
     protected $validationMessages = [
@@ -134,7 +134,7 @@ class UserModel extends Model
     /* Get All User with User Profile */
     public function getAllUserWithProfile()
     {
-        return $this->select('users.*, user_profiles.first_name as first_name, user_profiles.last_name as last_name, user_profiles.phone as phone, user_profiles.sex as sex, user_profiles.dob as dob, user_profiles.address as address, user_profiles.profile_picture as profile_picture, auth_groups.id as role_id, auth_groups.name as role_name')
+        return $this->select('users.*, user_profiles.id as user_profile_id, user_profiles.first_name as first_name, user_profiles.last_name as last_name, user_profiles.phone as phone, user_profiles.sex as sex, user_profiles.dob as dob, user_profiles.address as address, user_profiles.profile_picture as profile_picture, auth_groups.id as role_id, auth_groups.name as role_name')
             ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
             ->join('auth_groups_users', 'auth_groups_users.user_id = users.id', 'left')
             ->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id', 'left')

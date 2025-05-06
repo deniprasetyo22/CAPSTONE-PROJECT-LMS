@@ -8,7 +8,11 @@
     <div class="drawer-content flex flex-col">
         <!-- Mobile Topbar -->
         <div class="lg:hidden bg-gray-800 text-white flex items-center justify-between p-4">
+            <?php if (in_groups('administrator')) : ?>
             <h1 class="text-lg font-semibold">Admin Panel</h1>
+            <?php elseif (in_groups('teacher')) : ?>
+            <h1 class="text-lg font-semibold">Teacher Panel</h1>
+            <?php endif; ?>
             <label for="admin-drawer" class="btn btn-ghost text-white text-2xl">
                 <i class="fas fa-bars"></i>
             </label>

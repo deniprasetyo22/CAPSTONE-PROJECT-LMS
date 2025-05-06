@@ -125,19 +125,12 @@ class CourseModel extends Model
             ->getRow()
             ->id ?? null;
 
-        if (!$studentId) {
-            return $this->builder()
-                ->where('0=1'); // return empty query
-        }
-
-        $subQuery = $this->db->table('enrollments')
-            ->select('course_id')
-            ->where('student_id', $studentId);
-
         return $this->select('courses.*, level_courses.name as levelName')
             ->join('level_courses', 'level_courses.id = courses.level_course_id')
             ->where('courses.deleted_at', null)
-            ->whereIn('courses.id', $subQuery);
+            ->where('enrollments.deleted_at', null)
+            ->join('enrollments', 'enrollments.course_id = courses.id', 'left')
+            ->where('enrollments.student_id', $studentId);
     }
 
     public function getFilteredStudentCourses(DataParams $params)

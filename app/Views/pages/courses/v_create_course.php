@@ -36,6 +36,7 @@
                         class="input w-full <?= (session('errors.name')) ? 'border-red-500' : '' ?>"
                         placeholder="Course Name" value="<?= old('name') ?>">
                 </fieldset>
+
                 <fieldset class="mb-4">
                     <label class="label" for="code">
                         <span class="label-text">Course Code</span>
@@ -43,9 +44,22 @@
                     <input type="text" name="code" id="code"
                         class="input input-bordered w-full <?= (session('errors.code')) ? 'border-red-500' : '' ?>"
                         data-pristine-required data-pristine-required-message="Course Code is required"
+<<<<<<< HEAD
+                        placeholder="Course Code" value="<?= old('code') ?>">
+                </fieldset>
+
+                <fieldset class="mb-4">
+                    <label class="label" for="enrollment_code">
+                        <span class="label-text">Enrollment Code</span>
+                    </label>
+                    <input type="text" name="enrollment_code" id="enrollment_code"
+                        class="input input-bordered w-full <?= (session('errors.enrollment_code')) ? 'border-red-500' : '' ?>"
+                        placeholder="Enrollment Code" value="<?= old('enrollment_code') ?>">
+=======
                         data-pristine-maxlength="10"
                         data-pristine-maxlength-message="Maximum 10 characters allowed"
                         placeholder="CS101" value="<?= old('code') ?>">
+>>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f
                 </fieldset>
 
                 <fieldset class="mb-4">
@@ -62,7 +76,7 @@
                         <span class="label-text">Description</span>
                     </label>
                     <textarea name="description" id="description"
-                        class="textarea textarea-bordered w-full <?= (session('errors.description')) ? 'border-red-500' : '' ?> "
+                        class="textarea h-50 textarea-bordered w-full <?= (session('errors.description')) ? 'border-red-500' : '' ?> "
                         rows="3" placeholder="Description of the course..." data-pristine-required
                         data-pristine-required-message="Description is required"
                         value="<?= old('description') ?>"></textarea>

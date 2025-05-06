@@ -146,6 +146,10 @@ class MaterialController extends BaseController
             return redirect()->back()->with('error', 'Failed to delete course material.');
         }
 
+        $this->courseContentModel->update($contentId, [
+            'title' => $courseContent->title . '_deletedAt_' . date('Y-m-d H:i:s')
+        ]);
+
         return redirect()->to(route_to('show_course', $courseContent->course_id))->with('success', 'Course material deleted successfully!');
     }
 

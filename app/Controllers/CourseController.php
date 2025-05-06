@@ -239,11 +239,14 @@ class CourseController extends BaseController
             $enrollmentCode = generate_enrollment_code();
         }
         $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
+
+        $enrollmentCodeInput = $this->request->getPost('enrollment_code');
+        
         $data = [
             'code'              => $this->request->getPost('code'),
             'name'              => $this->request->getPost('name'),
             'description'       => $this->request->getPost('description'),
-            'enrollment_code'   => $enrollmentCode,
+            'enrollment_code'   => !empty($enrollmentCodeInput) ? $enrollmentCodeInput : generate_enrollment_code(),
             'expected_duration' => $this->request->getPost('expected_duration'),
             'level_course_id'   => $this->request->getPost('level_course_id'),
         ];
@@ -319,12 +322,13 @@ class CourseController extends BaseController
         if (!$course) {
             return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
-
-        $course->enrollment_code = $course->enrollment_code . '_deleted';
-        $course->code = $course->code . '_deleted';
-
-        $this->courseModel->save($course);
-
+        
+        $this->courseModel->update($id, [
+            'code' => $course->code . '_deletedAt_' . date('Y-m-d_H:i:s'),
+            'name' => $course->name . '_deletedAt_' . date('Y-m-d_H:i:s'),
+            'enrollment_code' => $course->enrollment_code . '_deletedAt_' . date('Y-m-d_H:i:s')
+        ]);
+        
         $this->courseModel->delete($id);
         return redirect()->to(route_to('teacher_courses'))->with('success', 'Course deleted successfully!');
     }

@@ -18,12 +18,12 @@ class CreateCoursesTable extends Migration
             ],
             'code' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 20,
+                'constraint' => 255,
                 'unique'     => true,
             ],
             'name'       => [
                 'type'       => 'VARCHAR',
-                'constraint' => 100,
+                'constraint' => 255,
                 'null'       => false,
             ],
             'description' => [
@@ -32,7 +32,7 @@ class CreateCoursesTable extends Migration
             ],
             'enrollment_code'       => [
                 'type'       => 'VARCHAR',
-                'constraint' => 100,
+                'constraint' => 255,
                 'null'       => false,
             ],
             'expected_duration' => [

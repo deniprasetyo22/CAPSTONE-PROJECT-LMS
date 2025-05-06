@@ -57,8 +57,6 @@ class EnrollmentController extends BaseController
             'student_id' => $studentId,
             'course_id' => $courseId,
             'status' => 'enrolled',
-            'progress_percentage' => 0,
-            'grade' => 0
         ];
 
         if (!$this->enrollmentModel->save($enrollmentData)) {
@@ -80,7 +78,7 @@ class EnrollmentController extends BaseController
             return redirect()->back()->with('error', 'Failed to leave the course.');
         }
 
-        return redirect()->to(route_to('my_courses'))->with('success', 'You have successfully left the course.');
+        return redirect()->to(route_to('student_courses'))->with('success', 'You have successfully left the course.');
     }
 
     public function addNewStudent($courseId)
@@ -103,8 +101,6 @@ class EnrollmentController extends BaseController
             'student_id' => $studentId,
             'course_id' => $courseId,
             'status' => 'enrolled',
-            'progress_percentage' => 0,
-            'grade' => 0
         ];
 
         if (!$this->enrollmentModel->save($enrollmentData)) {
