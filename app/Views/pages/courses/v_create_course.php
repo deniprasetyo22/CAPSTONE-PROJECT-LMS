@@ -21,11 +21,11 @@
             </div>
 
             <?php if (session('errors')) : ?>
-            <div class="mb-4 p-3 text-red-700 bg-red-100 border border-red-400 rounded">
-                <?php foreach (session('errors') as $error) : ?>
-                <p><?= $error ?></p>
-                <?php endforeach ?>
-            </div>
+                <div class="mb-4 p-3 text-red-700 bg-red-100 border border-red-400 rounded">
+                    <?php foreach (session('errors') as $error) : ?>
+                        <p><?= $error ?></p>
+                    <?php endforeach ?>
+                </div>
             <?php endif ?>
 
             <form action="<?= url_to('store_course') ?>" method="post" id="courseRegistrationForm">
@@ -44,6 +44,7 @@
                     <input type="text" name="code" id="code"
                         class="input input-bordered w-full <?= (session('errors.code')) ? 'border-red-500' : '' ?>"
                         data-pristine-required data-pristine-required-message="Course Code is required"
+<<<<<<< HEAD
                         placeholder="Course Code" value="<?= old('code') ?>">
                 </fieldset>
 
@@ -54,6 +55,20 @@
                     <input type="text" name="enrollment_code" id="enrollment_code"
                         class="input input-bordered w-full <?= (session('errors.enrollment_code')) ? 'border-red-500' : '' ?>"
                         placeholder="Enrollment Code" value="<?= old('enrollment_code') ?>">
+=======
+                        data-pristine-maxlength="10"
+                        data-pristine-maxlength-message="Maximum 10 characters allowed"
+                        placeholder="CS101" value="<?= old('code') ?>">
+>>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f
+                </fieldset>
+
+                <fieldset class="mb-4">
+                    <label class="label" for="enrollment_code">
+                        <span class="label-text">Enrollment Code (optional – auto-generated if left blank)</span>
+                    </label>
+                    <input type="text" name="enrollment_code" id="enrollment_code"
+                        class="input input-bordered w-full <?= (session('errors.enrollment_code')) ? 'border-red-500' : '' ?>"
+                        value="<?= old('enrollment_code') ?>">
                 </fieldset>
 
                 <fieldset class="mb-4">
@@ -87,10 +102,10 @@
                         data-pristine-required data-pristine-required-message="Level Course is required">
                         <option value="">-- Select Level --</option>
                         <?php foreach ($levelCourses as $level): ?>
-                        <option value="<?= esc($level->id) ?>"
-                            <?= old('level_course_id') == $level->id ? 'selected' : '' ?>>
-                            <?= esc($level->name) ?>
-                        </option>
+                            <option value="<?= esc($level->id) ?>"
+                                <?= old('level_course_id') == $level->id ? 'selected' : '' ?>>
+                                <?= esc($level->name) ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </fieldset>
@@ -106,20 +121,20 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('courseRegistrationForm');
-    const pristine = new Pristine(form, {
-        classTo: 'mb-4',
-        errorTextParent: 'mb-4',
-        errorTextClass: 'text-red-500 text-sm'
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('courseRegistrationForm');
+        const pristine = new Pristine(form, {
+            classTo: 'mb-4',
+            errorTextParent: 'mb-4',
+            errorTextClass: 'text-red-500 text-sm'
+        });
 
-    form.addEventListener('submit', function(e) {
-        if (!pristine.validate()) {
-            e.preventDefault();
-        }
+        form.addEventListener('submit', function(e) {
+            if (!pristine.validate()) {
+                e.preventDefault();
+            }
+        });
     });
-});
 </script>
 
 <?= $this->endSection() ?>

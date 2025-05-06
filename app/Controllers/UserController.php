@@ -225,26 +225,30 @@ class UserController extends BaseController
         return redirect()->to('admin/users/index')->with('success', 'User deleted successfully.');
     }
 
-    public function showStudentLists($courseId)
+    public function showStudentLists($courseId, $role)
     {
         $params = new DataParams([
             'search' => $this->request->getGet('search'),
         ]);
-        $results = $this->userProfileModel->getFilteredUserProfiles($params);
-        $includedTeachers = $this->courseTeacherModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
-        $includedTeacherIds = array_column($includedTeachers, 'teacher_id');
+        $results = $this->userProfileModel->getFilteredUserProfiles($params, $role);
 
-        $filteredTeachers = array_filter($results['user_profiles'], function ($user) use ($includedTeacherIds) {
-            return !in_array($user->id, $includedTeacherIds);
-        });
-
-        // filtered by students which is not in the course
-        $includedStudents = $this->enrollmentModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
-        $includedIds = array_column($includedStudents, 'student_id');
-
-        $filteredStudents = array_filter($filteredTeachers, function ($user) use ($includedIds) {
-            return !in_array($user->id, $includedIds);
-        });
+        $filteredUsers = [];
+        // Filter users based on the role and course ID
+        if ($role == 'teacher') {
+            $includedTeachers = $this->courseTeacherModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
+            $includedTeacherIds = array_column($includedTeachers, 'teacher_id');
+            $filteredTeachers = array_filter($results['user_profiles'], function ($user) use ($includedTeacherIds) {
+                return !in_array($user->id, $includedTeacherIds);
+            });
+            $filteredUsers = $filteredTeachers;
+        } else if ($role == 'student') {
+            $includedStudents = $this->enrollmentModel->where('course_id', $courseId)->where('deleted_at', null)->findAll();
+            $includedStudentIds = array_column($includedStudents, 'student_id');
+            $filteredStudents = array_filter($results['user_profiles'], function ($user) use ($includedStudentIds) {
+                return !in_array($user->id,  $includedStudentIds);
+            });
+            $filteredUsers = $filteredStudents;
+        }
         // REINDEX pakai array_values
         $formattedUsers = array_values(array_map(function ($user) {
             return [
@@ -253,10 +257,11 @@ class UserController extends BaseController
                 'last_name' => $user->last_name,
                 'email' => $user->email,
             ];
-        }, $filteredStudents));
+        }, $filteredUsers));
 
         return $this->response->setJSON($formattedUsers);
     }
+<<<<<<< HEAD
 
     public function studentProfile()
     {
@@ -363,3 +368,6 @@ class UserController extends BaseController
     }
 
 }
+=======
+}
+>>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f

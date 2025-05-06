@@ -72,7 +72,7 @@ $routes->group('students', ['filter' => 'role:student'], ['namespace' => 'App\Co
 
 /* Teacher Routes */
 $routes->group('teachers', ['filter' => 'role:teacher'], ['namespace' => 'App\Controllers'], function ($routes) {
-    $routes->get('search-users/(:num)', 'UserController::showStudentLists/$1', ['as' => 'search_users']);
+    $routes->get('search-users/(:num)/(:any)', 'UserController::showStudentLists/$1/$2', ['as' => 'search_users']);
     $routes->post('enroll_student/(:num)', 'EnrollmentController::addNewStudent/$1', ['as' => 'enroll_student']);
     $routes->post('add_teacher_course/(:num)', 'CourseTeacherController::addNewTeacher/$1', ['as' => 'add_teacher_course']);
     $routes->delete('remove_teacher_course/(:num)', 'CourseTeacherController::removeTeacher/$1', ['as' => 'remove_teacher_course']);
@@ -84,10 +84,11 @@ $routes->group('teachers', ['filter' => 'role:teacher'], ['namespace' => 'App\Co
 
 
 /* Courses Routes for Teacher and Student */
-$routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 'App\Controllers'], function ($routes) {
+$routes->group('courses', ['filter' => 'role:teacher,student,administrator'], ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('index', 'CourseController::courseList', ['as' => 'course_list']);
     $routes->get('student-courses', 'CourseController::studentCourses', ['as' => 'student_courses']);
     $routes->get('teacher-courses', 'CourseController::teacherCourses', ['as' => 'teacher_courses']);
+    $routes->get('admin-courses', 'CourseController::adminCourses', ['as' => 'admin_courses']);
 
     $routes->get('show-course/(:num)', 'CourseController::showCourse/$1', ['as' => 'show_course']);
     $routes->get('create-course', 'CourseController::createCourse', ['as' => 'create_course']);
@@ -95,8 +96,8 @@ $routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 
     $routes->get('edit-course/(:num)', 'CourseController::editCourse/$1', ['as' => 'edit_course']);
     $routes->put('update-course/(:num)', 'CourseController::updateCourse/$1', ['as' => 'update_course']);
     $routes->delete('delete-course/(:num)', 'CourseController::deleteCourse/$1', ['as' => 'delete_course']);
-        
-        // $routes->get('file/(:segment)', 'CourseController::file/$1', ['as' => 'file']);
+
+    // $routes->get('file/(:segment)', 'CourseController::file/$1', ['as' => 'file']);
     $routes->group('materials', function ($routes) {
         $routes->get('show-material/(:num)/(:num)', 'MaterialController::showMaterial/$1/$2', ['as' => 'show_material']);
         $routes->get('create-material/(:num)', 'MaterialController::createMaterial/$1', ['as' => 'create_material']);
@@ -112,10 +113,15 @@ $routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 
         $routes->put('update-file-material/(:num)', 'MaterialController::updateFileMaterial/$1', ['as' => 'update_file_material']);
         $routes->delete('delete-file-material/(:num)', 'MaterialController::deleteFileMaterial/$1', ['as' => 'delete_file_material']);
     });
-    
+
     // $routes->get('detail/(:num)', 'CourseController::detailCourse/$1', ['as' => 'course_detail']);
+<<<<<<< HEAD
     // $routes->get('course-teacher-archived', 'CourseTeacherController::teacherCourseListArchived', ['as' => 'archived_teacher_courses']);
     
+=======
+    $routes->get('course-teacher-archived', 'CourseTeacherController::teacherCourseListArchived', ['as' => 'archived_teacher_courses']);
+
+>>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f
     /* Assignments */
     $routes->group('assignments', function ($routes) {
         $routes->get('show-assignment/(:num)', 'AssignmentController::showAssignment/$1', ['as' => 'show_assignment']);

@@ -185,6 +185,13 @@ class CourseController extends BaseController
         $course = $this->courseModel->select('courses.*, level_courses.name as levelName')
             ->join('level_courses', 'level_courses.id = courses.level_course_id')->find($id);
 
+        if (!$course) {
+            if (in_groups('teacher')) {
+                return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
+            } elseif (in_groups('student')) {
+                return redirect()->to(route_to('student_courses'))->with('error', 'Course not found!');
+            }
+        }
         $courseContents = $this->courseContentModel->where('course_id', $id)->findAll();
 
         $assignments = $this->assignmentModel->where('course_id', $id)->findAll();
@@ -248,6 +255,10 @@ class CourseController extends BaseController
 
     public function storeCourse()
     {
+        $enrollmentCode = trim($this->request->getPost('enrollment_code'));
+        if (!$enrollmentCode) {
+            $enrollmentCode = generate_enrollment_code();
+        }
         $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
 
         $enrollmentCodeInput = $this->request->getPost('enrollment_code');
@@ -256,7 +267,11 @@ class CourseController extends BaseController
             'code'              => $this->request->getPost('code'),
             'name'              => $this->request->getPost('name'),
             'description'       => $this->request->getPost('description'),
+<<<<<<< HEAD
             'enrollment_code'   => !empty($enrollmentCodeInput) ? $enrollmentCodeInput : generate_enrollment_code(),
+=======
+            'enrollment_code'   => $enrollmentCode,
+>>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f
             'expected_duration' => $this->request->getPost('expected_duration'),
             'level_course_id'   => $this->request->getPost('level_course_id'),
         ];
@@ -280,7 +295,7 @@ class CourseController extends BaseController
         $course = $this->courseModel->find($id);
         $levelCourses = $this->levelCourseModel->findAll();
         if (!$course) {
-            return redirect()->to(route_to('course_list'))->with('error', 'Course not found!');
+            return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
 
         return view('pages/courses/v_edit_course', [
@@ -293,7 +308,7 @@ class CourseController extends BaseController
     {
         $course = $this->courseModel->find($id);
         if (!$course) {
-            return redirect()->to(route_to('course_list'))->with('error', 'Course not found!');
+            return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
 
         $data = [
@@ -332,6 +347,7 @@ class CourseController extends BaseController
         if (!$course) {
             return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
+<<<<<<< HEAD
         
         $this->courseModel->update($id, [
             'code' => $course->code . '_deletedAt_' . date('Y-m-d_H:i:s'),
@@ -339,7 +355,39 @@ class CourseController extends BaseController
             'enrollment_code' => $course->enrollment_code . '_deletedAt_' . date('Y-m-d_H:i:s')
         ]);
         
+=======
+
+        $course->enrollment_code = $course->enrollment_code . '_deleted';
+        $course->code = $course->code . '_deleted';
+
+        $this->courseModel->save($course);
+
+>>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f
         $this->courseModel->delete($id);
         return redirect()->to(route_to('teacher_courses'))->with('success', 'Course deleted successfully!');
+    }
+
+    public function adminCourses()
+    {
+        $params = new DataParams([
+            'search' => $this->request->getGet('search'),
+            'sort' => $this->request->getGet('sort'),
+            'order' => $this->request->getGet('order'),
+            'page' => $this->request->getGet('page_courses'),
+            'perPage' => $this->request->getGet('perPage'),
+        ]);
+
+        $courses = $this->courseModel->getFilteredCourses($params);
+
+        $data = [
+            'page_title' => 'Admin Courses',
+            'courses' => $courses['courses'],
+            'pager' => $courses['pager'],
+            'total' => $courses['total'],
+            'params' => $params,
+            'baseUrl' => base_url('courses/admin-courses'),
+        ];
+
+        return view('pages/admin/courses/v_admin_courses', $data);
     }
 }
