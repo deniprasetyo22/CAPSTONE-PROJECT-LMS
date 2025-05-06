@@ -1,4 +1,4 @@
-<?php if (in_groups('teacher')) : ?>
+<?php if (in_groups(['teacher', 'administrator'])) : ?>
     <?= $this->extend('layouts/admin_layout') ?>
 <?php elseif (in_groups('student')) : ?>
     <?= $this->extend('layouts/main_layout') ?>
@@ -8,7 +8,7 @@
 <?= $page_title ?>
 <?= $this->endSection() ?>
 
-<?php if (in_groups('teacher')) : ?>
+<?php if (in_groups(['teacher', 'administrator'])) : ?>
     <?= $this->section('admin_content') ?>
 <?php elseif (in_groups('student')) : ?>
     <?= $this->section('content') ?>
@@ -16,11 +16,15 @@
 
 <div class="container mx-auto mb-4">
 
-    <?php if (in_groups('teacher')) : ?>
+    <?php if (in_groups(['teacher', 'administrator'])) : ?>
         <div class="bg-gray-200 rounded-md px-4">
             <div class="breadcrumbs">
                 <ul>
-                    <li><a href="<?= url_to('teacher_courses') ?>">Courses</a></li>
+                    <?php if (in_groups('teacher')) : ?>
+                        <li><a href="<?= url_to('teacher_courses') ?>">Courses</a></li>
+                    <?php elseif (in_groups('administrator')) : ?>
+                        <li><a href="<?= url_to('admin_courses') ?>">Courses</a></li>
+                    <?php endif ?>
                     <li class="font-semibold">Detail Course</li>
                 </ul>
             </div>
@@ -348,7 +352,7 @@
                     <!-- Teachers Heading with Add Icon -->
                     <div class="flex items-center justify-between mb-2">
                         <h2 class="text-lg font-semibold">Teachers</h2>
-                        <?php if (in_groups('teacher')) : ?>
+                        <?php if (in_groups(['teacher', 'administrator'])) : ?>
                             <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                 onclick="openInviteModalLecturers()">
                                 <i class="fa-solid fa-user-plus"></i>
@@ -381,6 +385,13 @@
                     </div>
 
                     <!-- Teachers List -->
+                    <?php if (empty($teachers)) : ?>
+                        <div class="p-4 md:px-0">
+                            <div class="divider">
+                                <div class="divider-title">No Teachers</div>
+                            </div>
+                        </div>
+                    <?php endif ?>
                     <ul>
                         <?php foreach ($teachers as $teacher) : ?>
                             <li class="flex items-center gap-4 p-4 border rounded-lg mb-2">
@@ -393,7 +404,7 @@
                                     <p class="font-semibold"><?= $teacher->first_name ?> <?= $teacher->last_name ?></p>
                                     <p class="text-sm text-gray-500"><?= $teacher->email ?></p>
                                 </div>
-                                <?php if (in_groups('teacher')) : ?>
+                                <?php if (in_groups(['teacher', 'administrator'])) : ?>
                                     <button class="ml-auto btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                         onclick="document.getElementById('deleteModal<?= $teacher->id ?>').showModal()">
                                         <i class="fa-solid fa-xmark"></i>
@@ -423,7 +434,7 @@
                     <!-- Students Heading with Add Icon -->
                     <div class="flex items-center justify-between mb-2">
                         <h2 class="text-lg font-semibold">Students</h2>
-                        <?php if (in_groups('teacher')) : ?>
+                        <?php if (in_groups(['teacher', 'administrator'])) : ?>
                             <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                 onclick="openInviteModal()">
                                 <i class="fa-solid fa-user-plus"></i>
@@ -455,6 +466,13 @@
                         <?php endif ?>
                     </div>
                     <!-- Students List -->
+                    <?php if (empty($students)) : ?>
+                        <div class="p-4 md:px-0">
+                            <div class="divider">
+                                <div class="divider-title">No Students</div>
+                            </div>
+                        </div>
+                    <?php endif ?>
                     <ul class="mb-6">
                         <?php foreach ($students as $student) : ?>
                             <li class="flex items-center gap-4 p-4 border rounded-lg mb-2">
@@ -467,7 +485,7 @@
                                     <p class="font-semibold"><?= $student->first_name ?> <?= $student->last_name ?></p>
                                     <p class="text-sm text-gray-500"><?= $student->email ?></p>
                                 </div>
-                                <?php if (in_groups('teacher')) : ?>
+                                <?php if (in_groups(['teacher', 'administrator'])) : ?>
                                     <button class="ml-auto btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                         onclick="document.getElementById('deleteModalStudent<?= $student->id ?>').showModal()">
                                         <i class="fa-solid fa-xmark"></i>

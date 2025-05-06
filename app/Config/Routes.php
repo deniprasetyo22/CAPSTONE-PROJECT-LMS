@@ -74,10 +74,11 @@ $routes->group('teachers', ['filter' => 'role:teacher'], ['namespace' => 'App\Co
 
 
 /* Courses Routes for Teacher and Student */
-$routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 'App\Controllers'], function ($routes) {
+$routes->group('courses', ['filter' => 'role:teacher,student,administrator'], ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('index', 'CourseController::courseList', ['as' => 'course_list']);
     $routes->get('student-courses', 'CourseController::studentCourses', ['as' => 'student_courses']);
     $routes->get('teacher-courses', 'CourseController::teacherCourses', ['as' => 'teacher_courses']);
+    $routes->get('admin-courses', 'CourseController::adminCourses', ['as' => 'admin_courses']);
 
     $routes->get('show-course/(:num)', 'CourseController::showCourse/$1', ['as' => 'show_course']);
     $routes->get('create-course', 'CourseController::createCourse', ['as' => 'create_course']);

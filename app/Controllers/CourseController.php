@@ -328,4 +328,28 @@ class CourseController extends BaseController
         $this->courseModel->delete($id);
         return redirect()->to(route_to('teacher_courses'))->with('success', 'Course deleted successfully!');
     }
+
+    public function adminCourses()
+    {
+        $params = new DataParams([
+            'search' => $this->request->getGet('search'),
+            'sort' => $this->request->getGet('sort'),
+            'order' => $this->request->getGet('order'),
+            'page' => $this->request->getGet('page_courses'),
+            'perPage' => $this->request->getGet('perPage'),
+        ]);
+
+        $courses = $this->courseModel->getFilteredCourses($params);
+
+        $data = [
+            'page_title' => 'Admin Courses',
+            'courses' => $courses['courses'],
+            'pager' => $courses['pager'],
+            'total' => $courses['total'],
+            'params' => $params,
+            'baseUrl' => base_url('courses/admin-courses'),
+        ];
+
+        return view('pages/admin/courses/v_admin_courses', $data);
+    }
 }
