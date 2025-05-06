@@ -261,7 +261,6 @@ class UserController extends BaseController
 
         return $this->response->setJSON($formattedUsers);
     }
-<<<<<<< HEAD
 
     public function studentProfile()
     {
@@ -368,6 +367,3 @@ class UserController extends BaseController
     }
 
 }
-=======
-}
->>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f

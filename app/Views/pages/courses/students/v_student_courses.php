@@ -91,20 +91,46 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4 md:px-0">
         <?php foreach ($myCourses as $myCourse): ?>
-        <div class="card bg-base-100 shadow-md border border-gray-200">
-            <figure class="py-20 bg-blue-200">
-                <span class="text-xl font-semibold"><?= esc($myCourse->name) ?></span>
-            </figure>
-            <div class="card-body">
-                <h2 class="card-title text-lg font-semibold text-primary">
-                    <?= esc($myCourse->code) ?> - <?= esc($myCourse->name) ?>
-                </h2>
-                <p class="text-sm text-gray-600"><?= esc($myCourse->description) ?></p>
-                <div class="mt-4 text-sm text-gray-500">
-                    <p><strong>Duration:</strong> <?= esc($myCourse->expected_duration) ?> months</p>
-                    <p><strong>Level:</strong> <?= esc($myCourse->levelName) ?></p>
+        <div class="card bg-base-100 shadow-sm border border-gray-200">
+            <figure>
+                <div class="relative">
+                    <img src="<?= base_url('images/bg_card_courses.png') ?>" alt="Course Image"
+                        class="w-full h-auto rounded-t-lg">
+                    <span
+                        class="absolute inset-0 flex items-center justify-center text-xl font-semibold text-blue-800 bg-white/50">
+                        <?= esc($myCourse->name) ?>
+                    </span>
                 </div>
-                <div class="card-actions justify-end mt-4">
+            </figure>
+            <div class="card-body flex flex-col justify-between">
+                <div class="space-y-2">
+                    <h2 class="card-title text-lg font-semibold text-primary">
+                        <?= esc($myCourse->code) ?> - <?= esc($myCourse->name) ?>
+                    </h2>
+
+                    <?php 
+                        $short = esc(substr($myCourse->description, 0, 100));
+                        $full = esc($myCourse->description);
+                        $hasMore = strlen($myCourse->description) > 100;
+                    ?>
+                    <div class="text-sm text-gray-600 min-h-[80px]">
+                        <?php if ($hasMore): ?>
+                        <span class="short"><?= $short ?>...</span>
+                        <span class="full hidden"><?= $full ?></span>
+                        <button type="button" class="text-blue-500 text-sm toggle-desc hover:underline">Full
+                            View...</button>
+                        <?php else: ?>
+                        <?= $full ?>
+                        <?php endif ?>
+                    </div>
+
+                    <div class="text-sm text-gray-500">
+                        <p><strong>Duration:</strong> <?= esc($myCourse->expected_duration) ?> months</p>
+                        <p><strong>Level:</strong> <?= esc($myCourse->levelName) ?></p>
+                    </div>
+                </div>
+
+                <div class="card-actions justify-end">
                     <a href="<?= url_to('show_course', $myCourse->id) ?>">
                         <button class="btn btn-sm btn-primary">View</button>
                     </a>
@@ -122,5 +148,19 @@
             <?= $params->page ?>)</small>
     </div>
 </div>
+
+<script>
+document.querySelectorAll('.toggle-desc').forEach(button => {
+    button.addEventListener('click', function() {
+        const short = this.previousElementSibling.previousElementSibling;
+        const full = this.previousElementSibling;
+        const isHidden = full.classList.contains('hidden');
+
+        short.classList.toggle('hidden', isHidden);
+        full.classList.toggle('hidden', !isHidden);
+        this.textContent = isHidden ? 'Close' : 'Full View...';
+    });
+});
+</script>
 
 <?= $this->endSection() ?>

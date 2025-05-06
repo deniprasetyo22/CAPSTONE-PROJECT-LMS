@@ -115,13 +115,8 @@ $routes->group('courses', ['filter' => 'role:teacher,student,administrator'], ['
     });
 
     // $routes->get('detail/(:num)', 'CourseController::detailCourse/$1', ['as' => 'course_detail']);
-<<<<<<< HEAD
     // $routes->get('course-teacher-archived', 'CourseTeacherController::teacherCourseListArchived', ['as' => 'archived_teacher_courses']);
     
-=======
-    $routes->get('course-teacher-archived', 'CourseTeacherController::teacherCourseListArchived', ['as' => 'archived_teacher_courses']);
-
->>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f
     /* Assignments */
     $routes->group('assignments', function ($routes) {
         $routes->get('show-assignment/(:num)', 'AssignmentController::showAssignment/$1', ['as' => 'show_assignment']);

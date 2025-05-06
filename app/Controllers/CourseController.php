@@ -89,11 +89,6 @@ class CourseController extends BaseController
         $enrollments = $this->enrollmentModel->where('student_id', $currentUser->id)->findAll();
         $enrolledCourseIds = array_column($enrollments, 'course_id');
 
-        // Batasi jumlah kata pada deskripsi
-        foreach ($courses['courses'] as $course) {
-            $course->description = $this->limitWords($course->description, 20);
-        }
-
         $data = [
             'page_title' => 'Course List',
             'courses' => $courses['courses'],
@@ -109,12 +104,6 @@ class CourseController extends BaseController
         return view('pages/courses/v_index', $data);
     }
 
-    private function limitWords(string $text, int $limit = 20): string
-    {
-        $words = explode(' ', strip_tags($text));
-        return implode(' ', array_slice($words, 0, $limit)) . (count($words) > $limit ? '...' : '');
-    }
-
     public function studentCourses()
     {
         $params = new DataParams([
@@ -127,11 +116,6 @@ class CourseController extends BaseController
         ]);
 
         $myCourses = $this->courseModel->getFilteredStudentCourses($params);
-
-        // Batasi jumlah kata pada deskripsi
-        foreach ($myCourses['myCourses'] as $myCourse) {
-            $myCourse->description = $this->limitWords($myCourse->description, 20);
-        }
 
         $data = [
             'page_title' => 'My Courses',
@@ -158,11 +142,6 @@ class CourseController extends BaseController
         ]);
 
         $teacherCourses = $this->courseModel->getFilteredTeacherCourses($params);
-
-        // Batasi jumlah kata pada deskripsi
-        foreach ($teacherCourses['teacherCourses'] as $teacherCourse) {
-            $teacherCourse->description = $this->limitWords($teacherCourse->description, 20);
-        }
 
         $data = [
             'page_title' => 'My Courses',
@@ -267,11 +246,7 @@ class CourseController extends BaseController
             'code'              => $this->request->getPost('code'),
             'name'              => $this->request->getPost('name'),
             'description'       => $this->request->getPost('description'),
-<<<<<<< HEAD
             'enrollment_code'   => !empty($enrollmentCodeInput) ? $enrollmentCodeInput : generate_enrollment_code(),
-=======
-            'enrollment_code'   => $enrollmentCode,
->>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f
             'expected_duration' => $this->request->getPost('expected_duration'),
             'level_course_id'   => $this->request->getPost('level_course_id'),
         ];
@@ -347,7 +322,6 @@ class CourseController extends BaseController
         if (!$course) {
             return redirect()->to(route_to('teacher_courses'))->with('error', 'Course not found!');
         }
-<<<<<<< HEAD
         
         $this->courseModel->update($id, [
             'code' => $course->code . '_deletedAt_' . date('Y-m-d_H:i:s'),
@@ -355,14 +329,6 @@ class CourseController extends BaseController
             'enrollment_code' => $course->enrollment_code . '_deletedAt_' . date('Y-m-d_H:i:s')
         ]);
         
-=======
-
-        $course->enrollment_code = $course->enrollment_code . '_deleted';
-        $course->code = $course->code . '_deleted';
-
-        $this->courseModel->save($course);
-
->>>>>>> 49bd873156cdca5d6f3a60185bf7f97b0141900f
         $this->courseModel->delete($id);
         return redirect()->to(route_to('teacher_courses'))->with('success', 'Course deleted successfully!');
     }
