@@ -21,6 +21,10 @@
         <?php endif ?>
     </div>
 
+    <div class="divider px-4 md:px-0 mb-10">
+        <h1 class="text-2xl font-semibold divider-title">My Courses</h1>
+    </div>
+
     <form action="<?= $baseUrl ?>" method="get" class="space-y-4 px-4 md:px-0">
 
         <div class="w-full">

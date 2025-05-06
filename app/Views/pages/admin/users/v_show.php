@@ -72,8 +72,10 @@
                         <tr>
                             <th>Profile Picture</th>
                             <td>
-                                <img src="<?= base_url($user->profile_picture) ?>" alt="Profile Picture" width="50"
-                                    height="50">
+                                <div class="w-12 rounded ring ring-primary ring-offset-base-100 ring-offset-2">
+                                    <img src="<?= url_to('view_profile_pic', $user->id, $user->profile_picture) ?>"
+                                        alt="Profile Picture" />
+                                </div>
                             </td>
                         </tr>
                     </tbody>

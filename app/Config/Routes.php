@@ -15,6 +15,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 
 /* Admin Routes */
 $routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App\Controllers'], function ($routes) {
+    /* Dashboard */
     $routes->get('dashboard', 'DashboardController::adminDashboard', ['as' => 'admin_dashboard']);
 
     /* Report */
@@ -22,7 +23,6 @@ $routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App
         $routes->get('index', 'ReportController::index', ['as' => 'reports']);
         $routes->post('exportUsersPDF', 'ReportController::exportUsersPDF', ['as' => 'export_users_pdf']);
         $routes->post('exportCoursesPDF', 'ReportController::exportCoursesPDF', ['as' => 'export_courses_pdf']);
-
     });
 
     /* User */
@@ -34,6 +34,7 @@ $routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App
         $routes->get('edit/(:num)', 'UserController::edit/$1', ['as' => 'edit_user']);
         $routes->put('update/(:num)', 'UserController::update/$1', ['as' => 'update_user']);
         $routes->delete('delete/(:num)', 'UserController::delete/$1', ['as' => 'delete_user']);
+        $routes->get('view-profile-pic/(:segment)/(:any)', 'UserController::viewProfilePicture/$1/$2', ['as' => 'view_profile_pic']);
     });
 
     /* Level */
@@ -47,13 +48,21 @@ $routes->group('admin', ['filter' => 'role:administrator'], ['namespace' => 'App
     });
 });
 
-$routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
-    $routes->get('/courses', 'CourseController::index', ['as' => 'courses']);
-    $routes->get('/admin/courses', 'CourseController::listCoursesAdmin', ['as' => 'list_courses']);
-});
+// $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
+//     $routes->get('/courses', 'CourseController::index', ['as' => 'courses']);
+//     $routes->get('/admin/courses', 'CourseController::listCoursesAdmin', ['as' => 'list_courses']);
+// });
 
 /* Student Routes */
 $routes->group('students', ['filter' => 'role:student'], ['namespace' => 'App\Controllers'], function ($routes) {
+    /* Profile */
+    $routes->group('profile', function ($routes) {
+        $routes->get('index', 'UserController::studentProfile', ['as' => 'student_profile']);
+        $routes->get('edit', 'UserController::editStudentProfile', ['as' => 'edit_student_profile']);
+        $routes->put('update', 'UserController::updateStudentProfile', ['as' => 'update_student_profile']);
+        $routes->get('view-profile-picture/(:segment)/(:any)', 'UserController::viewProfilePicture/$1/$2', ['as' => 'view_profile_picture']);
+    });
+    
     /* Enrollemnt */
     $routes->group('enrollment', function ($routes) {
         $routes->post('store/(:num)', 'EnrollmentController::store/$1', ['as' => 'store_enrollment']);
@@ -105,7 +114,7 @@ $routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 
     });
     
     // $routes->get('detail/(:num)', 'CourseController::detailCourse/$1', ['as' => 'course_detail']);
-    $routes->get('course-teacher-archived', 'CourseTeacherController::teacherCourseListArchived', ['as' => 'archived_teacher_courses']);
+    // $routes->get('course-teacher-archived', 'CourseTeacherController::teacherCourseListArchived', ['as' => 'archived_teacher_courses']);
     
     /* Assignments */
     $routes->group('assignments', function ($routes) {
@@ -124,6 +133,7 @@ $routes->group('courses', ['filter' => 'role:teacher,student'], ['namespace' => 
     /* Discussion */
     $routes->group('discussion', function ($routes) {
         $routes->get('discussion/(:segment)', 'DiscussionController::showDiscussionDetail/$1', ['as' => 'show_discussion']);
+        
         /* Add Discussion comment of a course*/
         $routes->post('discussion-comment/(:num)', 'DiscussionUserController::addCommentDiscussion/$1', ['as' => 'add_comment_discussion']);
         $routes->delete('discussion-comment/(:any)', 'DiscussionUserController::deleteCommentDiscussion/$1', ['as' => 'delete_comment_discussion']);

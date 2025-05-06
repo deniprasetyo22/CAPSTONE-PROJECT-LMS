@@ -85,8 +85,8 @@
         </div>
     </form>
 
-    <div class="flex justify-start my-4">
-        <a href="<?= url_to('create_course') ?>" class="btn btn-primary">
+    <div class="flex flex-wrap gap-5 px-4 md:px-0 mt-4">
+        <a href="<?= url_to('create_course') ?>" class="btn btn-primary w-full lg:w-auto">
             <i class="fa fa-plus mr-2"></i>Add Course
         </a>
     </div>
