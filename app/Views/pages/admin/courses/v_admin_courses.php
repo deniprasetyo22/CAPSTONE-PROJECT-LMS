@@ -43,25 +43,38 @@
         </div>
     </div>
 
-    <div class="flex justify-between gap-2">
+    <form method="get" class="flex flex-wrap justify-between gap-2">
         <div>
-            <form method="get">
-                <select name="perPage" class="select w-full" onchange="this.form.submit()">
-                    <?php foreach ([5, 10, 25, 50, 100] as $option): ?>
-                        <option value="<?= $option ?>" <?= ($params->perPage == $option) ? 'selected' : '' ?>>
-                            Show <?= $option ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </form>
+            <select name="perPage" class="select w-full" onchange="this.form.submit()">
+                <?php foreach ([5, 10, 25, 50, 100] as $option): ?>
+                    <option value="<?= $option ?>" <?= ($params->perPage == $option) ? 'selected' : '' ?>>
+                        Show <?= $option ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
-
+        <div>
+            <select name="sort" class="select select-bordered w-full" onchange="this.form.submit()">
+                <option value="">Sort By</option>
+                <option value="code" <?= ($params->sort == 'code') ? 'selected' : '' ?>>Code</option>
+                <option value="enrollment_code" <?= ($params->sort == 'enrollment_code') ? 'selected' : '' ?>>Enrollment Code</option>
+                <option value="name" <?= ($params->sort == 'name') ? 'selected' : '' ?>>Name</option>
+                <option value="created_at" <?= ($params->sort == 'created_at') ? 'selected' : '' ?>>Created At</option>
+                <option value="levelName" <?= ($params->sort == 'levelName') ? 'selected' : '' ?>>Level</option>
+            </select>
+        </div>
+        <div>
+            <select name="order" class="select select-bordered w-full" onchange="this.form.submit()">
+                <option value="asc" <?= ($params->order == 'asc') ? 'selected' : '' ?>>Ascending</option>
+                <option value="desc" <?= ($params->order == 'desc') ? 'selected' : '' ?>>Descending</option>
+            </select>
+        </div>
         <div>
             <a href="<?= $params->getResetUrl($baseUrl) ?>" class="btn btn-info text-white">
                 Reset
             </a>
         </div>
-    </div>
+    </form>
 </div>
 
 
