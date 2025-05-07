@@ -37,9 +37,11 @@ class UserController extends BaseController
             'order' => $this->request->getGet('order'),
             'page' => $this->request->getGet('page_users'),
             'perPage' => $this->request->getGet('perPage'),
+            'filter' => $this->request->getGet('filter'),
         ]);
 
         $results = $this->userModel->getFileredUsers($params);
+        $roles = $this->groupModel->getAllRoles();
 
         $data = [
             'page_title' => 'Users',
@@ -47,11 +49,10 @@ class UserController extends BaseController
             'pager' => $results['pager'],
             'total' => $results['total'],
             'params' => $params,
+            'roles' => $roles,
             'baseUrl' => base_url('admin/users/index'),
             'hideHeader' => true
         ];
-
-        // dd($results['users']);
 
         return view('pages/admin/users/v_index', $data);
     }
@@ -194,14 +195,23 @@ class UserController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        //Update User
         $userUpdate = $this->userModel->update($id, $userData);
-
-        //Update User Profile
         $userProfileUpdate = $this->userProfileModel->where('user_id', $id)->set($userProfileData)->update();
+
+        $newRole = $this->request->getPost('role');
+        $group = $this->groupModel->where('name', $newRole)->first();
+        if (!$group) {
+            return redirect()->back()->with('error', 'Role not found.');
+        }
+        $this->groupModel->removeUserFromAllGroups($id);
+        $this->groupModel->addUserToGroup($id, $group->id);
+
+
         if ($userUpdate && $userProfileUpdate) {
             return redirect()->to('admin/users/index')->with('success', 'User updated successfully.');
         }
+
+        return redirect()->back()->with('error', 'Failed to update user.');
     }
 
     public function delete($id)

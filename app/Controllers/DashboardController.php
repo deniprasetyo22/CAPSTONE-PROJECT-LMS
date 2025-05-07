@@ -10,6 +10,7 @@ use App\Models\DiscussionModel;
 use App\Models\EnrollmentModel;
 use App\Models\UserProfileModel;
 use \Myth\Auth\Models\GroupModel;
+use Myth\Auth\Models\UserModel;
 
 class DashboardController extends BaseController
 {
@@ -20,6 +21,7 @@ class DashboardController extends BaseController
     protected $discussionModel;
     protected $assignmentModel;
     private $groupModel;
+    protected $userModel;
 
     public function __construct()
     {
@@ -30,6 +32,7 @@ class DashboardController extends BaseController
         $this->discussionModel = new DiscussionModel();
         $this->assignmentModel = new AssignmentModel();
         $this->groupModel = new GroupModel();
+        $this->userModel = new UserModel();
     }
     private function getTotalUsersByRole($role)
     {
@@ -112,6 +115,7 @@ class DashboardController extends BaseController
     public function teacherDashboard()
     {
         $currentUser = $this->userProfileModel->select('id')->where('user_id', user_id())->first();
+        $currentUserProfile = $this->userModel->getAllUserWithProfile()->where('users.id', user_id())->first();
 
         $courseLecturers = $this->courseTeacherModel->getAllCountTeacherCourses($currentUser->id);
         $discussions = $this->discussionModel->getAllCountTeacherDiscussions($currentUser->id);
@@ -189,6 +193,7 @@ class DashboardController extends BaseController
             'total_academic_teacher_courses' => json_encode($totalAcademicTeacherCourses),
             'enrollment_growth_month' => json_encode($enrollmentGrowthMonth),
             'assignment_by_status' => json_encode($assignmentByStatus),
+            'teacher' => $currentUserProfile,
             'hideHeader' => true
         ];
         return view('pages/teacher/dashboard/teacher_dashboard', $data);

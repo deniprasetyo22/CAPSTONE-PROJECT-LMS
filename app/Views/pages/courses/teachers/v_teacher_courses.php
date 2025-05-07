@@ -128,8 +128,8 @@
                         <?php if ($hasMore): ?>
                         <span class="short"><?= $short ?>...</span>
                         <span class="full hidden"><?= $full ?></span>
-                        <button type="button" class="text-blue-500 text-sm toggle-desc hover:underline">Full
-                            View...</button>
+                        <button type="button" class="text-blue-500 text-sm toggle-desc hover:underline">View
+                            More...</button>
                         <?php else: ?>
                         <?= $full ?>
                         <?php endif ?>
@@ -193,7 +193,7 @@ document.querySelectorAll('.toggle-desc').forEach(button => {
 
         short.classList.toggle('hidden', isHidden);
         full.classList.toggle('hidden', !isHidden);
-        this.textContent = isHidden ? 'Close' : 'Full View...';
+        this.textContent = isHidden ? 'Close' : 'View More...';
     });
 });
 </script>

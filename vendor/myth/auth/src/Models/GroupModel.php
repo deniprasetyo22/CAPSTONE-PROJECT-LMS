@@ -214,4 +214,10 @@ class GroupModel extends Model
             'description' => $faker->sentence,
         ]);
     }
+
+    public function getAllRoles()
+    {
+        return $this->select('id, name')->findAll();
+    }
+
 }

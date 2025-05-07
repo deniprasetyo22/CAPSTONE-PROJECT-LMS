@@ -6,6 +6,8 @@
 
 <?= $this->section('admin_content') ?>
 <h1 class="text-3xl font-bold text-center text-primary mb-8">Teacher Dashboard</h1>
+<p class="ml-4 text-lg font-semibold mb-2">Welcome, <?= $teacher->first_name . ' ' . $teacher->last_name ?>
+</p>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
     <!-- Total Students -->
     <div class="card bg-base-100 shadow-xl border">
@@ -68,87 +70,87 @@
 </div>
 
 <script>
-    const totalAcademicTeacherCourses = <?= $total_academic_teacher_courses ?>;
-    const enrollmentGrowthMonth = <?= $enrollment_growth_month ?>;
-    const assignmentByStatus = <?= $assignment_by_status ?>;
-    const currentYear = new Date().getFullYear();
-    document.getElementById('titleGrowthChart').textContent = `Enrollment Growth Month ${currentYear}`;
-    const userChart = new Chart(
-        document.getElementById('assignmentChart'), {
-            type: 'pie',
-            data: assignmentByStatus,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right'
-                    }
+const totalAcademicTeacherCourses = <?= $total_academic_teacher_courses ?>;
+const enrollmentGrowthMonth = <?= $enrollment_growth_month ?>;
+const assignmentByStatus = <?= $assignment_by_status ?>;
+const currentYear = new Date().getFullYear();
+document.getElementById('titleGrowthChart').textContent = `Enrollment Growth Month ${currentYear}`;
+const userChart = new Chart(
+    document.getElementById('assignmentChart'), {
+        type: 'pie',
+        data: assignmentByStatus,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
                 }
             }
         }
-    );
-    const academicRecordChart = new Chart(
-        document.getElementById('totalAcademicTeacherCoursesChart'), {
-            type: 'bar',
-            data: totalAcademicTeacherCourses,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: false, // Jangan otomatis skip label
-                            maxRotation: 0, // Atur rotasi maksimal (0 = horizontal)
-                            minRotation: 0 // Atur rotasi minimal
-                        }
+    }
+);
+const academicRecordChart = new Chart(
+    document.getElementById('totalAcademicTeacherCoursesChart'), {
+        type: 'bar',
+        data: totalAcademicTeacherCourses,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false, // Jangan otomatis skip label
+                        maxRotation: 0, // Atur rotasi maksimal (0 = horizontal)
+                        minRotation: 0 // Atur rotasi minimal
                     }
-                },
-                plugins: {
-                    datalabels: {
-                        display: false
-                    }
-                },
-            }
+                }
+            },
+            plugins: {
+                datalabels: {
+                    display: false
+                }
+            },
         }
-    );
+    }
+);
 
-    const enrollmentChart = new Chart(
-        document.getElementById('enrollmentGrowthChart'), {
-            type: 'line',
-            data: enrollmentGrowthMonth,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        min: 0,
-                        max: 20,
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Month'
-                        },
-                        ticks: {
-                            autoSkip: false, // Jangan otomatis skip label
-                            maxRotation: 0, // Atur rotasi maksimal (0 = horizontal)
-                            minRotation: 0 // Atur rotasi minimal
-                        }
-                    }
+const enrollmentChart = new Chart(
+    document.getElementById('enrollmentGrowthChart'), {
+        type: 'line',
+        data: enrollmentGrowthMonth,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 20,
                 },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `Total Enrollment: ${context.raw}`;
-                            }
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month'
+                    },
+                    ticks: {
+                        autoSkip: false, // Jangan otomatis skip label
+                        maxRotation: 0, // Atur rotasi maksimal (0 = horizontal)
+                        minRotation: 0 // Atur rotasi minimal
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Total Enrollment: ${context.raw}`;
                         }
                     }
                 }
             }
         }
-    );
+    }
+);
 </script>
 
 <?= $this->endSection() ?>

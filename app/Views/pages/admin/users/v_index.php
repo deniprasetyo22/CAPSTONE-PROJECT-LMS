@@ -46,8 +46,20 @@
     <div class="flex justify-between gap-2">
         <div>
             <form method="get">
+                <select name="filter" class="select" onchange="this.form.submit()">
+                    <option value="">All Roles</option>
+                    <?php foreach ($roles as $role): ?>
+                    <option value="<?= $role->id ?>" <?= ($params->filter == $role->id) ? 'selected' : '' ?>>
+                        <?= $role->name ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </form>
+        </div>
+
+        <div>
+            <form method="get">
                 <select name="perPage" class="select w-full" onchange="this.form.submit()">
-                    <?php foreach ([5, 10, 25, 50, 100] as $option): ?>
+                    <?php foreach ([4, 10, 25, 50, 100] as $option): ?>
                     <option value="<?= $option ?>" <?= ($params->perPage == $option) ? 'selected' : '' ?>>
                         Show <?= $option ?>
                     </option>
@@ -65,17 +77,42 @@
 </div>
 
 
-
 <div class="overflow-x-auto rounded-box border border-gray-300">
     <table class="table">
         <thead>
             <tr>
                 <th>#</th>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Created At</th>
+                <th>
+                    <a href="<?= $params->getSortUrl('id', $baseUrl) ?>">
+                        ID
+                        <?= $params->isSortedBy('id') ? ($params->getSortDirection() == 'asc' ? '↑' : '↓') : '↕' ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= $params->getSortUrl('email', $baseUrl) ?>">
+                        Email
+                        <?= $params->isSortedBy('email') ? ($params->getSortDirection() == 'asc' ? '↑' : '↓') : '↕' ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= $params->getSortUrl('username', $baseUrl) ?>">
+                        Username
+                        <?= $params->isSortedBy('username') ? ($params->getSortDirection() == 'asc' ? '↑' : '↓') : '↕' ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= $params->getSortUrl('first_name', $baseUrl) ?>">
+                        Name
+                        <?= $params->isSortedBy('first_name') ? ($params->getSortDirection() == 'asc' ? '↑' : '↓') : '↕' ?>
+                    </a>
+                </th>
+                <th>Role</th>
+                <th>
+                    <a href="<?= $params->getSortUrl('created_at', $baseUrl) ?>">
+                        Created At
+                        <?= $params->isSortedBy('created_at') ? ($params->getSortDirection() == 'asc' ? '↑' : '↓') : '↕' ?>
+                    </a>
+                </th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -85,7 +122,7 @@
                 <td colspan="7" class="text-center">No users found</td>
             </tr>
             <?php else : ?>
-            <?php $no = 1; ?>
+            <?php $no = ($params->page - 1) * $params->perPage + 1; ?>
             <?php foreach($users as $user) : ?>
             <tr class="hover:bg-gray-200">
                 <td><?= $no++ ?></td>
@@ -93,6 +130,7 @@
                 <td><?= $user->email ?></td>
                 <td><?= $user->username ?></td>
                 <td><?= $user->first_name . ' ' . $user->last_name ?></td>
+                <td><?= $user->role_name ?></td>
                 <td><?= $user->created_at ?></td>
                 <td class="flex gap-2">
                     <a href="<?= url_to('show_user', $user->id) ?>" class="btn btn-info btn-sm">

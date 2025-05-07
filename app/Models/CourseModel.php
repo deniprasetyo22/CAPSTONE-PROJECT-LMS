@@ -88,6 +88,7 @@ class CourseModel extends Model
             ->join('level_courses', 'level_courses.id = courses.level_course_id')
             ->where('courses.deleted_at', null);
     }
+    
 
     public function getFilteredCourses(DataParams $params)
     {
@@ -104,7 +105,7 @@ class CourseModel extends Model
 
         if (!empty($params->level)) {
             $query->where('courses.level_course_id', $params->level);
-        }
+        } 
 
         $query->orderBy($params->sort ?? 'id', $params->order ?? 'desc');
 
@@ -214,7 +215,8 @@ class CourseModel extends Model
             ->join('user_profiles AS teacher', 'teacher.id = course_teachers.teacher_id', 'left')
             ->join('enrollments', 'enrollments.course_id = courses.id', 'left')
             ->join('user_profiles AS student', 'student.id = enrollments.student_id', 'left')
-            ->groupBy('courses.id, courses.name, level_courses.name');
+            ->groupBy('courses.id, courses.name, level_courses.name')
+            ->where('courses.deleted_at', null);
 
         // Menambahkan filter berdasarkan course level jika ada
         if ($courseLevel) {

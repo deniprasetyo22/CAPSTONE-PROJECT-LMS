@@ -3,7 +3,7 @@
     <div class="drawer-content flex flex-col">
         <!-- Navbar -->
         <div class="navbar bg-blue-400 w-full">
-            <div class="container mx-auto flex items-center gap-4 px-4 py-2">
+            <div class="container mx-auto flex items-center gap-4 py-2">
                 <!-- Hamburger (mobile) -->
                 <label for="my-drawer-3" class="btn btn-square btn-ghost lg:hidden">
                     <i class="fa-solid fa-bars text-white"></i>

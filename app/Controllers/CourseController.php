@@ -40,15 +40,6 @@ class CourseController extends BaseController
         $this->assignmentModel = new AssignmentModel();
     }
 
-    public function index(): string
-    {
-        $listCourses = $this->courseModel->select('courses.*, level_courses.name as levelName')->join('level_courses', 'level_courses.id = courses.level_course_id')
-            ->where('courses.deleted_at', null)->findAll();
-        return view('pages/admin/courses/index', [
-            'courses' => $listCourses,
-        ]);
-    }
-
     public function listCoursesAdmin(): string
     {
         $params = new DataParams([

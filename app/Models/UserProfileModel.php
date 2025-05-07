@@ -32,7 +32,6 @@ class UserProfileModel extends Model
     // Validation
     protected $validationRules      = [
         'first_name' => 'required',
-        'last_name'  => 'required',
         'phone'      => 'required',
         'address'    => 'required',
         'dob'        => 'required',
@@ -41,9 +40,6 @@ class UserProfileModel extends Model
     protected $validationMessages   = [
         'first_name' => [
             'required' => 'First Name is required',
-        ],
-        'last_name' => [
-            'required' => 'Last Name is required',
         ],
         'phone' => [
             'required' => 'Phone is required',

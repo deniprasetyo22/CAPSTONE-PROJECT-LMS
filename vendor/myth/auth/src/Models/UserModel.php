@@ -84,7 +84,7 @@ class UserModel extends Model
         $group = $this->db->table('auth_groups')->where('name', $groupName)->get()->getFirstRow();
 
         $this->assignGroup = $group->id;
-
+ 
         return $this;
     }
 
@@ -137,39 +137,44 @@ class UserModel extends Model
         return $this->select('users.*, user_profiles.id as user_profile_id, user_profiles.first_name as first_name, user_profiles.last_name as last_name, user_profiles.phone as phone, user_profiles.sex as sex, user_profiles.dob as dob, user_profiles.address as address, user_profiles.profile_picture as profile_picture, auth_groups.id as role_id, auth_groups.name as role_name')
             ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
             ->join('auth_groups_users', 'auth_groups_users.user_id = users.id', 'left')
-            ->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id', 'left')
-            ->orderBy('users.id', 'desc');
+            ->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id', 'left');
     }
 
     public function getFileredUsers(DataParams $params)
     {
         $query = $this->getAllUserWithProfile();
 
-        //Search
+        // Search
         if (!empty($params->search)) {
             $query->groupStart()
-            ->where('CAST(users.id as TEXT) LIKE', "%$params->search%")
-            ->orLike('user_profiles.first_name', $params->search, 'both', null, true)
-            ->orLike('user_profiles.last_name', $params->search, 'both', null, true)
-            ->orWhere("user_profiles.first_name || ' ' || user_profiles.last_name ILIKE '%$params->search%'")
-            ->orLike('users.username', $params->search, 'both', null, true)
-            ->orLike('users.email', $params->search, 'both', null, true)
-            ->groupEnd(); 
+                ->where('CAST(users.id as TEXT) LIKE', "%$params->search%")
+                ->orLike('user_profiles.first_name', $params->search, 'both', null, true)
+                ->orLike('user_profiles.last_name', $params->search, 'both', null, true)
+                ->orWhere("user_profiles.first_name || ' ' || user_profiles.last_name ILIKE '%$params->search%'")
+                ->orLike('users.username', $params->search, 'both', null, true)
+                ->orLike('users.email', $params->search, 'both', null, true)
+                ->groupEnd(); 
         }
 
-        //Sorting
-        $allowedSortColumns = ['id', 'username', 'email', 'first_name', 'last_name', 'sex', 'dob'];
+        // Filter
+        if (!empty($params->filter)) {
+            $query->where('auth_groups.id', $params->filter);
+        }
+
+        // Sorting
+        $allowedSortColumns = ['id', 'email', 'username', 'first_name', 'created_at'];
         $sort = in_array($params->sort, $allowedSortColumns) ? $params->sort : 'id';
         $order = ($params->order === 'desc') ? 'desc' : 'asc';
-
+        
         $this->orderBy($sort, $order);
 
         $results = [
-            'users' => $this->paginate($params->perPage ?? 5, 'users', $params->page),
-            'pager' => $this->pager,
-            'total' => $this->countAllResults(false)
+            'users' => $query->paginate($params->perPage ?? 5, 'users', $params->page),
+            'pager' => $query->pager,
+            'total' => $query->countAllResults(false)
         ];
 
         return $results;
     }
+
 }

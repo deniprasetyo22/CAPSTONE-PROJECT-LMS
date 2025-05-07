@@ -61,7 +61,7 @@
                     <label for="lname" class="fieldset-label text-black">Last Name</label>
                     <input type="text" name="lname"
                         class="input w-full <?= (session('errors.lname')) ? 'border-red-500' : '' ?>"
-                        value="<?= old('lname', $user->last_name) ?>" required>
+                        value="<?= old('lname', $user->last_name) ?>">
                     <?php if(session('errors.lname')) : ?>
                     <span class="text-red-500 text-xs"><?= session('errors.lname') ?></span>
                     <?php endif ?>
