@@ -9,6 +9,7 @@ use App\Models\CourseTeacherModel;
 use App\Models\DiscussionModel;
 use App\Models\EnrollmentModel;
 use App\Models\UserProfileModel;
+use \Myth\Auth\Models\GroupModel;
 
 class DashboardController extends BaseController
 {
@@ -18,6 +19,7 @@ class DashboardController extends BaseController
     protected $userProfileModel;
     protected $discussionModel;
     protected $assignmentModel;
+    private $groupModel;
 
     public function __construct()
     {
@@ -27,18 +29,26 @@ class DashboardController extends BaseController
         $this->userProfileModel = new UserProfileModel();
         $this->discussionModel = new DiscussionModel();
         $this->assignmentModel = new AssignmentModel();
+        $this->groupModel = new GroupModel();
+    }
+    private function getTotalUsersByRole($role)
+    {
+        $idGroup = $this->groupModel->where('name', $role)->first()->id;
+        $listUsers = $this->groupModel->getUsersForGroup(+$idGroup);
+        $totalUsers = count($listUsers);
+        return $totalUsers;
     }
     public function adminDashboard()
     {
-        $countStudents = $this->enrollmentModel->getAllStudentsDashboard();
+        $countStudents = $this->getTotalUsersByRole('student');
+        $countTeachers = $this->getTotalUsersByRole('teacher');
         $countCourses =  $this->courseModel->getAllCoursesDashboard();
-        $countTeachers = $this->courseTeacherModel->getAllCourseTeachersDashboard();
         $countEnrollments = $this->enrollmentModel->getAllEnrollmentsDashboard();
 
         // Create Data for Pie Chart
-        $totalStudents = $countStudents->total_unique_students;
-        $totalTeachers = $countTeachers->total_unique_teachers;
-        $totalUsers = $totalStudents + $totalTeachers;
+        $totalStudents = $countStudents;
+        $totalTeachers = $countTeachers;
+        $totalUsers = 1;
 
         $gradeLabels[] = 'Students' . ' = ' . $totalStudents . ' users';
         $colors = [
@@ -57,9 +67,9 @@ class DashboardController extends BaseController
         $labels[] = 'Total Courses';
         $totalAcademicRecords[] = (int)$countCourses->total_courses;
         $labels[] = 'Total Students';
-        $totalAcademicRecords[] = (int)$countStudents->total_unique_students;
+        $totalAcademicRecords[] = (int)$countStudents;
         $labels[] = 'Total Teachers';
-        $totalAcademicRecords[] = (int)$countTeachers->total_unique_teachers;
+        $totalAcademicRecords[] = (int)$countTeachers;
 
         $totalAcademicRecords = $this->createBarChart($labels, $totalAcademicRecords);
 
@@ -86,9 +96,9 @@ class DashboardController extends BaseController
 
         $data = [
             'page_title' => 'Admin Dashboard',
-            'total_students' => $countStudents->total_unique_students,
+            'total_students' => $countStudents,
             'total_courses' => $countCourses->total_courses,
-            'total_teachers' => $countTeachers->total_unique_teachers,
+            'total_teachers' => $countTeachers,
             'total_enrollments' => $countEnrollments->total_enrollments,
             'users_by_role' => json_encode($usersByRole),
             'total_academic_records' => json_encode($totalAcademicRecords),
