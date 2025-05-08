@@ -172,6 +172,8 @@ class CourseModel extends Model
             ->join('level_courses', 'level_courses.id = courses.level_course_id', 'left')
             ->join('course_teachers', 'course_teachers.course_id = courses.id', 'left')
             ->join('user_profiles', 'user_profiles.id = course_teachers.teacher_id', 'left')
+            ->where('courses.deleted_at', null)
+            ->where('course_teachers.deleted_at', null)
             ->where('user_profiles.id', $teacherId);
     }
 

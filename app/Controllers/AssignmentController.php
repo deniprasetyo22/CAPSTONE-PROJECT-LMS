@@ -35,7 +35,7 @@ class AssignmentController extends BaseController
         if (in_groups('student')) {
             $studentId = $this->userProfileModel->where('user_id', user_id())->first()->id;
         }
-       
+        
         $getAssignmentSubmission = $this->assignmentSubmissionModel->where('assignment_id', $id)->where('student_id', $studentId)->first();
         
         $data = [
@@ -87,8 +87,20 @@ class AssignmentController extends BaseController
         $filePath = url_title($course->name, '-', true);
         $file->move(WRITEPATH . 'uploads/files/assignments/'.$filePath, $newName);
 
+        $rawTitle = trim($this->request->getPost('title'));
+        $title = $course->name . ' - ' . $rawTitle;
+
+        $existing = $this->assignmentModel
+            ->where('course_id', $id)
+            ->where('title', $title)
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Assignment title already exists for this course.');
+        }
+
         $data = [
-            'title'       => $this->request->getPost('title'),
+            'title'       => $title,
             'description' => $this->request->getPost('description'),
             'due_date'    => $this->request->getPost('due_date'),
             'course_id'   => $id,
@@ -98,7 +110,7 @@ class AssignmentController extends BaseController
         $rules = $this->assignmentModel->getValidationRules();
         $messages = $this->assignmentModel->getValidationMessages();
 
-        $rules['title'] = 'required|is_unique[assignments.title]';
+        $rules['title'] = 'required';
         $rules['course_id'] = 'permit_empty';
 
         if (!$this->validate($rules, $messages)) {

@@ -153,10 +153,22 @@ class CourseController extends BaseController
         if (in_groups('student')) {
             $studentId = $this->userProfileModel->where('user_id', user_id())->first()->id;
             $enrollment = $this->enrollmentModel->where('student_id', $studentId)->where('course_id', $id)->first();
+
+            if (!$enrollment) {
+                return redirect()->to(route_to('student_courses'))->with('error', 'You are not enrolled in this course!');
+            }
         }
 
         $course = $this->courseModel->select('courses.*, level_courses.name as levelName')
             ->join('level_courses', 'level_courses.id = courses.level_course_id')->find($id);
+
+        if(in_groups('teacher')) {
+            $teacherId = $this->userProfileModel->where('user_id', user_id())->first()->id;
+            $courseTeacher = $this->courseTeacherModel->where('teacher_id', $teacherId)->where('course_id', $id)->first();
+            if (!$courseTeacher) {
+                return redirect()->to(route_to('teacher_courses'))->with('error', 'You are not a teacher of this course!');
+            }
+        }
 
         if (!$course) {
             if (in_groups('teacher')) {

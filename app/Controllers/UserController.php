@@ -87,6 +87,16 @@ class UserController extends BaseController
         $user->password = $this->request->getVar('password');
         $user->active = 1;
 
+        // $existingUsername = $this->userModel->where('username', $user->username)->first();
+        // if ($existingUsername) {
+        //     return redirect()->back()->withInput()->with('error', 'Username already exists.');
+        // }
+        
+        // $existingEmail = $this->userModel->where('email', $user->email)->first();
+        // if ($existingEmail) {
+        //     return redirect()->back()->withInput()->with('error', 'Email already exists.');
+        // }
+        
         // Simpan user dan dapatkan ID-nya
         if (!$this->userModel->save($user)) {
             return redirect()->back()->withInput()->with('error', 'Create user failed.');
