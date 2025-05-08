@@ -27,7 +27,7 @@
                 <?= csrf_field() ?>
 
                 <fieldset class="mb-4">
-                    <label for="login" class="fieldset-label text-black">Email atau Username</label>
+                    <label for="login" class="fieldset-label text-black text-sm">Email atau Username</label>
                     <input type="text" name="login"
                         class="input w-full <?php if (session('errors.login')) echo 'border-red-500'; ?>"
                         placeholder="Email atau Username" value="<?= old('login') ?>">
@@ -37,7 +37,7 @@
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="password" class="fieldset-label text-black">Password</label>
+                    <label for="password" class="fieldset-label text-black text-sm">Password</label>
                     <input type="password" name="password"
                         class="input w-full <?php if (session('errors.password')) echo 'border-red-500'; ?>"
                         placeholder="Password">

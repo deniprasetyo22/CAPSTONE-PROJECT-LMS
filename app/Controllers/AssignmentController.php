@@ -111,7 +111,8 @@ class AssignmentController extends BaseController
     public function file($id, $filename)
     {
         $course = $this->courseModel->find($id);
-        $filePath = WRITEPATH . 'uploads/files/assignments/'. $course->name . '/'. $filename;
+        $courseName = url_title($course->name, '-', true);
+        $filePath = WRITEPATH . 'uploads/files/assignments/'. $courseName . '/'. $filename;
 
         if (!file_exists($filePath)) {
             return redirect()->back()->with('error', 'File not found');
@@ -174,7 +175,8 @@ class AssignmentController extends BaseController
             }
     
             $newName = $file->getRandomName();
-            $uploadPath = WRITEPATH . 'uploads/files/assignments/' . $course->name;
+            $courseName = url_title($course->name, '-', true);
+            $uploadPath = WRITEPATH . 'uploads/files/assignments/' . $courseName;
     
             // Buat folder jika belum ada
             if (!is_dir($uploadPath)) {
@@ -213,7 +215,8 @@ class AssignmentController extends BaseController
         }
 
         // Path file yang mau dihapus
-        $filePath = WRITEPATH . 'uploads/files/assignments/' . $course->name . '/' . $assignment->file_url;
+        $courseName = url_title($course->name, '-', true);
+        $filePath = WRITEPATH . 'uploads/files/assignments/' . $courseName . '/' . $assignment->file_url;
 
         // Hapus file kalau file-nya memang ada
         if (file_exists($filePath)) {

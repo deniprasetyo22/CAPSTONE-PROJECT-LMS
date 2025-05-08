@@ -23,7 +23,7 @@
                 <?= csrf_field() ?>
 
                 <fieldset class="mb-4">
-                    <label for="fname" class="fieldset-label text-black">First Name</label>
+                    <label for="fname" class="fieldset-label text-black text-sm">First Name</label>
                     <input type="text" name="fname" data-pristine-required
                         data-pristine-required-message="First Name is required"
                         class="input w-full <?= (session('errors.fname')) ? 'border-red-500' : '' ?>"
@@ -31,15 +31,15 @@
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="lname" class="fieldset-label text-black">Last Name</label>
-                    <input type="text" name="lname" data-pristine-required
-                        data-pristine-required-message="Full Name is required"
+                    <label for="lname" class="fieldset-label text-black text-sm">Last Name <span
+                            class="text-xs">*(Optional)</span></label>
+                    <input type="text" name="lname"
                         class="input w-full <?= (session('errors.lname')) ? 'border-red-500' : '' ?>"
                         placeholder="Last Name" value="<?= old('lname') ?>">
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="username" class="fieldset-label text-black">Username</label>
+                    <label for="username" class="fieldset-label text-black text-sm">Username</label>
                     <input type="text" name="username" data-pristine-required
                         data-pristine-required-message="Username is required" data-pristine-minLength="3"
                         data-pristine-minLength-message="Username must be at least 3 characters"
@@ -48,7 +48,7 @@
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="email" class="fieldset-label text-black">Email</label>
+                    <label for="email" class="fieldset-label text-black text-sm">Email</label>
                     <input type="email" name="email" data-pristine-required
                         data-pristine-required-message="Email is required"
                         class="input w-full <?= (session('errors.email')) ? 'border-red-500' : '' ?>"
@@ -56,7 +56,7 @@
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="phone" class="fieldset-label text-black">Phone</label>
+                    <label for="phone" class="fieldset-label text-black text-sm">Phone</label>
                     <input type="text" name="phone" data-pristine-required
                         data-pristine-required-message="Phone is required"
                         class="input w-full <?= session('errors.phone') ? 'border-red-500' : '' ?>" placeholder="Phone"
@@ -64,7 +64,7 @@
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="sex" class="fieldset-label text-black">Sex</label>
+                    <label for="sex" class="fieldset-label text-black text-sm">Sex</label>
                     <select class="select w-full" name="sex" required data-pristine-required
                         data-pristine-required-message="Sex is required">
                         <option value="" disabled selected>-- Select Sex --</option>
@@ -74,20 +74,20 @@
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="dob" class="fieldset-label text-black">Date of Birth</label>
+                    <label for="dob" class="fieldset-label text-black text-sm">Date of Birth</label>
                     <input type="date" name="dob" class="input w-full" required data-pristine-required
                         data-pristine-required-message="Date of Birth is required" value="<?= old('dob') ?>">
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="address" class="fieldset-label text-black">Address</label>
+                    <label for="address" class="fieldset-label text-black text-sm">Address</label>
                     <textarea name="address" data-pristine-required data-pristine-required-message="Address is required"
                         class="textarea w-full <?= (session('errors.address')) ? 'border-red-500' : '' ?>"
                         placeholder="Address" value="<?= old('address') ?>"></textarea>
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="password" class="fieldset-label text-black">Password</label>
+                    <label for="password" class="fieldset-label text-black text-sm">Password</label>
                     <input type="password" name="password" data-pristine-required
                         data-pristine-required-message="Password is required" data-pristine-minLength="8"
                         data-pristine-minLength-message="Password must be at least 8 characters"
@@ -96,7 +96,7 @@
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="pass_confirm" class="fieldset-label text-black">Confirmation Password</label>
+                    <label for="pass_confirm" class="fieldset-label text-black text-sm">Confirmation Password</label>
                     <input type="password" name="pass_confirm" data-pristine-required
                         data-pristine-required-message="Password is required" data-pristine-minLength="8"
                         data-pristine-minLength-message="Password must be at least 8 characters"
@@ -125,6 +125,17 @@ document.addEventListener('DOMContentLoaded', function() {
         errorTextParent: 'mb-4',
         errorTextClass: 'text-red-500 text-sm'
     });
+
+    pristine.addValidator(
+        form.querySelector('[name="pass_confirm"]'),
+        function(value) {
+            const password = form.querySelector('[name="password"]').value;
+            return value === password;
+        },
+        "Confirmation password does not match the password.",
+        2,
+        false
+    );
 
     form.addEventListener('submit', function(e) {
         if (!pristine.validate()) {

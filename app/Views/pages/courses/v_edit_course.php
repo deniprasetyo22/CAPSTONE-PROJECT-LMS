@@ -65,7 +65,7 @@
                     </label>
                     <textarea name="description" id="description"
                         class="textarea textarea-bordered w-full <?= (session('errors.description')) ? 'border-red-500' : '' ?> "
-                        rows="3" placeholder="Description of the course..." data-pristine-required
+                        rows="10" placeholder="Description of the course..." data-pristine-required
                         data-pristine-required-message="Description is required"><?= old('description') ?? esc($course->description) ?></textarea>
                 </fieldset>
 

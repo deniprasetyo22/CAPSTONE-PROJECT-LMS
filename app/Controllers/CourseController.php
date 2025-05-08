@@ -101,7 +101,7 @@ class CourseController extends BaseController
             'search' => $this->request->getGet('search'),
             'sort' => $this->request->getGet('sort'),
             'order' => $this->request->getGet('order'),
-            'page' => $this->request->getGet('page_my_courses'),
+            'page' => $this->request->getGet('page_myCourses'),
             'perPage' => $this->request->getGet('perPage'),
             'level' => $this->request->getGet('level'),
         ]);
@@ -127,7 +127,7 @@ class CourseController extends BaseController
             'search' => $this->request->getGet('search'),
             'sort' => $this->request->getGet('sort'),
             'order' => $this->request->getGet('order'),
-            'page' => $this->request->getGet('page_my_courses'),
+            'page' => $this->request->getGet('page_teacherCourses'),
             'perPage' => $this->request->getGet('perPage'),
             'level' => $this->request->getGet('level'),
         ]);
@@ -162,9 +162,9 @@ class CourseController extends BaseController
                 return redirect()->to(route_to('student_courses'))->with('error', 'Course not found!');
             }
         }
-        $courseContents = $this->courseContentModel->where('course_id', $id)->findAll();
+        $courseContents = $this->courseContentModel->where('course_id', $id)->orderBy('id', 'desc')->findAll();
 
-        $assignments = $this->assignmentModel->where('course_id', $id)->findAll();
+        $assignments = $this->assignmentModel->where('course_id', $id)->orderBy('id', 'desc')->findAll();
 
         $teachers = $this->courseTeacherModel->select('user_profiles.*, users.email, course_teachers.id')
             ->join('user_profiles', 'user_profiles.id = course_teachers.teacher_id')
@@ -185,6 +185,7 @@ class CourseController extends BaseController
             ->join('users', 'users.id = user_profiles.user_id')
             ->where('enrollments.course_id', $id)
             ->where('enrollments.deleted_at', null)
+            ->orderBy('enrollments.id', 'desc')
             ->findAll();
 
         $data = [
@@ -232,9 +233,12 @@ class CourseController extends BaseController
         $currentUser = $this->userProfileModel->where('user_id', user_id())->first();
 
         $enrollmentCodeInput = $this->request->getPost('enrollment_code');
+
+        $courseCodeRandom = generate_course_code();
+        $courseCodeInput = $this->request->getPost('code');
         
         $data = [
-            'code'              => $this->request->getPost('code'),
+            'code'              => !empty($courseCodeInput) ? $courseCodeInput : $courseCodeRandom,
             'name'              => $this->request->getPost('name'),
             'description'       => $this->request->getPost('description'),
             'enrollment_code'   => !empty($enrollmentCodeInput) ? $enrollmentCodeInput : generate_enrollment_code(),

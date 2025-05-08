@@ -38,10 +38,10 @@
                 </fieldset>
 
                 <fieldset class="mb-4">
-                    <label for="code" class="fieldset-label text-black text-xs">Course Code</label>
+                    <label for="code" class="fieldset-label text-black text-xs">Course Code <span
+                            class="text-xs">*(Optional - Empty for auto generate)</label>
                     <input type="text" name="code" id="code"
                         class="input input-bordered w-full <?= (session('errors.code')) ? 'border-red-500' : '' ?>"
-                        data-pristine-required data-pristine-required-message="Course Code is required"
                         placeholder="Course Code" value="<?= old('code') ?>">
                 </fieldset>
 

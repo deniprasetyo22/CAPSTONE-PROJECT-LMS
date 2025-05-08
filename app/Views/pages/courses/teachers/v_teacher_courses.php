@@ -64,7 +64,7 @@
 
             <div class="w-full md:w-2/10">
                 <select name="sort" class="select select-bordered w-full" onchange="this.form.submit()">
-                    <option value="">Sort By</option>
+                    <option value="id">Sort By</option>
                     <option value="code" <?= ($params->sort == 'code') ? 'selected' : '' ?>>Code</option>
                     <option value="name" <?= ($params->sort == 'name') ? 'selected' : '' ?>>name</option>
                 </select>
