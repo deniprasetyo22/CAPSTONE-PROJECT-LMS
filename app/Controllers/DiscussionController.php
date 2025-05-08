@@ -128,9 +128,14 @@ class DiscussionController extends BaseController
             return redirect()->back()->with('error', 'Discussion not found.');
         }
 
-        $currentUser = $this->userProfileModel
+        $currentUser = null;
+
+        if(in_groups(['teacher', 'student'])){
+            $currentUser = $this->userProfileModel
             ->select('id')
             ->where('user_id', user_id())->first();
+        }
+        
 
         $discussion->timeAgo = $this->getTimeAgo($discussion->created_at);
 
@@ -143,11 +148,14 @@ class DiscussionController extends BaseController
         $discussionUserFormat = array_map(function ($d) use ($currentUser) {
             $timeAgo = $this->getTimeAgo($d->created_at);
             $d->timeAgo = $timeAgo;
-            if ($currentUser->id == $d->user_profile_id) {
-                $d->isCurrentUser = true;
-            } else {
-                $d->isCurrentUser = false;
+            if($currentUser != null){
+                if ($currentUser->id == $d->user_profile_id) {
+                    $d->isCurrentUser = true;
+                } else {
+                    $d->isCurrentUser = false;
+                }   
             }
+            
             return $d;
         }, $discussionUser);
 

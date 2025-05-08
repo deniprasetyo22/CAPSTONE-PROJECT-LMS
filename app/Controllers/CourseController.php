@@ -149,8 +149,11 @@ class CourseController extends BaseController
 
     public function showCourse($id)
     {
-        $studentId = $this->userProfileModel->where('user_id', user_id())->first()->id;
-        $enrollment = $this->enrollmentModel->where('student_id', $studentId)->where('course_id', $id)->first();
+        $enrollment = null;
+        if (in_groups('student')) {
+            $studentId = $this->userProfileModel->where('user_id', user_id())->first()->id;
+            $enrollment = $this->enrollmentModel->where('student_id', $studentId)->where('course_id', $id)->first();
+        }
 
         $course = $this->courseModel->select('courses.*, level_courses.name as levelName')
             ->join('level_courses', 'level_courses.id = courses.level_course_id')->find($id);

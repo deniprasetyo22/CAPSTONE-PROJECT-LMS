@@ -177,4 +177,13 @@ class UserModel extends Model
         return $results;
     }
 
+    public function getAllUsers($role)
+    {
+        return $this->select('users.*, auth_groups.id as role_id, auth_groups.name as role_name')
+            ->join('auth_groups_users', 'auth_groups_users.user_id = users.id', 'left')
+            ->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id', 'left')
+            ->where('auth_groups.name', $role)
+            ->countAllResults();
+    }
+
 }

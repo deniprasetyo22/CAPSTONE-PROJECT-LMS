@@ -36,9 +36,7 @@ class DashboardController extends BaseController
     }
     private function getTotalUsersByRole($role)
     {
-        $idGroup = $this->groupModel->where('name', $role)->first()->id;
-        $listUsers = $this->groupModel->getUsersForGroup(+$idGroup);
-        $totalUsers = count($listUsers);
+        $totalUsers = $this->userModel->getAllUsers($role);
         return $totalUsers;
     }
     public function adminDashboard()

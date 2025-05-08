@@ -31,7 +31,11 @@ class AssignmentController extends BaseController
         $course = $this->courseModel->where('id', $assignment->course_id)->first();
         
         $getAllAssignmentSubmissions = $this->assignmentSubmissionModel->getAllAssignmentSubmissionsWithStudentName($id);
-        $studentId = $this->userProfileModel->where('user_id', user_id())->first()->id;
+        $studentId = null;
+        if (in_groups('student')) {
+            $studentId = $this->userProfileModel->where('user_id', user_id())->first()->id;
+        }
+       
         $getAssignmentSubmission = $this->assignmentSubmissionModel->where('assignment_id', $id)->where('student_id', $studentId)->first();
         
         $data = [
