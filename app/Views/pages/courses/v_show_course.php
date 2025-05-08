@@ -214,26 +214,28 @@
                             </div>
 
                             <!-- More options -->
-                            <div class="dropdown dropdown-end ml-auto">
-                                <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </label>
-                                <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
-                                    <li>
-                                        <a href="<?= url_to('show_assignment', $assignment->id) ?>">Open</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= url_to('edit_assignment', $assignment->id) ?>">Edit</a>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onclick="document.getElementById('deleteModalAssignment<?= $assignment->id ?>').showModal()"
-                                            class="w-full text-left">
-                                            Delete
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
+                            <?php if (in_groups(['teacher', 'student'])) : ?>
+                                <div class="dropdown dropdown-end ml-auto">
+                                    <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </label>
+                                    <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
+                                        <li>
+                                            <a href="<?= url_to('show_assignment', $assignment->id) ?>">Open</a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= url_to('edit_assignment', $assignment->id) ?>">Edit</a>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onclick="document.getElementById('deleteModalAssignment<?= $assignment->id ?>').showModal()"
+                                                class="w-full text-left">
+                                                Delete
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            <?php endif ?>
                         </div>
                     </div>
                     <dialog id="deleteModalAssignment<?= $assignment->id ?>" class="modal">
@@ -300,26 +302,28 @@
                             </div>
 
                             <!-- More options -->
-                            <div class="dropdown dropdown-end ml-auto">
-                                <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </label>
-                                <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
-                                    <li>
-                                        <a href="<?= site_url('discussion/' . $discussion->id) ?>" target="_blank">Open</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= url_to('edit_discussion', $discussion->id) ?>">Edit</a>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onclick="document.getElementById('deleteModalDiscussion<?= $discussion->id ?>').showModal()"
-                                            class="w-full text-left">
-                                            Delete
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
+                            <?php if (in_groups('teacher')) : ?>
+                                <div class="dropdown dropdown-end ml-auto">
+                                    <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </label>
+                                    <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 shadow rounded-box w-40">
+                                        <li>
+                                            <a href="<?= site_url('discussion/' . $discussion->id) ?>" target="_blank">Open</a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= url_to('edit_discussion', $discussion->id) ?>">Edit</a>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onclick="document.getElementById('deleteModalDiscussion<?= $discussion->id ?>').showModal()"
+                                                class="w-full text-left">
+                                                Delete
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            <?php endif ?>
                         </div>
                         <dialog id="deleteModalDiscussion<?= $discussion->id ?>" class="modal">
                             <div class="modal-box">
@@ -352,7 +356,7 @@
                     <!-- Teachers Heading with Add Icon -->
                     <div class="flex items-center justify-between mb-2">
                         <h2 class="text-lg font-semibold">Teachers</h2>
-                        <?php if (in_groups(['teacher', 'administrator'])) : ?>
+                        <?php if (in_groups('teacher')) : ?>
                             <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                 onclick="openInviteModalLecturers()">
                                 <i class="fa-solid fa-user-plus"></i>
@@ -404,7 +408,7 @@
                                     <p class="font-semibold"><?= $teacher->first_name ?> <?= $teacher->last_name ?></p>
                                     <p class="text-sm text-gray-500"><?= $teacher->email ?></p>
                                 </div>
-                                <?php if (in_groups(['teacher', 'administrator'])) : ?>
+                                <?php if (in_groups('teacher')) : ?>
                                     <button class="ml-auto btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                         onclick="document.getElementById('deleteModal<?= $teacher->id ?>').showModal()">
                                         <i class="fa-solid fa-xmark"></i>
@@ -434,7 +438,7 @@
                     <!-- Students Heading with Add Icon -->
                     <div class="flex items-center justify-between mb-2">
                         <h2 class="text-lg font-semibold">Students</h2>
-                        <?php if (in_groups(['teacher', 'administrator'])) : ?>
+                        <?php if (in_groups('teacher')) : ?>
                             <button class="btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                 onclick="openInviteModal()">
                                 <i class="fa-solid fa-user-plus"></i>
@@ -485,7 +489,7 @@
                                     <p class="font-semibold"><?= $student->first_name ?> <?= $student->last_name ?></p>
                                     <p class="text-sm text-gray-500"><?= $student->email ?></p>
                                 </div>
-                                <?php if (in_groups(['teacher', 'administrator'])) : ?>
+                                <?php if (in_groups('teacher')) : ?>
                                     <button class="ml-auto btn btn-sm btn-ghost text-primary flex items-center gap-1"
                                         onclick="document.getElementById('deleteModalStudent<?= $student->id ?>').showModal()">
                                         <i class="fa-solid fa-xmark"></i>
